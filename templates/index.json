@@ -2,26 +2,101 @@
   "sections": {
     "slideshow": {
       "type": "slideshow",
-      "settings": {}
+      "settings": {
+        "height": 80
+      },
+      "blocks": {
+        "slide_1": {
+          "type": "slide",
+          "settings": {
+            "heading": "New Season Collection",
+            "subheading": "Refined essentials for the modern wardrobe",
+            "button_text": "Shop New Arrivals",
+            "button_link": "/collections/new-arrivals",
+            "text_position": "bottom-left",
+            "text_color": "#FFFFFF"
+          }
+        },
+        "slide_2": {
+          "type": "slide",
+          "settings": {
+            "heading": "Linen Wear",
+            "subheading": "Lightweight fabrics for every occasion",
+            "button_text": "Explore Linen",
+            "button_link": "/collections/linen-wear",
+            "text_position": "bottom-left",
+            "text_color": "#FFFFFF"
+          }
+        }
+      },
+      "block_order": ["slide_1", "slide_2"]
     },
     "collection_grid": {
       "type": "collection-grid",
       "settings": {
-        "heading": "Shop by Category"
-      }
+        "heading": "Shop by Category",
+        "columns": 4
+      },
+      "blocks": {
+        "tile_shirts": {
+          "type": "tile",
+          "settings": {
+            "title": "Shirts",
+            "link": "/collections/shirts"
+          }
+        },
+        "tile_linen": {
+          "type": "tile",
+          "settings": {
+            "title": "Linen Wear",
+            "link": "/collections/linen-wear"
+          }
+        },
+        "tile_essentials": {
+          "type": "tile",
+          "settings": {
+            "title": "Essentials",
+            "link": "/collections/essentials"
+          }
+        },
+        "tile_new": {
+          "type": "tile",
+          "settings": {
+            "title": "New Arrivals",
+            "link": "/collections/new-arrivals"
+          }
+        }
+      },
+      "block_order": ["tile_shirts", "tile_linen", "tile_essentials", "tile_new"]
     },
     "featured_collection": {
       "type": "featured-collection",
       "settings": {
-        "heading": "New In",
-        "collection": "beauty",
+        "heading": "New Arrivals",
+        "collection": "new-arrivals",
+        "products_to_show": 4,
+        "show_view_all": true
+      }
+    },
+    "featured_collection_2": {
+      "type": "featured-collection",
+      "settings": {
+        "heading": "Shirts",
+        "collection": "shirts",
         "products_to_show": 4,
         "show_view_all": true
       }
     },
     "image_with_text": {
       "type": "image-with-text",
-      "settings": {}
+      "settings": {
+        "heading": "Our Story",
+        "eyebrow": "Hekrown Fashion",
+        "body": "<p>Refined, contemporary clothing crafted for the modern wardrobe. From relaxed linen shirts to tailored essentials — quality you can feel.</p>",
+        "button_text": "Discover",
+        "button_link": "/collections/essentials",
+        "image_position": "left"
+      }
     },
     "usp_bar": {
       "type": "usp-bar",
@@ -32,6 +107,7 @@
     "slideshow",
     "collection_grid",
     "featured_collection",
+    "featured_collection_2",
     "image_with_text",
     "usp_bar"
   ]

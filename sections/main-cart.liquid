@@ -3,19 +3,19 @@
   Two-column: 65% line items, 35% order summary (sticky).
 {%- endcomment -%}
 
-<div class="cart-page section-padding">
+<div class="cart-page section-padding" data-cart-page>
   <div class="container">
     <h1 class="cart-page__heading">Your Basket</h1>
 
     {%- if cart.item_count == 0 -%}
-      <div class="cart-page__empty">
+      <div class="cart-page__empty" data-cart-empty>
         <p>Your basket is empty</p>
         <a href="/collections/all" class="btn btn--primary">Continue Shopping</a>
       </div>
     {%- else -%}
-      <div class="cart-page__grid">
+      <div class="cart-page__grid" data-cart-grid>
         {%- comment -%} Line Items {%- endcomment -%}
-        <div class="cart-page__items">
+        <div class="cart-page__items" data-cart-items>
           {%- for item in cart.items -%}
             <div class="cart-page__item" data-cart-item="{{ item.key }}">
               <a href="{{ item.url }}" class="cart-page__item-image">
@@ -34,7 +34,7 @@
                     {{ option.name }}: {{ option.value }}{% unless forloop.last %} | {% endunless %}
                   {%- endfor -%}
                 </p>
-                <p class="cart-page__item-price">{{ item.final_price | money }}</p>
+                <p class="cart-page__item-price" data-item-price="{{ item.key }}">{{ item.final_price | money }}</p>
 
                 <div class="cart-page__item-actions">
                   <div class="cart-page__item-qty">
@@ -90,6 +90,24 @@
 </div>
 
 <style>
+  /* Loading state — dims items while AJAX is in flight */
+  .cart-page--loading .cart-page__items {
+    opacity: 0.4;
+    pointer-events: none;
+    transition: opacity var(--transition-fast);
+  }
+
+  /* Flash highlight on updated price */
+  @keyframes cart-price-flash {
+    0%   { background-color: transparent; }
+    30%  { background-color: #f0f0f0; }
+    100% { background-color: transparent; }
+  }
+
+  .cart-price-updated {
+    animation: cart-price-flash 0.6s ease;
+  }
+
   .cart-page__heading {
     font-size: var(--font-size-2xl);
     font-weight: var(--font-weight-bold);
@@ -267,6 +285,168 @@
     width: auto;
   }
 </style>
+
+<script>
+(function () {
+  'use strict';
+
+  var cartPage = document.querySelector('[data-cart-page]');
+  if (!cartPage) return;
+
+  // ── Money formatting ─────────────────────────────────────────────────────
+  // Shopify returns cents — format as £X.XX using the store's currency symbol
+  function formatMoney(cents) {
+    var amount = (cents / 100).toFixed(2);
+    // Use Intl if available, otherwise simple fallback
+    try {
+      return new Intl.NumberFormat('en-GB', {
+        style: 'currency',
+        currency: 'GBP'
+      }).format(cents / 100);
+    } catch (e) {
+      return '£' + amount;
+    }
+  }
+
+  // ── Set loading state ────────────────────────────────────────────────────
+  function setLoading(on) {
+    cartPage.classList.toggle('cart-page--loading', on);
+  }
+
+  // ── Update totals in the summary panel ──────────────────────────────────
+  function updateTotals(cart) {
+    var subtotalEl = document.querySelector('[data-cart-subtotal]');
+    var totalEl    = document.querySelector('[data-cart-total]');
+    var formatted  = formatMoney(cart.total_price);
+
+    if (subtotalEl) {
+      subtotalEl.textContent = formatted;
+      subtotalEl.classList.add('cart-price-updated');
+      subtotalEl.addEventListener('animationend', function () {
+        subtotalEl.classList.remove('cart-price-updated');
+      }, { once: true });
+    }
+    if (totalEl) {
+      totalEl.textContent = formatted;
+      totalEl.classList.add('cart-price-updated');
+      totalEl.addEventListener('animationend', function () {
+        totalEl.classList.remove('cart-price-updated');
+      }, { once: true });
+    }
+
+    // Update header cart count badge
+    dispatchCartUpdate(cart);
+  }
+
+  // ── Show empty state when all items removed ──────────────────────────────
+  function showEmptyState() {
+    var grid  = document.querySelector('[data-cart-grid]');
+    var empty = document.querySelector('[data-cart-empty]');
+
+    if (grid) {
+      grid.remove();
+    }
+
+    if (!empty) {
+      var container = cartPage.querySelector('.container');
+      var emptyDiv  = document.createElement('div');
+      emptyDiv.className = 'cart-page__empty';
+      emptyDiv.setAttribute('data-cart-empty', '');
+      emptyDiv.innerHTML =
+        '<p>Your basket is empty</p>' +
+        '<a href="/collections/all" class="btn btn--primary">Continue Shopping</a>';
+      container.appendChild(emptyDiv);
+    }
+  }
+
+  // ── Remove a line item row from the DOM ──────────────────────────────────
+  function removeItemRow(key) {
+    var row = document.querySelector('[data-cart-item="' + key + '"]');
+    if (row) {
+      row.style.transition = 'opacity 0.3s ease, max-height 0.3s ease';
+      row.style.opacity    = '0';
+      row.style.overflow   = 'hidden';
+      row.style.maxHeight  = row.offsetHeight + 'px';
+      requestAnimationFrame(function () {
+        row.style.maxHeight = '0';
+        row.style.padding   = '0';
+      });
+      row.addEventListener('transitionend', function () {
+        row.remove();
+      }, { once: true });
+    }
+  }
+
+  // ── Update quantity display for an item ──────────────────────────────────
+  function updateItemQty(key, newQty) {
+    var row    = document.querySelector('[data-cart-item="' + key + '"]');
+    if (!row) return;
+    var qtyEl  = row.querySelector('[data-qty-value]');
+    if (qtyEl) qtyEl.textContent = newQty;
+  }
+
+  // ── AJAX: change item quantity ───────────────────────────────────────────
+  function changeQty(key, newQty) {
+    setLoading(true);
+
+    MossCart.updateItem(key, newQty)
+      .then(function (cart) {
+        if (newQty === 0) {
+          removeItemRow(key);
+          if (cart.item_count === 0) {
+            showEmptyState();
+            return;
+          }
+        } else {
+          updateItemQty(key, newQty);
+        }
+        updateTotals(cart);
+      })
+      .catch(function (err) {
+        console.error('Cart update failed:', err);
+      })
+      .finally(function () {
+        setLoading(false);
+      });
+  }
+
+  // ── Attach events to a single item row ──────────────────────────────────
+  function bindItemEvents(row) {
+    var key      = row.dataset.cartItem;
+    var minusBtn = row.querySelector('[data-qty-minus]');
+    var plusBtn  = row.querySelector('[data-qty-plus]');
+    var qtyEl    = row.querySelector('[data-qty-value]');
+    var removeBtn = row.querySelector('[data-remove-item]');
+
+    if (minusBtn) {
+      minusBtn.addEventListener('click', function () {
+        var current = parseInt(qtyEl.textContent, 10) || 1;
+        var newQty  = Math.max(0, current - 1);
+        changeQty(key, newQty);
+      });
+    }
+
+    if (plusBtn) {
+      plusBtn.addEventListener('click', function () {
+        var current = parseInt(qtyEl.textContent, 10) || 1;
+        changeQty(key, current + 1);
+      });
+    }
+
+    if (removeBtn) {
+      removeBtn.addEventListener('click', function () {
+        changeQty(key, 0);
+      });
+    }
+  }
+
+  // ── Bind all item rows on page load ─────────────────────────────────────
+  document.querySelectorAll('[data-cart-item]').forEach(function (row) {
+    bindItemEvents(row);
+  });
+
+})();
+</script>
 
 {% schema %}
 {

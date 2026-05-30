@@ -1,7 +1,13 @@
 <header class="site-header" data-header>
   <div class="site-header__inner">
     {%- comment -%} Mobile menu toggle {%- endcomment -%}
-    <button class="site-header__menu-toggle" aria-label="Open menu" data-menu-toggle>
+    <button
+      class="site-header__menu-toggle"
+      aria-label="Open menu"
+      aria-expanded="false"
+      aria-controls="mobile-nav-drawer"
+      data-menu-toggle
+    >
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <line x1="3" y1="6" x2="21" y2="6"/>
         <line x1="3" y1="12" x2="21" y2="12"/>
@@ -24,24 +30,53 @@
       {%- endif -%}
     </a>
 
-    {%- comment -%} Desktop navigation {%- endcomment -%}
+    {%- comment -%} Desktop navigation with mega menu {%- endcomment -%}
     <nav class="site-header__nav" aria-label="Main navigation">
       {%- for link in section.settings.menu.links -%}
-        <a href="{{ link.url }}" class="site-header__nav-link">
-          {{ link.title }}
-        </a>
+        {%- if link.links.size > 0 -%}
+          <div class="site-header__nav-item" data-mega-item>
+            <button
+              class="site-header__nav-link site-header__nav-link--has-dropdown"
+              aria-expanded="false"
+              aria-haspopup="true"
+              data-mega-toggle
+            >
+              {{ link.title }}
+              <svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" style="margin-left:4px;stroke:currentColor;stroke-width:2;fill:none;"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="mega-menu" aria-hidden="true" data-mega-menu>
+              <div class="mega-menu__inner">
+                <div class="mega-menu__column">
+                  {%- for sublink in link.links -%}
+                    <a href="{{ sublink.url }}" class="mega-menu__link">{{ sublink.title }}</a>
+                  {%- endfor -%}
+                </div>
+              </div>
+            </div>
+          </div>
+        {%- else -%}
+          <a href="{{ link.url }}" class="site-header__nav-link">
+            {{ link.title }}
+          </a>
+        {%- endif -%}
       {%- endfor -%}
     </nav>
 
     {%- comment -%} Icon cluster {%- endcomment -%}
     <div class="site-header__icons">
-      {%- comment -%} Search {%- endcomment -%}
-      <a href="/search" class="site-header__icon-btn" aria-label="Search">
+      {%- comment -%} Search — button triggers overlay {%- endcomment -%}
+      <button
+        class="site-header__icon-btn"
+        aria-label="Open search"
+        aria-expanded="false"
+        aria-controls="search-overlay"
+        data-search-toggle
+      >
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <circle cx="11" cy="11" r="7"/>
           <line x1="16.5" y1="16.5" x2="21" y2="21"/>
         </svg>
-      </a>
+      </button>
 
       {%- comment -%} Account {%- endcomment -%}
       <a href="/account" class="site-header__icon-btn" aria-label="Account">
@@ -51,18 +86,182 @@
         </svg>
       </a>
 
-      {%- comment -%} Cart {%- endcomment -%}
-      <a href="/cart" class="site-header__icon-btn" aria-label="Cart">
+      {%- comment -%} Cart — triggers drawer {%- endcomment -%}
+      <button
+        class="site-header__icon-btn"
+        aria-label="Open basket"
+        aria-expanded="false"
+        aria-controls="cart-drawer"
+        data-cart-drawer-toggle
+      >
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
           <line x1="3" y1="6" x2="21" y2="6"/>
           <path d="M16 10a4 4 0 0 1-8 0"/>
         </svg>
         <span class="site-header__badge" data-cart-count hidden>0</span>
-      </a>
+      </button>
     </div>
   </div>
 </header>
+
+{%- comment -%} ============================================================
+  Search Overlay
+  Full-width panel that drops down from the header on search icon click.
+============================================================ {%- endcomment -%}
+<div
+  id="search-overlay"
+  class="search-overlay"
+  aria-hidden="true"
+  data-search-overlay
+>
+  <div class="search-overlay__inner">
+    <form action="/search" method="get" class="search-overlay__form" role="search">
+      <input type="hidden" name="type" value="product">
+      <label for="search-input" class="visually-hidden">Search</label>
+      <input
+        type="search"
+        id="search-input"
+        name="q"
+        class="search-overlay__input"
+        placeholder="Search for products..."
+        autocomplete="off"
+        data-search-input
+      >
+      <button type="submit" class="search-overlay__submit" aria-label="Submit search">
+        <svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22">
+          <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.5" fill="none"/>
+          <line x1="16.5" y1="16.5" x2="21" y2="21" stroke="currentColor" stroke-width="1.5"/>
+        </svg>
+      </button>
+      <button type="button" class="search-overlay__close" aria-label="Close search" data-search-close>
+        <svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22">
+          <line x1="4" y1="4" x2="20" y2="20" stroke="currentColor" stroke-width="1.5"/>
+          <line x1="20" y1="4" x2="4" y2="20" stroke="currentColor" stroke-width="1.5"/>
+        </svg>
+      </button>
+    </form>
+  </div>
+</div>
+
+{%- comment -%} ============================================================
+  Mobile Navigation Drawer
+  Rendered outside <header> so it can overlay the full page.
+  Hidden on desktop via CSS (display:none above 1024px).
+============================================================ {%- endcomment -%}
+
+{%- comment -%} Overlay backdrop {%- endcomment -%}
+<div
+  class="mobile-nav__overlay"
+  aria-hidden="true"
+  data-nav-overlay
+></div>
+
+{%- comment -%} Drawer panel {%- endcomment -%}
+<nav
+  id="mobile-nav-drawer"
+  class="mobile-nav__drawer"
+  aria-label="Mobile navigation"
+  aria-hidden="true"
+  data-nav-drawer
+>
+  {%- comment -%} Drawer header: logo + close button {%- endcomment -%}
+  <div class="mobile-nav__header">
+    <a href="/" class="mobile-nav__logo" aria-label="{{ shop.name }}">
+      {%- if settings.logo != blank -%}
+        <img
+          src="{{ settings.logo | image_url: width: 200 }}"
+          alt="{{ shop.name }}"
+          width="120"
+          loading="lazy"
+        >
+      {%- else -%}
+        <span class="mobile-nav__logo-text">{{ shop.name }}</span>
+      {%- endif -%}
+    </a>
+
+    <button
+      class="mobile-nav__close"
+      aria-label="Close menu"
+      data-nav-close
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true" width="24" height="24">
+        <line x1="4" y1="4" x2="20" y2="20" stroke="currentColor" stroke-width="1.5"/>
+        <line x1="20" y1="4" x2="4" y2="20" stroke="currentColor" stroke-width="1.5"/>
+      </svg>
+    </button>
+  </div>
+
+  {%- comment -%} Navigation links {%- endcomment -%}
+  <ul class="mobile-nav__list" role="list">
+    {%- for link in section.settings.menu.links -%}
+      <li class="mobile-nav__item">
+        <a
+          href="{{ link.url }}"
+          class="mobile-nav__link"
+        >
+          {{ link.title }}
+        </a>
+      </li>
+    {%- endfor -%}
+  </ul>
+
+  {%- comment -%} Utility links at bottom of drawer {%- endcomment -%}
+  <div class="mobile-nav__footer">
+    <a href="/account" class="mobile-nav__utility-link">
+      <svg viewBox="0 0 24 24" aria-hidden="true" width="18" height="18">
+        <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.5" fill="none"/>
+        <path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1" stroke="currentColor" stroke-width="1.5" fill="none"/>
+      </svg>
+      Account
+    </a>
+    <a href="/search" class="mobile-nav__utility-link">
+      <svg viewBox="0 0 24 24" aria-hidden="true" width="18" height="18">
+        <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.5" fill="none"/>
+        <line x1="16.5" y1="16.5" x2="21" y2="21" stroke="currentColor" stroke-width="1.5"/>
+      </svg>
+      Search
+    </a>
+  </div>
+</nav>
+
+{%- comment -%} ============================================================
+  Cart Drawer
+  Slide-out mini cart from the right side.
+============================================================ {%- endcomment -%}
+<div class="cart-drawer__overlay" aria-hidden="true" data-cart-overlay></div>
+
+<div
+  id="cart-drawer"
+  class="cart-drawer"
+  aria-hidden="true"
+  aria-label="Your basket"
+  data-cart-drawer
+>
+  <div class="cart-drawer__header">
+    <h2 class="cart-drawer__title">Your Basket (<span data-drawer-count>0</span>)</h2>
+    <button class="cart-drawer__close" aria-label="Close basket" data-cart-drawer-close>
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+        <line x1="4" y1="4" x2="20" y2="20" stroke="currentColor" stroke-width="1.5"/>
+        <line x1="20" y1="4" x2="4" y2="20" stroke="currentColor" stroke-width="1.5"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="cart-drawer__body" data-drawer-body>
+    <p class="cart-drawer__empty" data-drawer-empty>Your basket is empty</p>
+    <div class="cart-drawer__items" data-drawer-items></div>
+  </div>
+
+  <div class="cart-drawer__footer" data-drawer-footer style="display:none;">
+    <div class="cart-drawer__subtotal">
+      <span>Subtotal</span>
+      <span data-drawer-subtotal></span>
+    </div>
+    <a href="/cart" class="btn btn--secondary btn--full-width cart-drawer__view-cart">View Basket</a>
+    <a href="/checkout" class="btn btn--primary btn--full-width cart-drawer__checkout">Proceed to Checkout</a>
+  </div>
+</div>
 
 {% schema %}
 {
