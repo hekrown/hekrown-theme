@@ -1,15 +1,135 @@
 {%- comment -%}
-  Main Collection Section — Product Grid with Filters
+  Main Collection Section — Product Grid with Filter Drawer
 {%- endcomment -%}
 
 {{ 'section-main-collection.css' | asset_url | stylesheet_tag }}
+
+{%- comment -%} Filter Drawer Overlay {%- endcomment -%}
+<div class="filter-overlay" aria-hidden="true" data-filter-overlay></div>
+
+{%- comment -%} Filter Drawer {%- endcomment -%}
+<div class="filter-drawer" id="filter-drawer" aria-hidden="true" aria-label="Filters" data-filter-drawer>
+  <div class="filter-drawer__header">
+    <h2 class="filter-drawer__title">Filter & Sort</h2>
+    <button class="filter-drawer__close" aria-label="Close filters" data-filter-close>
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+        <line x1="4" y1="4" x2="20" y2="20" stroke="currentColor" stroke-width="1.5"/>
+        <line x1="20" y1="4" x2="4" y2="20" stroke="currentColor" stroke-width="1.5"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="filter-drawer__body">
+    {%- comment -%} Sort {%- endcomment -%}
+    <div class="filter-drawer__group">
+      <h3 class="filter-drawer__group-title">Sort By</h3>
+      <div class="filter-drawer__sort-options">
+        {%- for option in collection.sort_options -%}
+          <label class="filter-drawer__sort-option">
+            <input
+              type="radio"
+              name="sort_by"
+              value="{{ option.value }}"
+              class="visually-hidden"
+              {% if collection.sort_by == option.value %}checked{% endif %}
+              data-sort-radio
+            >
+            <span class="filter-drawer__sort-label">{{ option.name }}</span>
+          </label>
+        {%- endfor -%}
+      </div>
+    </div>
+
+    {%- comment -%} Native Shopify filters (if Search & Discovery app active) {%- endcomment -%}
+    {%- if collection.filters.size > 0 -%}
+      {%- for filter in collection.filters -%}
+        <div class="filter-drawer__group">
+          <h3 class="filter-drawer__group-title">{{ filter.label }}</h3>
+
+          {%- if filter.type == 'list' -%}
+            <div class="filter-drawer__options">
+              {%- for value in filter.values -%}
+                <label class="filter-drawer__option">
+                  <input
+                    type="checkbox"
+                    name="{{ value.param_name }}"
+                    value="{{ value.value }}"
+                    {% if value.active %}checked{% endif %}
+                    class="filter-drawer__checkbox"
+                    data-filter-input
+                  >
+                  <span class="filter-drawer__option-label">
+                    {{ value.label }}
+                    <span class="filter-drawer__option-count">({{ value.count }})</span>
+                  </span>
+                </label>
+              {%- endfor -%}
+            </div>
+
+          {%- elsif filter.type == 'price_range' -%}
+            <div class="filter-drawer__price-range">
+              <div class="filter-drawer__price-inputs">
+                <div class="filter-drawer__price-field">
+                  <label for="filter-price-min">Min</label>
+                  <input
+                    type="number"
+                    id="filter-price-min"
+                    name="{{ filter.min_value.param_name }}"
+                    value="{{ filter.min_value.value | divided_by: 100 }}"
+                    min="0"
+                    max="{{ filter.range_max | divided_by: 100 }}"
+                    class="input filter-drawer__price-input"
+                    data-filter-input
+                  >
+                </div>
+                <span class="filter-drawer__price-sep">—</span>
+                <div class="filter-drawer__price-field">
+                  <label for="filter-price-max">Max</label>
+                  <input
+                    type="number"
+                    id="filter-price-max"
+                    name="{{ filter.max_value.param_name }}"
+                    value="{{ filter.max_value.value | divided_by: 100 | default: filter.range_max | divided_by: 100 }}"
+                    min="0"
+                    max="{{ filter.range_max | divided_by: 100 }}"
+                    class="input filter-drawer__price-input"
+                    data-filter-input
+                  >
+                </div>
+              </div>
+            </div>
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+    {%- else -%}
+      {%- comment -%} Fallback: no Search & Discovery app — show basic message {%- endcomment -%}
+      <p class="filter-drawer__no-filters">
+        Install the <strong>Shopify Search &amp; Discovery</strong> app to enable filters.
+      </p>
+    {%- endif -%}
+  </div>
+
+  <div class="filter-drawer__footer">
+    <a href="{{ collection.url }}" class="btn btn--secondary filter-drawer__clear">Clear All</a>
+    <button type="button" class="btn btn--primary filter-drawer__apply" data-filter-apply>Apply</button>
+  </div>
+</div>
 
 <div class="collection-page section-padding">
   <div class="container">
     {%- comment -%} Filter & Sort Bar {%- endcomment -%}
     <div class="collection-page__toolbar">
       <div class="collection-page__filter-toggle">
-        <button type="button" data-filter-toggle class="btn btn--secondary">
+        <button
+          type="button"
+          class="btn btn--secondary"
+          aria-expanded="false"
+          aria-controls="filter-drawer"
+          data-filter-toggle
+        >
+          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" style="margin-right:6px;stroke:currentColor;stroke-width:1.5;fill:none;">
+            <line x1="4" y1="6" x2="20" y2="6"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="10" y1="18" x2="14" y2="18"/>
+          </svg>
           Filter & Sort
         </button>
       </div>
@@ -28,6 +148,28 @@
       </div>
     </div>
 
+    {%- comment -%} Active filter pills {%- endcomment -%}
+    {%- if collection.filters.size > 0 -%}
+      {%- assign active_filters = 0 -%}
+      {%- for filter in collection.filters -%}
+        {%- for value in filter.active_values -%}
+          {%- assign active_filters = active_filters | plus: 1 -%}
+        {%- endfor -%}
+      {%- endfor -%}
+      {%- if active_filters > 0 -%}
+        <div class="collection-page__active-filters">
+          {%- for filter in collection.filters -%}
+            {%- for value in filter.active_values -%}
+              <a href="{{ value.url_to_remove }}" class="collection-page__filter-pill">
+                {{ filter.label }}: {{ value.label }} &times;
+              </a>
+            {%- endfor -%}
+          {%- endfor -%}
+          <a href="{{ collection.url }}" class="collection-page__filter-clear">Clear all</a>
+        </div>
+      {%- endif -%}
+    {%- endif -%}
+
     {%- comment -%} Product Grid {%- endcomment -%}
     <div class="collection-page__grid" data-product-grid>
       {%- paginate collection.products by section.settings.products_per_page -%}
@@ -44,6 +186,76 @@
     </div>
   </div>
 </div>
+
+<script>
+(function () {
+  'use strict';
+
+  // ── Filter Drawer ─────────────────────────────────────────────────────────
+  var drawer    = document.querySelector('[data-filter-drawer]');
+  var overlay   = document.querySelector('[data-filter-overlay]');
+  var toggleBtn = document.querySelector('[data-filter-toggle]');
+  var closeBtn  = document.querySelector('[data-filter-close]');
+  var applyBtn  = document.querySelector('[data-filter-apply]');
+
+  function openDrawer() {
+    if (!drawer) return;
+    drawer.classList.add('is-open');
+    overlay.classList.add('is-open');
+    drawer.setAttribute('aria-hidden', 'false');
+    toggleBtn.setAttribute('aria-expanded', 'true');
+    document.body.classList.add('nav-open');
+    if (closeBtn) closeBtn.focus();
+  }
+
+  function closeDrawer() {
+    if (!drawer) return;
+    drawer.classList.remove('is-open');
+    overlay.classList.remove('is-open');
+    drawer.setAttribute('aria-hidden', 'true');
+    toggleBtn.setAttribute('aria-expanded', 'false');
+    document.body.classList.remove('nav-open');
+    if (toggleBtn) toggleBtn.focus();
+  }
+
+  if (toggleBtn) toggleBtn.addEventListener('click', openDrawer);
+  if (closeBtn)  closeBtn.addEventListener('click', closeDrawer);
+  if (overlay)   overlay.addEventListener('click', closeDrawer);
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && drawer && drawer.classList.contains('is-open')) closeDrawer();
+  });
+
+  // Apply filters — build URL from checked inputs and redirect
+  if (applyBtn) {
+    applyBtn.addEventListener('click', function () {
+      var params  = new URLSearchParams();
+      var sortRadio = document.querySelector('[data-sort-radio]:checked');
+      if (sortRadio) params.set('sort_by', sortRadio.value);
+
+      document.querySelectorAll('[data-filter-input]').forEach(function (input) {
+        if (input.type === 'checkbox' && input.checked) {
+          params.append(input.name, input.value);
+        } else if (input.type === 'number' && input.value) {
+          params.set(input.name, input.value * 100); // Shopify expects cents
+        }
+      });
+
+      window.location.href = window.location.pathname + '?' + params.toString();
+    });
+  }
+
+  // ── Sort select (toolbar) — redirect on change ───────────────────────────
+  var sortSelect = document.querySelector('[data-sort-select]');
+  if (sortSelect) {
+    sortSelect.addEventListener('change', function () {
+      var url = new URL(window.location.href);
+      url.searchParams.set('sort_by', sortSelect.value);
+      window.location.href = url.toString();
+    });
+  }
+})();
+</script>
 
 {% schema %}
 {
