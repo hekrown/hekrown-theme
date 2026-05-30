@@ -1,0 +1,39 @@
+<div class="search-page section-padding">
+  <div class="container">
+    <h1 class="search-page__title">Search</h1>
+
+    <form action="/search" method="get" class="search-page__form">
+      <div style="display: flex; gap: var(--space-sm); max-width: 600px;">
+        <input type="search" name="q" value="{{ search.terms | escape }}" class="input" placeholder="Search products..." aria-label="Search">
+        <button type="submit" class="btn btn--primary">Search</button>
+      </div>
+    </form>
+
+    {%- if search.performed -%}
+      {%- if search.results_count > 0 -%}
+        <p class="search-page__count" style="margin: var(--space-lg) 0; color: var(--color-mid-grey); font-size: var(--font-size-sm);">
+          {{ search.results_count }} results for "{{ search.terms }}"
+        </p>
+        <div class="collection-page__grid">
+          {%- for item in search.results -%}
+            {%- if item.object_type == 'product' -%}
+              {% render 'product-card', product: item %}
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      {%- else -%}
+        <p style="margin-top: var(--space-xl); color: var(--color-mid-grey);">
+          No results found for "{{ search.terms }}". Try a different search term.
+        </p>
+      {%- endif -%}
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Search results",
+  "tag": "section",
+  "settings": []
+}
+{% endschema %}

@@ -1,0 +1,40 @@
+<div class="page-content section-padding">
+  <div class="container">
+    <h1 class="page-content__title">{{ page.title }}</h1>
+    <div class="page-content__body">
+      {{ page.content }}
+    </div>
+  </div>
+</div>
+
+<style>
+  .page-content__title {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--space-xl);
+  }
+
+  .page-content__body {
+    max-width: 720px;
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-normal);
+  }
+
+  .page-content__body h2,
+  .page-content__body h3 {
+    margin-top: var(--space-xl);
+    margin-bottom: var(--space-md);
+  }
+
+  .page-content__body p {
+    margin-bottom: var(--space-md);
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Page content",
+  "tag": "section",
+  "settings": []
+}
+{% endschema %}

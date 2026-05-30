@@ -1,0 +1,165 @@
+{%- comment -%}
+  Promotional / Editorial Banner (50/50 split)
+{%- endcomment -%}
+
+<div class="image-with-text section-padding">
+  <div class="image-with-text__grid image-with-text__grid--{{ section.settings.image_position }}">
+    <div class="image-with-text__media">
+      {%- if section.settings.image != blank -%}
+        <img
+          src="{{ section.settings.image | image_url: width: 960 }}"
+          alt="{{ section.settings.heading | escape }}"
+          class="image-with-text__image"
+          loading="lazy"
+          width="960"
+          height="{{ 960 | divided_by: section.settings.image.aspect_ratio | round }}"
+        >
+      {%- else -%}
+        <div class="image-with-text__placeholder"></div>
+      {%- endif -%}
+    </div>
+
+    <div class="image-with-text__content">
+      {%- if section.settings.eyebrow != blank -%}
+        <span class="image-with-text__eyebrow">{{ section.settings.eyebrow }}</span>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="image-with-text__heading">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+      {%- if section.settings.body != blank -%}
+        <div class="image-with-text__body">{{ section.settings.body }}</div>
+      {%- endif -%}
+      {%- if section.settings.button_text != blank -%}
+        <a href="{{ section.settings.button_link }}" class="btn btn--primary">
+          {{ section.settings.button_text }}
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+<style>
+  .image-with-text__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 1024px) {
+    .image-with-text__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .image-with-text__grid--right .image-with-text__media {
+      order: 2;
+    }
+  }
+
+  .image-with-text__media {
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+  }
+
+  .image-with-text__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .image-with-text__placeholder {
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-off-white);
+  }
+
+  .image-with-text__content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: var(--space-xl) var(--container-padding-mobile);
+    gap: var(--space-md);
+    background-color: var(--color-off-white);
+  }
+
+  @media (min-width: 1024px) {
+    .image-with-text__content {
+      padding: var(--space-2xl) var(--space-2xl);
+    }
+  }
+
+  .image-with-text__eyebrow {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-wider);
+    color: var(--color-mid-grey);
+  }
+
+  .image-with-text__heading {
+    font-size: clamp(24px, 3vw, 36px);
+    font-weight: var(--font-weight-bold);
+  }
+
+  .image-with-text__body {
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-normal);
+    color: var(--color-dark-grey);
+    max-width: 480px;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Image with text",
+  "tag": "section",
+  "class": "image-with-text-section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image position",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Our Story"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body text"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Discover"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image with text"
+    }
+  ]
+}
+{% endschema %}

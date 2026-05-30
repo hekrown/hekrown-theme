@@ -1,0 +1,38 @@
+{
+  "sections": {
+    "slideshow": {
+      "type": "slideshow",
+      "settings": {}
+    },
+    "collection_grid": {
+      "type": "collection-grid",
+      "settings": {
+        "heading": "Shop by Category"
+      }
+    },
+    "featured_collection": {
+      "type": "featured-collection",
+      "settings": {
+        "heading": "New In",
+        "collection": "beauty",
+        "products_to_show": 4,
+        "show_view_all": true
+      }
+    },
+    "image_with_text": {
+      "type": "image-with-text",
+      "settings": {}
+    },
+    "usp_bar": {
+      "type": "usp-bar",
+      "settings": {}
+    }
+  },
+  "order": [
+    "slideshow",
+    "collection_grid",
+    "featured_collection",
+    "image_with_text",
+    "usp_bar"
+  ]
+}

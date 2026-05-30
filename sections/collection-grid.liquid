@@ -1,0 +1,158 @@
+{%- comment -%}
+  Category Tiles / Shop by Category
+  3-5 column grid on desktop, 2 on mobile.
+{%- endcomment -%}
+
+<div class="collection-grid section-padding">
+  <div class="container">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="collection-grid__heading">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+
+    <div class="collection-grid__grid">
+      {%- for block in section.blocks -%}
+        <a href="{{ block.settings.link }}" class="collection-grid__card" {{ block.shopify_attributes }}>
+          <div class="collection-grid__image-wrapper">
+            {%- if block.settings.image != blank -%}
+              <img
+                src="{{ block.settings.image | image_url: width: 600 }}"
+                alt="{{ block.settings.title | escape }}"
+                class="collection-grid__image"
+                loading="lazy"
+                width="600"
+                height="{{ 600 | divided_by: block.settings.image.aspect_ratio | round }}"
+              >
+            {%- else -%}
+              <div class="collection-grid__placeholder"></div>
+            {%- endif -%}
+          </div>
+          <span class="collection-grid__title">{{ block.settings.title }}</span>
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+<style>
+  .collection-grid__heading {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    text-align: center;
+    margin-bottom: var(--space-xl);
+  }
+
+  .collection-grid__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--grid-gutter);
+  }
+
+  @media (min-width: 640px) {
+    .collection-grid__grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .collection-grid__grid {
+      grid-template-columns: repeat({{ section.settings.columns }}, 1fr);
+    }
+  }
+
+  .collection-grid__card {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+  }
+
+  .collection-grid__image-wrapper {
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    background-color: var(--color-off-white);
+  }
+
+  .collection-grid__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-slow);
+  }
+
+  .collection-grid__card:hover .collection-grid__image {
+    transform: scale(1.04);
+  }
+
+  .collection-grid__placeholder {
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-off-white);
+  }
+
+  .collection-grid__title {
+    margin-top: var(--space-sm);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-black);
+    text-align: center;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Collection grid",
+  "tag": "section",
+  "class": "collection-grid-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Shop by Category"
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Columns (desktop)",
+      "min": 3,
+      "max": 5,
+      "step": 1,
+      "default": 4
+    }
+  ],
+  "blocks": [
+    {
+      "type": "tile",
+      "name": "Category tile",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Category"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection grid",
+      "blocks": [
+        { "type": "tile", "settings": { "title": "Suits" } },
+        { "type": "tile", "settings": { "title": "Shirts" } },
+        { "type": "tile", "settings": { "title": "Trousers" } },
+        { "type": "tile", "settings": { "title": "Shoes" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,74 @@
+{%- comment -%}
+  Main Collection Section — Product Grid with Filters
+{%- endcomment -%}
+
+{{ 'section-main-collection.css' | asset_url | stylesheet_tag }}
+
+<div class="collection-page section-padding">
+  <div class="container">
+    {%- comment -%} Filter & Sort Bar {%- endcomment -%}
+    <div class="collection-page__toolbar">
+      <div class="collection-page__filter-toggle">
+        <button type="button" data-filter-toggle class="btn btn--secondary">
+          Filter & Sort
+        </button>
+      </div>
+      <div class="collection-page__count">
+        {{ collection.products_count }} {{ collection.products_count | pluralize: 'product', 'products' }}
+      </div>
+      <div class="collection-page__sort">
+        <label for="sort-by" class="visually-hidden">Sort by</label>
+        <select id="sort-by" class="collection-page__sort-select" data-sort-select>
+          {%- for option in collection.sort_options -%}
+            <option value="{{ option.value }}" {% if collection.sort_by == option.value %}selected{% endif %}>
+              {{ option.name }}
+            </option>
+          {%- endfor -%}
+        </select>
+      </div>
+    </div>
+
+    {%- comment -%} Product Grid {%- endcomment -%}
+    <div class="collection-page__grid" data-product-grid>
+      {%- paginate collection.products by section.settings.products_per_page -%}
+        {%- for product in collection.products -%}
+          {% render 'product-card', product: product %}
+        {%- endfor -%}
+
+        {%- if paginate.pages > 1 -%}
+          <div class="collection-page__pagination">
+            {{ paginate | default_pagination: next: '→', previous: '←' }}
+          </div>
+        {%- endif -%}
+      {%- endpaginate -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Collection products",
+  "tag": "section",
+  "class": "main-collection-section",
+  "settings": [
+    {
+      "type": "range",
+      "id": "products_per_row",
+      "label": "Products per row (desktop)",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "label": "Products per page",
+      "min": 12,
+      "max": 48,
+      "step": 4,
+      "default": 24
+    }
+  ]
+}
+{% endschema %}
