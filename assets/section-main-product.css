@@ -78,6 +78,17 @@
   background-color: var(--color-off-white);
 }
 
+/* Gallery active/inactive states — desktop fade */
+@media (min-width: 1024px) {
+  .product-page__media-item {
+    display: none;
+  }
+
+  .product-page__media-item--active {
+    display: block;
+  }
+}
+
 /* Thumbnails */
 .product-page__thumbnails {
   display: none;
