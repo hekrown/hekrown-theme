@@ -1,0 +1,10 @@
+{
+  "current": {
+    "color_primary": "#000000",
+    "color_secondary": "#333333",
+    "color_accent": "#C0392B",
+    "color_background": "#FFFFFF",
+    "color_text": "#333333",
+    "cart_type": "drawer"
+  }
+}

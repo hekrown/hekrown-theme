@@ -1,0 +1,89 @@
+<div class="article-page section-padding">
+  <div class="container">
+    <article class="article">
+      <header class="article__header">
+        <span class="article__date">{{ article.published_at | date: '%B %d, %Y' }}</span>
+        <h1 class="article__title">{{ article.title }}</h1>
+        {%- if article.author -%}
+          <span class="article__author">By {{ article.author }}</span>
+        {%- endif -%}
+      </header>
+
+      {%- if article.image -%}
+        <div class="article__image">
+          <img
+            src="{{ article.image | image_url: width: 1200 }}"
+            alt="{{ article.image.alt | escape }}"
+            width="1200"
+            height="{{ 1200 | divided_by: article.image.aspect_ratio | round }}"
+            loading="eager"
+          >
+        </div>
+      {%- endif -%}
+
+      <div class="article__body">
+        {{ article.content }}
+      </div>
+    </article>
+  </div>
+</div>
+
+<style>
+  .article__header {
+    max-width: 720px;
+    margin-bottom: var(--space-xl);
+  }
+
+  .article__date {
+    font-size: var(--font-size-xs);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-wide);
+    color: var(--color-mid-grey);
+  }
+
+  .article__title {
+    font-size: clamp(24px, 4vw, 40px);
+    font-weight: var(--font-weight-bold);
+    margin-top: var(--space-sm);
+  }
+
+  .article__author {
+    font-size: var(--font-size-sm);
+    color: var(--color-mid-grey);
+    margin-top: var(--space-sm);
+    display: block;
+  }
+
+  .article__image {
+    margin-bottom: var(--space-xl);
+  }
+
+  .article__image img {
+    width: 100%;
+    height: auto;
+  }
+
+  .article__body {
+    max-width: 720px;
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-normal);
+  }
+
+  .article__body p {
+    margin-bottom: var(--space-md);
+  }
+
+  .article__body h2,
+  .article__body h3 {
+    margin-top: var(--space-xl);
+    margin-bottom: var(--space-md);
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Article",
+  "tag": "section",
+  "settings": []
+}
+{% endschema %}

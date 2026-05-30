@@ -1,0 +1,199 @@
+{%- comment -%}
+  Main Product Section
+  Two-column layout: 55-60% images left, 40-45% details right (sticky).
+{%- endcomment -%}
+
+{{ 'section-main-product.css' | asset_url | stylesheet_tag }}
+
+<div class="product-page section-padding">
+  <div class="container">
+    {%- comment -%} Breadcrumb {%- endcomment -%}
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a>
+      <span aria-hidden="true">&rsaquo;</span>
+      {%- if collection -%}
+        <a href="{{ collection.url }}">{{ collection.title }}</a>
+        <span aria-hidden="true">&rsaquo;</span>
+      {%- endif -%}
+      <span aria-current="page">{{ product.title }}</span>
+    </nav>
+
+    <div class="product-page__grid">
+      {%- comment -%} Image Gallery (Left) {%- endcomment -%}
+      <div class="product-page__media">
+        <div class="product-page__gallery" data-product-gallery>
+          {%- for media in product.media -%}
+            <div class="product-page__media-item{% if forloop.first %} product-page__media-item--active{% endif %}" data-media-id="{{ media.id }}">
+              {%- if media.media_type == 'image' -%}
+                <img
+                  src="{{ media | image_url: width: 900 }}"
+                  alt="{{ media.alt | escape }}"
+                  width="900"
+                  height="{{ 900 | divided_by: media.aspect_ratio | round }}"
+                  loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                  class="product-page__image"
+                >
+              {%- endif -%}
+            </div>
+          {%- endfor -%}
+        </div>
+
+        {%- comment -%} Thumbnails {%- endcomment -%}
+        {%- if product.media.size > 1 -%}
+          <div class="product-page__thumbnails">
+            {%- for media in product.media -%}
+              <button
+                class="product-page__thumbnail{% if forloop.first %} product-page__thumbnail--active{% endif %}"
+                data-thumbnail="{{ media.id }}"
+                aria-label="View image {{ forloop.index }}"
+              >
+                <img
+                  src="{{ media | image_url: width: 100 }}"
+                  alt=""
+                  width="80"
+                  height="80"
+                  loading="lazy"
+                >
+              </button>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      </div>
+
+      {%- comment -%} Product Details (Right — Sticky) {%- endcomment -%}
+      <div class="product-page__details">
+        {%- comment -%} Product header {%- endcomment -%}
+        <h1 class="product-page__title">{{ product.title }}</h1>
+
+        {%- if product.metafields.reviews.rating.value -%}
+          <div class="product-page__rating">
+            ★ {{ product.metafields.reviews.rating.value }} ({{ product.metafields.reviews.rating_count }} reviews)
+          </div>
+        {%- endif -%}
+
+        <div class="product-page__price" data-product-price>
+          {%- if product.compare_at_price > product.price -%}
+            <span class="product-page__price-sale">{{ product.price | money }}</span>
+            <span class="product-page__price-compare">{{ product.compare_at_price | money }}</span>
+          {%- else -%}
+            <span>{{ product.price | money }}</span>
+          {%- endif -%}
+        </div>
+
+        {%- comment -%} Variant selectors {%- endcomment -%}
+        {%- unless product.has_only_default_variant -%}
+          <div class="product-page__variants" data-variant-picker>
+            {%- for option in product.options_with_values -%}
+              <fieldset class="product-page__option">
+                <legend class="product-page__option-label">
+                  {{ option.name }}{% if option.name == 'Colour' or option.name == 'Color' %}: <span data-selected-color>{{ option.selected_value }}</span>{% endif %}
+                </legend>
+
+                <div class="product-page__option-values">
+                  {%- for value in option.values -%}
+                    <label class="product-page__option-value{% if option.selected_value == value %} product-page__option-value--selected{% endif %}">
+                      <input
+                        type="radio"
+                        name="option-{{ option.name | handleize }}"
+                        value="{{ value | escape }}"
+                        {% if option.selected_value == value %}checked{% endif %}
+                        class="visually-hidden"
+                      >
+                      <span class="product-page__option-label-text">{{ value }}</span>
+                    </label>
+                  {%- endfor -%}
+                </div>
+              </fieldset>
+            {%- endfor -%}
+          </div>
+        {%- endunless -%}
+
+        {%- comment -%} Add to basket {%- endcomment -%}
+        {%- form 'product', product, id: 'product-form', data-product-form: '' -%}
+          <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}" data-variant-id>
+
+          <div class="product-page__quantity">
+            <label for="quantity" class="visually-hidden">Quantity</label>
+            <button type="button" class="product-page__qty-btn" data-qty-minus aria-label="Decrease quantity">−</button>
+            <input type="number" id="quantity" name="quantity" value="1" min="1" class="product-page__qty-input" data-qty-input>
+            <button type="button" class="product-page__qty-btn" data-qty-plus aria-label="Increase quantity">+</button>
+          </div>
+
+          <button
+            type="submit"
+            class="btn btn--primary btn--full-width product-page__atc"
+            {% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}
+          >
+            {%- if product.selected_or_first_available_variant.available -%}
+              Add to Basket
+            {%- else -%}
+              Out of Stock
+            {%- endif -%}
+          </button>
+        {%- endform -%}
+
+        {%- comment -%} Delivery & returns info {%- endcomment -%}
+        <div class="product-page__info-rows">
+          <div class="product-page__info-row">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            <span>Free delivery on orders over £200</span>
+          </div>
+          <div class="product-page__info-row">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+            <span>Easy returns & exchanges</span>
+          </div>
+        </div>
+
+        {%- comment -%} Product description accordion {%- endcomment -%}
+        <div class="product-page__accordions">
+          {%- if product.description != blank -%}
+            <details class="product-page__accordion">
+              <summary class="product-page__accordion-trigger">Description</summary>
+              <div class="product-page__accordion-content">
+                {{ product.description }}
+              </div>
+            </details>
+          {%- endif -%}
+
+          {%- if product.metafields.custom.details -%}
+            <details class="product-page__accordion">
+              <summary class="product-page__accordion-trigger">Product Details</summary>
+              <div class="product-page__accordion-content">
+                {{ product.metafields.custom.details | metafield_tag }}
+              </div>
+            </details>
+          {%- endif -%}
+
+          <details class="product-page__accordion">
+            <summary class="product-page__accordion-trigger">Delivery & Returns</summary>
+            <div class="product-page__accordion-content">
+              <p>Free UK standard delivery on orders over £200. Express delivery available. Easy returns within 30 days of purchase.</p>
+            </div>
+          </details>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Product page",
+  "tag": "section",
+  "class": "main-product-section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable_sticky_details",
+      "label": "Sticky product details (desktop)",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sku",
+      "label": "Show SKU",
+      "default": false
+    }
+  ]
+}
+{% endschema %}

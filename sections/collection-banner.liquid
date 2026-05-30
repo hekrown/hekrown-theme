@@ -1,0 +1,52 @@
+{%- comment -%}
+  Collection Banner / Header
+{%- endcomment -%}
+
+<div class="collection-banner" style="background-color: {{ section.settings.background_color }};">
+  <div class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a>
+      <span aria-hidden="true">&rsaquo;</span>
+      <span aria-current="page">{{ collection.title }}</span>
+    </nav>
+    <h1 class="collection-banner__title">{{ collection.title }}</h1>
+    {%- if collection.description != blank -%}
+      <p class="collection-banner__description">{{ collection.description }}</p>
+    {%- endif -%}
+  </div>
+</div>
+
+<style>
+  .collection-banner {
+    padding: var(--space-xl) 0 var(--space-2xl);
+  }
+
+  .collection-banner__title {
+    font-size: clamp(24px, 4vw, 40px);
+    font-weight: var(--font-weight-bold);
+    margin-top: var(--space-md);
+  }
+
+  .collection-banner__description {
+    font-size: var(--font-size-base);
+    color: var(--color-mid-grey);
+    margin-top: var(--space-sm);
+    max-width: 600px;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Collection banner",
+  "tag": "section",
+  "class": "collection-banner-section",
+  "settings": [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background colour",
+      "default": "#F5F5F5"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,199 @@
+{%- comment -%}
+  Hero / Slideshow Section
+  Full-width, edge-to-edge. 70-90vh desktop, 50-60vh mobile.
+{%- endcomment -%}
+
+<div class="slideshow section-padding" style="--slideshow-height: {{ section.settings.height }}vh;">
+  {%- for block in section.blocks -%}
+    <div
+      class="slideshow__slide{% if forloop.first %} slideshow__slide--active{% endif %}"
+      {{ block.shopify_attributes }}
+    >
+      {%- if block.settings.image != blank -%}
+        <img
+          src="{{ block.settings.image | image_url: width: 1920 }}"
+          alt="{{ block.settings.heading | escape }}"
+          class="slideshow__image"
+          loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+          width="1920"
+          height="{{ 1920 | divided_by: block.settings.image.aspect_ratio | round }}"
+        >
+      {%- else -%}
+        <div class="slideshow__placeholder"></div>
+      {%- endif -%}
+
+      <div class="slideshow__content slideshow__content--{{ block.settings.text_position }}">
+        {%- if block.settings.heading != blank -%}
+          <h2 class="slideshow__heading" style="color: {{ block.settings.text_color }};">
+            {{ block.settings.heading }}
+          </h2>
+        {%- endif -%}
+        {%- if block.settings.subheading != blank -%}
+          <p class="slideshow__subheading" style="color: {{ block.settings.text_color }};">
+            {{ block.settings.subheading }}
+          </p>
+        {%- endif -%}
+        {%- if block.settings.button_text != blank -%}
+          <a href="{{ block.settings.button_link }}" class="btn btn--primary slideshow__btn">
+            {{ block.settings.button_text }}
+          </a>
+        {%- endif -%}
+      </div>
+    </div>
+  {%- endfor -%}
+</div>
+
+<style>
+  .slideshow {
+    position: relative;
+    width: 100%;
+    height: var(--slideshow-height, 80vh);
+    overflow: hidden;
+  }
+
+  @media (max-width: 639px) {
+    .slideshow {
+      height: 55vh;
+    }
+  }
+
+  .slideshow__slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+  }
+
+  .slideshow__slide--active {
+    opacity: 1;
+    position: relative;
+  }
+
+  .slideshow__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .slideshow__placeholder {
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-off-white);
+  }
+
+  .slideshow__content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
+    padding: var(--space-xl) var(--container-padding-mobile);
+    gap: var(--space-md);
+  }
+
+  @media (min-width: 1024px) {
+    .slideshow__content {
+      padding: var(--space-3xl) var(--container-padding);
+    }
+  }
+
+  .slideshow__content--center {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  .slideshow__heading {
+    font-size: clamp(32px, 5vw, 60px);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-tight);
+    color: var(--color-white);
+  }
+
+  .slideshow__subheading {
+    font-size: clamp(14px, 2vw, 18px);
+    font-weight: var(--font-weight-regular);
+    color: var(--color-white);
+    max-width: 500px;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Slideshow",
+  "tag": "section",
+  "class": "slideshow-section",
+  "settings": [
+    {
+      "type": "range",
+      "id": "height",
+      "label": "Slide height (vh)",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "default": 80,
+      "unit": "vh"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Your headline here"
+        },
+        {
+          "type": "text",
+          "id": "subheading",
+          "label": "Subheading"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button text",
+          "default": "Shop Now"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button link"
+        },
+        {
+          "type": "select",
+          "id": "text_position",
+          "label": "Text position",
+          "options": [
+            { "value": "bottom-left", "label": "Bottom left" },
+            { "value": "center", "label": "Centre" }
+          ],
+          "default": "bottom-left"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Text colour",
+          "default": "#FFFFFF"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Slideshow",
+      "blocks": [
+        { "type": "slide", "settings": { "heading": "New Season Collection" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

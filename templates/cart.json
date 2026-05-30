@@ -1,0 +1,18 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-cart",
+      "settings": {}
+    },
+    "recommendations": {
+      "type": "cart-recommendations",
+      "settings": {
+        "heading": "You May Also Like"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "recommendations"
+  ]
+}
