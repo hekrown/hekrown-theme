@@ -44,6 +44,21 @@
       },
       "block_order": ["link_1", "link_2", "link_3", "link_4", "link_5"]
     },
+    "split_panel_suits": {
+      "type": "split-panel",
+      "settings": {
+        "label": "Suits",
+        "link": "/collections/new-arrivals"
+      }
+    },
+    "full_banner_shirts": {
+      "type": "full-banner",
+      "settings": {
+        "label": "Shirts",
+        "link": "/collections/shirts",
+        "height": 70
+      }
+    },
     "collection_grid": {
       "type": "collection-grid",
       "settings": {
@@ -118,6 +133,8 @@
   },
   "order": [
     "sticky-hero",
+    "split_panel_suits",
+    "full_banner_shirts",
     "collection_grid",
     "featured_collection",
     "featured_collection_2",

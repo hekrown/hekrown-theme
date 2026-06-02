@@ -1,0 +1,150 @@
+{%- comment -%}
+  Full Width Banner Section
+  Single full-width landscape/cinematic image with category label bottom-left.
+  Entire section links to a collection.
+  Used for: Shirts, Linen Wear, Essentials etc.
+{%- endcomment -%}
+
+<a
+  href="{{ section.settings.link | default: '#' }}"
+  class="full-banner"
+  style="--banner-height: {{ section.settings.height }}vh;"
+  aria-label="{{ section.settings.label | default: 'View collection' }}"
+>
+  {%- if section.settings.image != blank -%}
+    <img
+      src="{{ section.settings.image | image_url: width: 2000 }}"
+      alt="{{ section.settings.image.alt | default: section.settings.label | escape }}"
+      class="full-banner__img"
+      loading="lazy"
+      width="2000"
+      height="{{ 2000 | divided_by: section.settings.image.aspect_ratio | round }}"
+    >
+  {%- else -%}
+    <div class="full-banner__placeholder">
+      <svg viewBox="0 0 1200 600" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect width="1200" height="600" fill="#f0f0f0"/>
+        <text x="600" y="310" text-anchor="middle" font-family="sans-serif" font-size="18" fill="#999">Add image</text>
+      </svg>
+    </div>
+  {%- endif -%}
+
+  {%- if section.settings.label != blank -%}
+    <span class="full-banner__label">{{ section.settings.label }}</span>
+  {%- endif -%}
+</a>
+
+<style>
+  .full-banner {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: var(--banner-height, 70vh);
+    overflow: hidden;
+    text-decoration: none;
+    background-color: var(--color-off-white);
+  }
+
+  .full-banner:hover {
+    text-decoration: none;
+  }
+
+  .full-banner__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    display: block;
+    transition: transform var(--transition-slow);
+  }
+
+  .full-banner:hover .full-banner__img {
+    transform: scale(1.02);
+  }
+
+  .full-banner__placeholder {
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-off-white);
+  }
+
+  .full-banner__placeholder svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Label — bottom left, same style as Moss */
+  .full-banner__label {
+    position: absolute;
+    bottom: var(--space-lg);
+    left: var(--space-lg);
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-white);
+    letter-spacing: var(--letter-spacing-tight);
+    pointer-events: none;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  }
+
+  @media (min-width: 1024px) {
+    .full-banner__label {
+      font-size: var(--font-size-xl);
+      bottom: var(--space-xl);
+      left: var(--space-xl);
+    }
+  }
+
+  /* Mobile — reduce height */
+  @media (max-width: 639px) {
+    .full-banner {
+      height: 50vh;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Full Width Banner",
+  "tag": "section",
+  "class": "full-banner-section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Category label",
+      "default": "Shirts",
+      "info": "Displayed bottom-left over the image"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Collection link"
+    },
+    {
+      "type": "range",
+      "id": "height",
+      "label": "Banner height",
+      "min": 40,
+      "max": 100,
+      "step": 5,
+      "default": 70,
+      "unit": "vh"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Full Width Banner",
+      "settings": {
+        "label": "Shirts",
+        "link": "/collections/shirts",
+        "height": 70
+      }
+    }
+  ]
+}
+{% endschema %}
