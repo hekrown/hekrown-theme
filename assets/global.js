@@ -316,6 +316,7 @@ document.addEventListener('cart:updated', (event) => {
 
 /* ==========================================================================
    Cart Drawer
+   Only active if cart type is set to drawer
    ========================================================================== */
 
 (function () {
@@ -323,13 +324,15 @@ document.addEventListener('cart:updated', (event) => {
   var drawer    = document.querySelector('[data-cart-drawer]');
   var overlay   = document.querySelector('[data-cart-overlay]');
   var closeBtn  = document.querySelector('[data-cart-drawer-close]');
+  
+  // Exit if cart drawer doesn't exist (cart type = page)
+  if (!toggleBtn || !drawer) return;
+  
   var drawerItems   = document.querySelector('[data-drawer-items]');
   var drawerEmpty   = document.querySelector('[data-drawer-empty]');
   var drawerFooter  = document.querySelector('[data-drawer-footer]');
   var drawerCount   = document.querySelector('[data-drawer-count]');
   var drawerSubtotal = document.querySelector('[data-drawer-subtotal]');
-
-  if (!toggleBtn || !drawer) return;
 
   // ── Format money ─────────────────────────────────────────────────────────
   function fmt(cents) {

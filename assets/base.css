@@ -291,3 +291,48 @@ h1, h2, h3, h4, h5, h6 {
    Desktop: 1024px – 1280px
    Large:   1280px+
    -------------------------------------------------------------------------- */
+
+/* --------------------------------------------------------------------------
+   Homepage Transparent Header Overlay & Stacking
+   -------------------------------------------------------------------------- */
+.template-index .header-section {
+  position: relative;
+  z-index: 1010;
+}
+
+.template-index .site-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: transparent !important;
+  border-bottom: none !important;
+  transition: background-color var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.template-index .site-header:not(.site-header--scrolled) .site-header__nav-link,
+.template-index .site-header:not(.site-header--scrolled) .site-header__icon-btn,
+.template-index .site-header:not(.site-header--scrolled) .site-header__menu-toggle svg,
+.template-index .site-header:not(.site-header--scrolled) .site-header__logo span {
+  color: var(--color-white) !important;
+  stroke: var(--color-white) !important;
+}
+
+.template-index .site-header:not(.site-header--scrolled) .site-header__logo img {
+  filter: invert(1) brightness(2);
+}
+
+/* When scrolled, transition header to fixed, solid state */
+.template-index .site-header--scrolled {
+  position: fixed !important;
+  top: 0 !important;
+  background-color: var(--color-white) !important;
+  border-bottom: 1px solid var(--color-border) !important;
+}
+
+/* Ensure subsequent homepage sections scroll over the sticky hero background */
+.template-index #main-content > *:not(.shopify-section--sticky-hero) {
+  position: relative;
+  z-index: 2;
+  background-color: var(--color-white);
+}
+
