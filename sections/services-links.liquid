@@ -1,0 +1,169 @@
+{%- comment -%}
+  Services Links Section
+  Left: single image. Right: black background with vertical list of service links.
+  Mirrors the Moss.co.uk Gift Card / Services panel.
+{%- endcomment -%}
+
+<div class="services-links">
+  {%- comment -%} Left — image {%- endcomment -%}
+  <div class="services-links__media">
+    {%- if section.settings.image != blank -%}
+      <img
+        src="{{ section.settings.image | image_url: width: 1000 }}"
+        alt="{{ section.settings.image.alt | default: 'Services' | escape }}"
+        class="services-links__img"
+        loading="lazy"
+        width="1000"
+        height="{{ 1000 | divided_by: section.settings.image.aspect_ratio | round }}"
+      >
+    {%- else -%}
+      <div class="services-links__placeholder">
+        <svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect width="500" height="500" fill="#2a2a2a"/>
+          <text x="250" y="260" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#666">Add image</text>
+        </svg>
+      </div>
+    {%- endif -%}
+  </div>
+
+  {%- comment -%} Right — black panel with links {%- endcomment -%}
+  <div class="services-links__panel">
+    <nav class="services-links__list" aria-label="Services">
+      {%- for block in section.blocks -%}
+        <a
+          href="{{ block.settings.link | default: '#' }}"
+          class="services-links__link{% if block.settings.underline %} services-links__link--underline{% endif %}"
+          {{ block.shopify_attributes }}
+        >
+          {{ block.settings.label }}
+        </a>
+      {%- endfor -%}
+    </nav>
+  </div>
+</div>
+
+<style>
+  .services-links {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 400px;
+  }
+
+  @media (max-width: 639px) {
+    .services-links {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Left image */
+  .services-links__media {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .services-links__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .services-links__placeholder {
+    width: 100%;
+    height: 100%;
+    min-height: 400px;
+    background-color: #2a2a2a;
+  }
+
+  .services-links__placeholder svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Right black panel */
+  .services-links__panel {
+    background-color: var(--color-black);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-2xl) var(--space-xl);
+  }
+
+  .services-links__list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-xl);
+  }
+
+  .services-links__link {
+    font-size: clamp(16px, 2vw, 22px);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-white);
+    text-decoration: none;
+    letter-spacing: var(--letter-spacing-tight);
+    transition: opacity var(--transition-fast);
+  }
+
+  .services-links__link:hover {
+    opacity: 0.6;
+    text-decoration: none;
+  }
+
+  .services-links__link--underline {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Services Links",
+  "tag": "section",
+  "class": "services-links-section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Left image"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "link",
+      "name": "Service Link",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Hire"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "checkbox",
+          "id": "underline",
+          "label": "Underline",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Services Links",
+      "blocks": [
+        { "type": "link", "settings": { "label": "Hire", "link": "/pages/contact" } },
+        { "type": "link", "settings": { "label": "Custom Made", "link": "/pages/contact" } },
+        { "type": "link", "settings": { "label": "Size Guide", "link": "/pages/contact" } },
+        { "type": "link", "settings": { "label": "Gift Cards", "link": "/pages/contact" } },
+        { "type": "link", "settings": { "label": "Editorial", "link": "/pages/contact", "underline": true } }
+      ]
+    }
+  ]
+}
+{% endschema %}
