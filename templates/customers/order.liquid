@@ -1,0 +1,159 @@
+{{ 'customer-account.css' | asset_url | stylesheet_tag }}
+
+<div class="account">
+  <div class="account__container">
+    <div class="account__header">
+      <a href="{{ routes.account_url }}" style="font-size: var(--font-size-sm); color: var(--color-mid-grey); text-decoration: none; display: inline-flex; align-items: center; gap: 4px; margin-bottom: var(--space-sm);">
+        ← {{ 'customer.account.return_to_account' | t }}
+      </a>
+      <h1 class="account__title">{{ 'customer.order.title' | t: name: order.name }}</h1>
+      <p class="account__subtitle">
+        {{ order.created_at | date: '%B %d, %Y' }}
+      </p>
+    </div>
+
+    {%- if order.cancelled -%}
+      <div class="account-notice account-notice--error">
+        <strong>Order cancelled on {{ order.cancelled_at | date: '%B %d, %Y' }}</strong>
+        <p>{{ 'customer.order.cancelled_reason' | t: reason: order.cancel_reason_label }}</p>
+      </div>
+    {%- endif -%}
+
+    <div class="order-detail">
+      <div class="order-detail__header">
+        <div>
+          <h2 class="order-detail__title">{{ 'customer.order.order_details' | t }}</h2>
+          <div class="order-detail__meta">
+            <span class="order-status order-status--{{ order.financial_status | handle }}">
+              {{ order.financial_status_label }}
+            </span>
+            {%- if order.fulfillment_status -%}
+              <span class="order-status order-status--{{ order.fulfillment_status | handle }}" style="margin-left: 8px;">
+                {{ order.fulfillment_status_label }}
+              </span>
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+
+      {%- comment -%} Order Items {%- endcomment -%}
+      <div class="order-detail__items">
+        <h3 style="font-size: var(--font-size-md); font-weight: var(--font-weight-semibold); margin-bottom: var(--space-md);">
+          {{ 'customer.order.items' | t }}
+        </h3>
+
+        {%- for line_item in order.line_items -%}
+          <div class="order-item">
+            {%- if line_item.image -%}
+              <img
+                src="{{ line_item.image | image_url: width: 160 }}"
+                alt="{{ line_item.image.alt | escape }}"
+                class="order-item__image"
+                width="80"
+                height="100"
+                loading="lazy"
+              >
+            {%- else -%}
+              <div class="order-item__image" style="background-color: var(--color-off-white);"></div>
+            {%- endif -%}
+
+            <div class="order-item__details">
+              <h4 class="order-item__title">
+                {%- if line_item.url -%}
+                  <a href="{{ line_item.url }}">{{ line_item.title }}</a>
+                {%- else -%}
+                  {{ line_item.title }}
+                {%- endif -%}
+              </h4>
+
+              {%- unless line_item.variant.title contains 'Default' -%}
+                <p class="order-item__variant">{{ line_item.variant.title }}</p>
+              {%- endunless -%}
+
+              {%- if line_item.sku != blank -%}
+                <p class="order-item__variant">SKU: {{ line_item.sku }}</p>
+              {%- endif -%}
+
+              <p class="order-item__price">
+                {{ line_item.final_price | money }} &times; {{ line_item.quantity }}
+              </p>
+
+              {%- if line_item.fulfillment -%}
+                <div style="margin-top: var(--space-sm); font-size: var(--font-size-xs); color: var(--color-mid-grey);">
+                  {{ 'customer.order.fulfilled' | t: date: line_item.fulfillment.created_at | date: format: 'date' }}
+                  {%- if line_item.fulfillment.tracking_number -%}
+                    <br>
+                    <a href="{{ line_item.fulfillment.tracking_url }}" target="_blank">
+                      {{ 'customer.order.track_shipment' | t }}
+                    </a>
+                  {%- endif -%}
+                </div>
+              {%- endif -%}
+            </div>
+
+            <div style="text-align: right; font-weight: var(--font-weight-medium);">
+              {{ line_item.final_line_price | money }}
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+
+      {%- comment -%} Order Summary {%- endcomment -%}
+      <div class="order-summary">
+        <div class="order-summary__row">
+          <span>{{ 'customer.order.subtotal' | t }}</span>
+          <span>{{ order.line_items_subtotal_price | money }}</span>
+        </div>
+
+        {%- if order.cart_level_discount_applications.size > 0 -%}
+          {%- for discount in order.cart_level_discount_applications -%}
+            <div class="order-summary__row">
+              <span>{{ 'customer.order.discount' | t }} ({{ discount.title }})</span>
+              <span>-{{ discount.total_allocated_amount | money }}</span>
+            </div>
+          {%- endfor -%}
+        {%- endif -%}
+
+        {%- for shipping_method in order.shipping_methods -%}
+          <div class="order-summary__row">
+            <span>{{ 'customer.order.shipping' | t }} ({{ shipping_method.title }})</span>
+            <span>{{ shipping_method.price | money }}</span>
+          </div>
+        {%- endfor -%}
+
+        {%- for tax_line in order.tax_lines -%}
+          <div class="order-summary__row">
+            <span>{{ 'customer.order.tax' | t }} ({{ tax_line.title }} {{ tax_line.rate_percentage }}%)</span>
+            <span>{{ tax_line.price | money }}</span>
+          </div>
+        {%- endfor -%}
+
+        <div class="order-summary__row order-summary__row--total">
+          <span>{{ 'customer.order.total' | t }}</span>
+          <span>{{ order.total_price | money_with_currency }}</span>
+        </div>
+      </div>
+
+      {%- comment -%} Billing & Shipping {%- endcomment -%}
+      <div style="display: grid; grid-template-columns: 1fr; gap: var(--space-xl); margin-top: var(--space-2xl);">
+        <div>
+          <h3 style="font-size: var(--font-size-base); font-weight: var(--font-weight-semibold); margin-bottom: var(--space-sm);">
+            {{ 'customer.order.billing_address' | t }}
+          </h3>
+          <address style="font-style: normal; line-height: var(--line-height-normal); color: var(--color-dark-grey); font-size: var(--font-size-sm);">
+            {{ order.billing_address | format_address }}
+          </address>
+        </div>
+
+        <div>
+          <h3 style="font-size: var(--font-size-base); font-weight: var(--font-weight-semibold); margin-bottom: var(--space-sm);">
+            {{ 'customer.order.shipping_address' | t }}
+          </h3>
+          <address style="font-style: normal; line-height: var(--line-height-normal); color: var(--color-dark-grey); font-size: var(--font-size-sm);">
+            {{ order.shipping_address | format_address }}
+          </address>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

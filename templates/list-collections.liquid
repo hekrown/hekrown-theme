@@ -1,0 +1,157 @@
+{{ 'section-main-collection.css' | asset_url | stylesheet_tag }}
+
+<div class="collection-list section-padding">
+  <div class="container">
+    <div class="collection-list__header">
+      <h1 class="collection-list__title">{{ 'collections.general.title' | t }}</h1>
+      {%- if collections.size > 0 -%}
+        <p class="collection-list__count">{{ 'collections.general.count' | t: count: collections.size }}</p>
+      {%- endif -%}
+    </div>
+
+    {%- if collections.size > 0 -%}
+      <div class="collection-list__grid">
+        {%- for collection in collections -%}
+          {%- unless collection.handle == 'frontpage' -%}
+            <a href="{{ collection.url }}" class="collection-list__card">
+              <div class="collection-list__image-wrapper">
+                {%- if collection.image -%}
+                  <img
+                    src="{{ collection.image | image_url: width: 800 }}"
+                    alt="{{ collection.image.alt | escape | default: collection.title }}"
+                    class="collection-list__image"
+                    loading="lazy"
+                    width="800"
+                    height="{{ 800 | divided_by: collection.image.aspect_ratio | round }}"
+                  >
+                {%- elsif collection.products.first and collection.products.first.featured_image -%}
+                  <img
+                    src="{{ collection.products.first.featured_image | image_url: width: 800 }}"
+                    alt="{{ collection.products.first.featured_image.alt | escape | default: collection.title }}"
+                    class="collection-list__image"
+                    loading="lazy"
+                    width="800"
+                    height="{{ 800 | divided_by: collection.products.first.featured_image.aspect_ratio | round }}"
+                  >
+                {%- else -%}
+                  <div class="collection-list__placeholder">
+                    {{ 'collection-' | append: forloop.index | placeholder_svg_tag: 'collection-list__placeholder-svg' }}
+                  </div>
+                {%- endif -%}
+              </div>
+
+              <div class="collection-list__info">
+                <h2 class="collection-list__card-title">{{ collection.title }}</h2>
+                <p class="collection-list__product-count">
+                  {{ 'collections.general.items_with_count' | t: count: collection.products_count }}
+                </p>
+              </div>
+            </a>
+          {%- endunless -%}
+        {%- endfor -%}
+      </div>
+    {%- else -%}
+      <div class="account-empty" style="padding: var(--space-3xl) 0;">
+        <div class="account-empty__icon">📦</div>
+        <h3 class="account-empty__title">{{ 'collections.general.no_collections' | t }}</h3>
+        <p class="account-empty__text">{{ 'collections.general.no_collections_description' | t }}</p>
+        <a href="{{ routes.all_products_collection_url }}" class="btn btn--primary">
+          {{ 'collections.general.view_all_products' | t }}
+        </a>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+<style>
+  .collection-list__header {
+    margin-bottom: var(--space-xl);
+    text-align: center;
+  }
+
+  .collection-list__title {
+    font-size: clamp(24px, 4vw, 40px);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--space-sm);
+  }
+
+  .collection-list__count {
+    font-size: var(--font-size-base);
+    color: var(--color-mid-grey);
+  }
+
+  .collection-list__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--grid-gutter);
+  }
+
+  @media (min-width: 640px) {
+    .collection-list__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .collection-list__grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .collection-list__card {
+    display: block;
+    text-decoration: none;
+    transition: transform var(--transition-normal);
+  }
+
+  .collection-list__card:hover {
+    transform: translateY(-4px);
+  }
+
+  .collection-list__image-wrapper {
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background-color: var(--color-off-white);
+    margin-bottom: var(--space-md);
+  }
+
+  .collection-list__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-slow);
+  }
+
+  .collection-list__card:hover .collection-list__image {
+    transform: scale(1.05);
+  }
+
+  .collection-list__placeholder {
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-off-white);
+  }
+
+  .collection-list__placeholder-svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .collection-list__info {
+    text-align: center;
+  }
+
+  .collection-list__card-title {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-black);
+    margin-bottom: 4px;
+  }
+
+  .collection-list__product-count {
+    font-size: var(--font-size-sm);
+    color: var(--color-mid-grey);
+  }
+</style>

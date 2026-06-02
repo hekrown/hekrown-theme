@@ -1,0 +1,100 @@
+{{ 'customer-account.css' | asset_url | stylesheet_tag }}
+
+<div class="auth-page">
+  <div class="auth-page__container">
+    <div class="auth-page__header">
+      <h1 class="auth-page__title">{{ 'customer.register.title' | t }}</h1>
+      <p class="auth-page__subtitle">{{ 'customer.register.subtitle' | t }}</p>
+    </div>
+
+    {%- form 'create_customer', class: 'auth-page__form account-form', novalidate: 'novalidate' -%}
+      {%- if form.errors -%}
+        <div class="account-notice account-notice--error">
+          <strong>{{ 'form.errors.heading' | t }}</strong>
+          <ul>
+            {%- for field in form.errors -%}
+              <li>{{ form.errors.messages[field] }}</li>
+            {%- endfor -%}
+          </ul>
+        </div>
+      {%- endif -%}
+
+      <div class="form-row--half">
+        <div class="form-row">
+          <label for="register-first-name" class="form-label form-label--required">
+            {{ 'customer.register.first_name' | t }}
+          </label>
+          <input
+            type="text"
+            id="register-first-name"
+            name="customer[first_name]"
+            class="form-input"
+            autocomplete="given-name"
+            required
+            {% if form.first_name %}value="{{ form.first_name }}"{% endif %}
+          >
+        </div>
+
+        <div class="form-row">
+          <label for="register-last-name" class="form-label form-label--required">
+            {{ 'customer.register.last_name' | t }}
+          </label>
+          <input
+            type="text"
+            id="register-last-name"
+            name="customer[last_name]"
+            class="form-input"
+            autocomplete="family-name"
+            required
+            {% if form.last_name %}value="{{ form.last_name }}"{% endif %}
+          >
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label for="register-email" class="form-label form-label--required">
+          {{ 'customer.register.email' | t }}
+        </label>
+        <input
+          type="email"
+          id="register-email"
+          name="customer[email]"
+          class="form-input"
+          autocomplete="email"
+          autocorrect="off"
+          autocapitalize="off"
+          required
+          {% if form.email %}value="{{ form.email }}"{% endif %}
+        >
+      </div>
+
+      <div class="form-row">
+        <label for="register-password" class="form-label form-label--required">
+          {{ 'customer.register.password' | t }}
+        </label>
+        <input
+          type="password"
+          id="register-password"
+          name="customer[password]"
+          class="form-input"
+          autocomplete="new-password"
+          required
+        >
+        <small class="form-helper" style="font-size: var(--font-size-xs); color: var(--color-mid-grey); margin-top: 4px;">
+          {{ 'customer.register.password_hint' | t }}
+        </small>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn--primary btn--full-width">
+          {{ 'customer.register.submit' | t }}
+        </button>
+      </div>
+    {%- endform -%}
+
+    <div class="auth-page__footer">
+      {{ 'customer.register.already_have_account' | t }}
+      <a href="{{ routes.account_login_url }}">{{ 'customer.register.sign_in' | t }}</a>
+    </div>
+  </div>
+</div>

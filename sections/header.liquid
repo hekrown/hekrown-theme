@@ -16,7 +16,7 @@
     </button>
 
     {%- comment -%} Logo {%- endcomment -%}
-    <a href="/" class="site-header__logo" aria-label="{{ shop.name }}">
+    <a href="{{ routes.root_url }}" class="site-header__logo" aria-label="{{ shop.name }}">
       {%- if settings.logo != blank -%}
         <img
           src="{{ settings.logo | image_url: width: 240 }}"
@@ -78,29 +78,57 @@
         </svg>
       </button>
 
+      {%- comment -%} Wishlist {%- endcomment -%}
+      <button
+        class="site-header__icon-btn"
+        aria-label="Open wishlist"
+        aria-expanded="false"
+        data-wishlist-drawer-toggle
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="none" stroke="currentColor" stroke-width="1.5"/>
+        </svg>
+        <span class="site-header__badge" data-wishlist-count hidden>0</span>
+      </button>
+
       {%- comment -%} Account {%- endcomment -%}
-      <a href="/account" class="site-header__icon-btn" aria-label="Account">
+      <a href="{{ routes.account_url }}" class="site-header__icon-btn" aria-label="Account">
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <circle cx="12" cy="8" r="4"/>
           <path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/>
         </svg>
       </a>
 
-      {%- comment -%} Cart — triggers drawer {%- endcomment -%}
-      <button
-        class="site-header__icon-btn"
-        aria-label="Open basket"
-        aria-expanded="false"
-        aria-controls="cart-drawer"
-        data-cart-drawer-toggle
-      >
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
-          <line x1="3" y1="6" x2="21" y2="6"/>
-          <path d="M16 10a4 4 0 0 1-8 0"/>
-        </svg>
-        <span class="site-header__badge" data-cart-count hidden>0</span>
-      </button>
+      {%- comment -%} Cart — triggers drawer or goes to cart page {%- endcomment -%}
+      {%- if settings.cart_type == 'drawer' -%}
+        <button
+          class="site-header__icon-btn"
+          aria-label="Open basket"
+          aria-expanded="false"
+          aria-controls="cart-drawer"
+          data-cart-drawer-toggle
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <path d="M16 10a4 4 0 0 1-8 0"/>
+          </svg>
+          <span class="site-header__badge" data-cart-count hidden>0</span>
+        </button>
+      {%- else -%}
+        <a
+          href="{{ routes.cart_url }}"
+          class="site-header__icon-btn"
+          aria-label="View basket"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <path d="M16 10a4 4 0 0 1-8 0"/>
+          </svg>
+          <span class="site-header__badge" data-cart-count hidden>0</span>
+        </a>
+      {%- endif -%}
     </div>
   </div>
 </header>
@@ -116,7 +144,7 @@
   data-search-overlay
 >
   <div class="search-overlay__inner">
-    <form action="/search" method="get" class="search-overlay__form" role="search">
+    <form action="{{ routes.search_url }}" method="get" class="search-overlay__form" role="search">
       <input type="hidden" name="type" value="product">
       <label for="search-input" class="visually-hidden">Search</label>
       <input
@@ -167,12 +195,13 @@
 >
   {%- comment -%} Drawer header: logo + close button {%- endcomment -%}
   <div class="mobile-nav__header">
-    <a href="/" class="mobile-nav__logo" aria-label="{{ shop.name }}">
+    <a href="{{ routes.root_url }}" class="mobile-nav__logo" aria-label="{{ shop.name }}">
       {%- if settings.logo != blank -%}
         <img
           src="{{ settings.logo | image_url: width: 200 }}"
           alt="{{ shop.name }}"
           width="120"
+          height="40"
           loading="lazy"
         >
       {%- else -%}
@@ -208,14 +237,14 @@
 
   {%- comment -%} Utility links at bottom of drawer {%- endcomment -%}
   <div class="mobile-nav__footer">
-    <a href="/account" class="mobile-nav__utility-link">
+    <a href="{{ routes.account_url }}" class="mobile-nav__utility-link">
       <svg viewBox="0 0 24 24" aria-hidden="true" width="18" height="18">
         <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.5" fill="none"/>
         <path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1" stroke="currentColor" stroke-width="1.5" fill="none"/>
       </svg>
       Account
     </a>
-    <a href="/search" class="mobile-nav__utility-link">
+    <a href="{{ routes.search_url }}" class="mobile-nav__utility-link">
       <svg viewBox="0 0 24 24" aria-hidden="true" width="18" height="18">
         <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.5" fill="none"/>
         <line x1="16.5" y1="16.5" x2="21" y2="21" stroke="currentColor" stroke-width="1.5"/>
@@ -228,7 +257,9 @@
 {%- comment -%} ============================================================
   Cart Drawer
   Slide-out mini cart from the right side.
+  Only rendered if cart type is set to drawer.
 ============================================================ {%- endcomment -%}
+{%- if settings.cart_type == 'drawer' -%}
 <div class="cart-drawer__overlay" aria-hidden="true" data-cart-overlay></div>
 
 <div
@@ -258,10 +289,111 @@
       <span>Subtotal</span>
       <span data-drawer-subtotal></span>
     </div>
-    <a href="/cart" class="btn btn--secondary btn--full-width cart-drawer__view-cart">View Basket</a>
+    <a href="{{ routes.cart_url }}" class="btn btn--secondary btn--full-width cart-drawer__view-cart">View Basket</a>
     <a href="/checkout" class="btn btn--primary btn--full-width cart-drawer__checkout">Proceed to Checkout</a>
   </div>
 </div>
+{%- endif -%}
+
+{%- comment -%} ============================================================
+  Wishlist Drawer
+  ============================================================ {%- endcomment -%}
+<div class="cart-drawer__overlay" aria-hidden="true" data-wishlist-overlay></div>
+
+<div
+  id="wishlist-drawer"
+  class="cart-drawer"
+  aria-hidden="true"
+  aria-label="Your wishlist"
+  data-wishlist-drawer
+>
+  <div class="cart-drawer__header">
+    <h2 class="cart-drawer__title">Your Wishlist (<span data-wishlist-count>0</span>)</h2>
+    <button class="cart-drawer__close" aria-label="Close wishlist" data-wishlist-drawer-close>
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+        <line x1="4" y1="4" x2="20" y2="20" stroke="currentColor" stroke-width="1.5"/>
+        <line x1="20" y1="4" x2="4" y2="20" stroke="currentColor" stroke-width="1.5"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="cart-drawer__body" data-drawer-body>
+    <p class="cart-drawer__empty" data-wishlist-empty>Your wishlist is empty</p>
+    <div class="wishlist-drawer__items" data-wishlist-items></div>
+  </div>
+
+  <div class="cart-drawer__footer" data-wishlist-footer style="display:none;">
+    <a href="/pages/wishlist" class="btn btn--secondary btn--full-width">View Full Wishlist</a>
+    <a href="{{ routes.all_products_collection_url }}" class="btn btn--primary btn--full-width">Continue Shopping</a>
+  </div>
+</div>
+
+<style>
+  .wishlist-drawer__items {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .wishlist-drawer__item {
+    display: flex;
+    gap: var(--space-md);
+    padding-bottom: var(--space-md);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .wishlist-drawer__item-img-link {
+    flex-shrink: 0;
+  }
+
+  .wishlist-drawer__item-img-link img {
+    width: 72px;
+    height: 90px;
+    object-fit: cover;
+    background-color: var(--color-off-white);
+  }
+
+  .wishlist-drawer__item-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .wishlist-drawer__item-title {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-black);
+    text-decoration: none;
+    line-height: 1.3;
+  }
+
+  .wishlist-drawer__item-title:hover {
+    text-decoration: underline;
+  }
+
+  .wishlist-drawer__item-price {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .wishlist-drawer__remove {
+    font-size: var(--font-size-xs);
+    color: var(--color-mid-grey);
+    text-decoration: underline;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+    align-self: flex-start;
+  }
+
+  .wishlist-drawer__remove:hover {
+    color: var(--color-black);
+  }
+</style>
+
+<script src="{{ 'wishlist.js' | asset_url }}" defer></script>
 
 {% schema %}
 {

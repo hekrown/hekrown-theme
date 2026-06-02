@@ -4,7 +4,41 @@
   "sections": {
     "footer": {
       "type": "footer",
-      "settings": {}
+      "settings": {
+        "show_newsletter": true,
+        "newsletter_heading": "Stay in the loop"
+      },
+      "blocks": {
+        "col_about": {
+          "type": "text",
+          "settings": {
+            "heading": "About",
+            "content": "<p>Refined, contemporary clothing crafted for the modern wardrobe. Quality you can feel.</p>"
+          }
+        },
+        "col_help": {
+          "type": "link_list",
+          "settings": {
+            "heading": "Help & Info",
+            "menu": "footer"
+          }
+        },
+        "col_account": {
+          "type": "link_list",
+          "settings": {
+            "heading": "My Account",
+            "menu": "footer"
+          }
+        },
+        "col_services": {
+          "type": "text",
+          "settings": {
+            "heading": "Contact",
+            "content": "<p>Email: hello@hekrown.com</p><p>Mon–Fri, 9am–5pm</p>"
+          }
+        }
+      },
+      "block_order": ["col_about", "col_help", "col_account", "col_services"]
     }
   },
   "order": [

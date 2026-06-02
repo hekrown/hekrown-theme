@@ -1,0 +1,43 @@
+{%- comment -%}
+  Organization Schema for homepage and site-wide context
+{%- endcomment -%}
+{%- liquid
+  assign social_links = ''
+  if settings.social_instagram != blank
+    assign social_links = social_links | append: settings.social_instagram | append: '|'
+  endif
+  if settings.social_facebook != blank
+    assign social_links = social_links | append: settings.social_facebook | append: '|'
+  endif
+  if settings.social_pinterest != blank
+    assign social_links = social_links | append: settings.social_pinterest | append: '|'
+  endif
+  if settings.social_tiktok != blank
+    assign social_links = social_links | append: settings.social_tiktok | append: '|'
+  endif
+  if settings.social_youtube != blank
+    assign social_links = social_links | append: settings.social_youtube | append: '|'
+  endif
+  assign social_array = social_links | split: '|' | compact
+-%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": {{ shop.name | json }},
+  "url": {{ shop.url | json }}
+  {%- if settings.logo -%}
+  ,"logo": {{ settings.logo | image_url: width: 600 | prepend: 'https:' | json }}
+  {%- endif -%}
+  {%- if shop.description -%}
+  ,"description": {{ shop.description | json }}
+  {%- endif -%}
+  {%- if social_array.size > 0 -%}
+  ,"sameAs": [
+    {%- for link in social_array -%}
+      {{ link | json }}{% unless forloop.last %},{% endunless %}
+    {%- endfor -%}
+  ]
+  {%- endif -%}
+}
+</script>

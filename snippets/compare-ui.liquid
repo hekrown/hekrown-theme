@@ -1,0 +1,200 @@
+{%- comment -%}
+  Compare UI — sticky bar and modal
+  Include once in theme.liquid before </body>
+{%- endcomment -%}
+
+{%- comment -%} Sticky Compare Bar {%- endcomment -%}
+<div
+  class="compare-bar"
+  data-compare-bar
+  style="display: none;"
+  aria-live="polite"
+>
+  <div class="compare-bar__inner">
+    <span class="compare-bar__text">
+      <span data-compare-bar-count>0</span> product<span data-compare-bar-plural>s</span> selected
+    </span>
+    <div class="compare-bar__actions">
+      <button
+        type="button"
+        class="btn btn--primary"
+        data-compare-view
+        disabled
+      >
+        Compare Now
+      </button>
+      <button
+        type="button"
+        class="btn btn--secondary"
+        onclick="MossCompare.clear()"
+        aria-label="Clear compare selection"
+      >
+        Clear
+      </button>
+    </div>
+  </div>
+</div>
+
+{%- comment -%} Compare Modal {%- endcomment -%}
+<div
+  class="compare-modal"
+  data-compare-modal
+  aria-hidden="true"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Product comparison"
+>
+  <div class="compare-modal__overlay" data-compare-modal-overlay></div>
+  <div class="compare-modal__panel">
+    <div class="compare-modal__header">
+      <h2 class="compare-modal__title">Compare Products</h2>
+      <button
+        type="button"
+        class="compare-modal__close"
+        data-compare-modal-close
+        aria-label="Close comparison"
+      >
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+          <line x1="4" y1="4" x2="20" y2="20" stroke="currentColor" stroke-width="1.5"/>
+          <line x1="20" y1="4" x2="4" y2="20" stroke="currentColor" stroke-width="1.5"/>
+        </svg>
+      </button>
+    </div>
+    <div class="compare-modal__body">
+      <div class="compare-modal__table-wrap" data-compare-table></div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Compare Bar */
+  .compare-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 500;
+    background-color: var(--color-black);
+    color: var(--color-white);
+    padding: var(--space-md) var(--container-padding-mobile);
+    box-shadow: 0 -2px 12px rgba(0,0,0,0.15);
+    align-items: center;
+    justify-content: center;
+  }
+
+  .compare-bar__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: var(--container-max-width);
+    margin: 0 auto;
+    gap: var(--space-md);
+    flex-wrap: wrap;
+  }
+
+  .compare-bar__text {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .compare-bar__actions {
+    display: flex;
+    gap: var(--space-sm);
+  }
+
+  .compare-bar .btn--primary {
+    background-color: var(--color-white);
+    color: var(--color-black);
+    padding: 10px 20px;
+    font-size: var(--font-size-sm);
+  }
+
+  .compare-bar .btn--primary:hover {
+    background-color: var(--color-off-white);
+  }
+
+  .compare-bar .btn--primary:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .compare-bar .btn--secondary {
+    background-color: transparent;
+    color: var(--color-white);
+    border-color: rgba(255,255,255,0.4);
+    padding: 10px 20px;
+    font-size: var(--font-size-sm);
+  }
+
+  .compare-bar .btn--secondary:hover {
+    background-color: rgba(255,255,255,0.1);
+  }
+
+  /* Compare Modal */
+  .compare-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .compare-modal.is-open {
+    display: flex;
+  }
+
+  .compare-modal__overlay {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0,0,0,0.6);
+  }
+
+  .compare-modal__panel {
+    position: relative;
+    z-index: 1;
+    background-color: var(--color-white);
+    width: 95vw;
+    max-width: 1100px;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .compare-modal__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-lg) var(--space-xl);
+    border-bottom: 1px solid var(--color-border);
+    flex-shrink: 0;
+  }
+
+  .compare-modal__title {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+  }
+
+  .compare-modal__close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    color: var(--color-black);
+  }
+
+  .compare-modal__close:hover { opacity: 0.6; }
+
+  .compare-modal__body {
+    flex: 1;
+    overflow: auto;
+  }
+
+  .compare-modal__table-wrap {
+    min-width: 600px;
+  }
+</style>
+
+<script src="{{ 'compare.js' | asset_url }}" defer></script>

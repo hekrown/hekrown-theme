@@ -56,6 +56,18 @@
       {%- endif -%}
     </a>
 
+    {%- comment -%} Wishlist toggle {%- endcomment -%}
+    <button
+      class="product-card__wishlist"
+      data-wishlist-toggle="{{ product.id }}"
+      aria-label="Add to wishlist"
+      aria-pressed="false"
+    >
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="none" stroke="currentColor" stroke-width="1.5"/>
+      </svg>
+    </button>
+
     {%- comment -%} Quick Add button — appears on hover {%- endcomment -%}
     {%- unless product.has_only_default_variant -%}
       <div class="product-card__quick-add" data-quick-add>
@@ -67,7 +79,6 @@
         >
           Quick Add
         </button>
-
         <div class="product-card__size-picker" aria-hidden="true" data-size-picker>
           {%- if size_option -%}
             {%- for value in size_option.values -%}
@@ -207,9 +218,46 @@
   .product-card__badge--sale { background-color: var(--color-red); color: var(--color-white); }
   .product-card__badge--new  { background-color: var(--color-black); color: var(--color-white); }
 
-  /* Quick Add */
-  .product-card__quick-add {
+  /* Wishlist toggle */
+  .product-card__wishlist {
     position: absolute;
+    top: var(--space-sm);
+    right: var(--space-sm);
+    z-index: 3;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-white);
+    border: none;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity var(--transition-fast), background-color var(--transition-fast);
+  }
+
+  .product-card__image-wrapper:hover .product-card__wishlist,
+  .product-card__wishlist:focus,
+  .product-card__wishlist.is-wishlisted {
+    opacity: 1;
+  }
+
+  .product-card__wishlist svg path {
+    transition: fill var(--transition-fast);
+  }
+
+  .product-card__wishlist.is-wishlisted svg path {
+    fill: var(--color-black);
+    stroke: var(--color-black);
+  }
+
+  .product-card__wishlist:hover svg path {
+    fill: var(--color-black);
+    stroke: var(--color-black);
+  }
+
+  /* Quick Add */
+  .product-card__quick-add {    position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
