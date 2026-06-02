@@ -1,0 +1,227 @@
+{%- comment -%}
+  Brand Story + Newsletter Section
+  Black background. Two columns:
+  Left: eyebrow heading + brand story paragraphs.
+  Right: newsletter signup subtext + email form + social icons.
+  Mirrors Moss.co.uk "ON FORM SINCE 1851" section.
+{%- endcomment -%}
+
+<div class="brand-story">
+  <div class="brand-story__inner">
+    {%- comment -%} Left — brand story {%- endcomment -%}
+    <div class="brand-story__left">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="brand-story__eyebrow">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+      {%- if section.settings.body_1 != blank -%}
+        <p class="brand-story__body">{{ section.settings.body_1 }}</p>
+      {%- endif -%}
+      {%- if section.settings.body_2 != blank -%}
+        <p class="brand-story__body">{{ section.settings.body_2 }}</p>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} Right — newsletter + social {%- endcomment -%}
+    <div class="brand-story__right">
+      {%- if section.settings.newsletter_text != blank -%}
+        <p class="brand-story__newsletter-text">{{ section.settings.newsletter_text }}</p>
+      {%- endif -%}
+
+      {%- form 'customer', id: 'brand-story-newsletter' -%}
+        <input type="hidden" name="contact[tags]" value="newsletter">
+        <div class="brand-story__form">
+          <label for="brand-story-email" class="visually-hidden">Email address</label>
+          <input
+            type="email"
+            id="brand-story-email"
+            name="contact[email]"
+            class="brand-story__input"
+            placeholder="{{ 'Email address' | t }}"
+            required
+            autocomplete="email"
+          >
+          <button type="submit" class="brand-story__submit">Submit</button>
+        </div>
+      {%- endform -%}
+
+      {%- comment -%} Social icons {%- endcomment -%}
+      <div class="brand-story__social">
+        {%- if settings.social_facebook != blank -%}
+          <a href="{{ settings.social_facebook }}" class="brand-story__social-link" aria-label="Facebook" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+        {%- endif -%}
+        {%- if settings.social_tiktok != blank -%}
+          <a href="{{ settings.social_tiktok }}" class="brand-story__social-link" aria-label="TikTok" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.79 1.53V6.79a4.85 4.85 0 0 1-1.02-.1z"/></svg>
+          </a>
+        {%- endif -%}
+        {%- if settings.social_pinterest != blank -%}
+          <a href="{{ settings.social_pinterest }}" class="brand-story__social-link" aria-label="Pinterest" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 0 1 .083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg>
+          </a>
+        {%- endif -%}
+        {%- if settings.social_instagram != blank -%}
+          <a href="{{ settings.social_instagram }}" class="brand-story__social-link" aria-label="Instagram" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+          </a>
+        {%- endif -%}
+        {%- if settings.social_youtube != blank -%}
+          <a href="{{ settings.social_youtube }}" class="brand-story__social-link" aria-label="YouTube" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="white"/></svg>
+          </a>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .brand-story {
+    background-color: var(--color-black);
+    padding: var(--space-2xl) 0;
+  }
+
+  .brand-story__inner {
+    max-width: var(--container-max-width);
+    margin-inline: auto;
+    padding-inline: var(--container-padding-mobile);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-2xl);
+  }
+
+  @media (min-width: 1024px) {
+    .brand-story__inner {
+      grid-template-columns: 1fr 1fr;
+      padding-inline: var(--container-padding);
+      gap: var(--space-3xl);
+    }
+  }
+
+  /* Left */
+  .brand-story__eyebrow {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-white);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: var(--space-lg);
+  }
+
+  .brand-story__body {
+    font-size: var(--font-size-sm);
+    color: var(--color-footer-subtext);
+    line-height: var(--line-height-normal);
+    margin-bottom: var(--space-md);
+    max-width: 480px;
+  }
+
+  /* Right */
+  .brand-story__right {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+    justify-content: center;
+  }
+
+  .brand-story__newsletter-text {
+    font-size: var(--font-size-sm);
+    color: var(--color-footer-subtext);
+    line-height: var(--line-height-normal);
+  }
+
+  .brand-story__form {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--color-footer-subtext);
+    padding-bottom: var(--space-sm);
+    gap: var(--space-sm);
+  }
+
+  .brand-story__input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--color-white);
+    font-size: var(--font-size-sm);
+    font-family: var(--font-body);
+  }
+
+  .brand-story__input::placeholder {
+    color: var(--color-footer-subtext);
+  }
+
+  .brand-story__submit {
+    background: transparent;
+    border: none;
+    color: var(--color-white);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: var(--letter-spacing-normal);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: opacity var(--transition-fast);
+  }
+
+  .brand-story__submit:hover { opacity: 0.6; }
+
+  /* Social icons */
+  .brand-story__social {
+    display: flex;
+    gap: var(--space-md);
+    align-items: center;
+  }
+
+  .brand-story__social-link {
+    color: var(--color-white);
+    display: flex;
+    align-items: center;
+    transition: opacity var(--transition-fast);
+  }
+
+  .brand-story__social-link:hover {
+    opacity: 0.6;
+    text-decoration: none;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Brand Story",
+  "tag": "section",
+  "class": "brand-story-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow heading",
+      "default": "ON FORM SINCE 1851"
+    },
+    {
+      "type": "textarea",
+      "id": "body_1",
+      "label": "First paragraph",
+      "default": "For big days and everydays, for life's milestones and more minor moments — it all matters, and it's all worthy of a great outfit."
+    },
+    {
+      "type": "textarea",
+      "id": "body_2",
+      "label": "Second paragraph",
+      "default": "With over 170 years around the tailoring block and a collection of modern suiting, elevated daily wear and carefully curated accessories, we are the menswear destination for dressed-up moments and refined everyday wardrobes."
+    },
+    {
+      "type": "text",
+      "id": "newsletter_text",
+      "label": "Newsletter subtext",
+      "default": "Sign up today to get the latest news and be the first to hear about our exclusive offers."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Brand Story"
+    }
+  ]
+}
+{% endschema %}

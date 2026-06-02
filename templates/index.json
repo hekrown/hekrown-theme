@@ -8,38 +8,23 @@
       "blocks": {
         "link_1": {
           "type": "link",
-          "settings": {
-            "label": "New In",
-            "link": "/collections/new-arrivals"
-          }
+          "settings": { "label": "New In", "link": "/collections/new-arrivals" }
         },
         "link_2": {
           "type": "link",
-          "settings": {
-            "label": "Suits",
-            "link": "/collections/new-arrivals"
-          }
+          "settings": { "label": "Suits", "link": "/collections/new-arrivals" }
         },
         "link_3": {
           "type": "link",
-          "settings": {
-            "label": "Shirts",
-            "link": "/collections/shirts"
-          }
+          "settings": { "label": "Shirts", "link": "/collections/shirts" }
         },
         "link_4": {
           "type": "link",
-          "settings": {
-            "label": "Linen Wear",
-            "link": "/collections/linen-wear"
-          }
+          "settings": { "label": "Linen Wear", "link": "/collections/linen-wear" }
         },
         "link_5": {
           "type": "link",
-          "settings": {
-            "label": "Essentials",
-            "link": "/collections/essentials"
-          }
+          "settings": { "label": "Essentials", "link": "/collections/essentials" }
         }
       },
       "block_order": ["link_1", "link_2", "link_3", "link_4", "link_5"]
@@ -59,86 +44,60 @@
         "height": 70
       }
     },
-    "collection_grid": {
-      "type": "collection-grid",
+    "split_panel_linen": {
+      "type": "split-panel",
       "settings": {
-        "heading": "Shop by Category",
-        "columns": 4
-      },
+        "label": "Linen Wear",
+        "link": "/collections/linen-wear"
+      }
+    },
+    "full_banner_essentials": {
+      "type": "full-banner",
+      "settings": {
+        "label": "Essentials",
+        "link": "/collections/essentials",
+        "height": 70
+      }
+    },
+    "services_links": {
+      "type": "services-links",
+      "settings": {},
       "blocks": {
-        "tile_shirts": {
-          "type": "tile",
-          "settings": {
-            "title": "Shirts",
-            "link": "/collections/shirts"
-          }
-        },
-        "tile_linen": {
-          "type": "tile",
-          "settings": {
-            "title": "Linen Wear",
-            "link": "/collections/linen-wear"
-          }
-        },
-        "tile_essentials": {
-          "type": "tile",
-          "settings": {
-            "title": "Essentials",
-            "link": "/collections/essentials"
-          }
-        },
-        "tile_new": {
-          "type": "tile",
-          "settings": {
-            "title": "New Arrivals",
-            "link": "/collections/new-arrivals"
-          }
-        }
+        "svc_1": { "type": "link", "settings": { "label": "Hire", "link": "/pages/contact" } },
+        "svc_2": { "type": "link", "settings": { "label": "Custom Made", "link": "/pages/contact" } },
+        "svc_3": { "type": "link", "settings": { "label": "Size Guide", "link": "/pages/contact" } },
+        "svc_4": { "type": "link", "settings": { "label": "Gift Cards", "link": "/pages/contact" } },
+        "svc_5": { "type": "link", "settings": { "label": "Editorial", "link": "/pages/contact", "underline": true } }
       },
-      "block_order": ["tile_shirts", "tile_linen", "tile_essentials", "tile_new"]
+      "block_order": ["svc_1", "svc_2", "svc_3", "svc_4", "svc_5"]
     },
-    "featured_collection": {
-      "type": "featured-collection",
+    "store_finder": {
+      "type": "store-finder",
       "settings": {
-        "heading": "New Arrivals",
-        "collection": "new-arrivals",
-        "products_to_show": 4,
-        "show_view_all": true
+        "heading": "Find your nearest store",
+        "body": "Visit one of our stores for customisations, fittings & styling advice.",
+        "button_text": "Book An Appointment",
+        "button_link": "/pages/contact"
       }
     },
-    "featured_collection_2": {
-      "type": "featured-collection",
+    "brand_story": {
+      "type": "brand-story",
       "settings": {
-        "heading": "Shirts",
-        "collection": "shirts",
-        "products_to_show": 4,
-        "show_view_all": true
+        "eyebrow": "ON FORM SINCE 1851",
+        "body_1": "For big days and everydays, for life's milestones and more minor moments — it all matters, and it's all worthy of a great outfit.",
+        "body_2": "With over 170 years around the tailoring block and a collection of modern suiting, elevated daily wear and carefully curated accessories, we are the menswear destination for dressed-up moments and refined everyday wardrobes.",
+        "newsletter_text": "Sign up today to get the latest news and be the first to hear about our exclusive offers."
       }
-    },
-    "image_with_text": {
-      "type": "image-with-text",
-      "settings": {
-        "heading": "Our Story",
-        "eyebrow": "Hekrown Fashion",
-        "body": "<p>Refined, contemporary clothing crafted for the modern wardrobe. From relaxed linen shirts to tailored essentials — quality you can feel.</p>",
-        "button_text": "Discover",
-        "button_link": "/collections/essentials",
-        "image_position": "left"
-      }
-    },
-    "usp_bar": {
-      "type": "usp-bar",
-      "settings": {}
     }
   },
   "order": [
     "sticky-hero",
     "split_panel_suits",
     "full_banner_shirts",
-    "collection_grid",
-    "featured_collection",
-    "featured_collection_2",
-    "image_with_text",
-    "usp_bar"
+    "split_panel_linen",
+    "full_banner_essentials",
+    "services_links",
+    "store_finder",
+    "brand_story"
   ]
 }
