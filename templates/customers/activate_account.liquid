@@ -1,0 +1,63 @@
+{{ 'customer-account.css' | asset_url | stylesheet_tag }}
+
+<div class="auth-page">
+  <div class="auth-page__container">
+    <div class="auth-page__header">
+      <h1 class="auth-page__title">{{ 'customer.activate_account.title' | t }}</h1>
+      <p class="auth-page__subtitle">{{ 'customer.activate_account.subtext' | t }}</p>
+    </div>
+
+    {%- form 'activate_customer_password', class: 'auth-page__form account-form' -%}
+      {%- if form.errors -%}
+        <div class="account-notice account-notice--error">
+          <strong>{{ 'form.errors.heading' | t }}</strong>
+          <ul>
+            {%- for field in form.errors -%}
+              <li>{{ form.errors.messages[field] }}</li>
+            {%- endfor -%}
+          </ul>
+        </div>
+      {%- endif -%}
+
+      <div class="form-row">
+        <label for="activate-password" class="form-label form-label--required">
+          {{ 'customer.activate_account.password' | t }}
+        </label>
+        <input
+          type="password"
+          id="activate-password"
+          name="customer[password]"
+          class="form-input"
+          autocomplete="new-password"
+          required
+        >
+      </div>
+
+      <div class="form-row">
+        <label for="activate-password-confirm" class="form-label form-label--required">
+          {{ 'customer.activate_account.password_confirm' | t }}
+        </label>
+        <input
+          type="password"
+          id="activate-password-confirm"
+          name="customer[password_confirmation]"
+          class="form-input"
+          autocomplete="new-password"
+          required
+        >
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn--primary btn--full-width">
+          {{ 'customer.activate_account.submit' | t }}
+        </button>
+      </div>
+
+      <div class="form-actions" style="margin-top: var(--space-md);">
+        <a href="{{ routes.account_login_url }}" class="btn btn--secondary btn--full-width">
+          {{ 'customer.activate_account.cancel' | t }}
+        </a>
+      </div>
+    {%- endform -%}
+  </div>
+</div>

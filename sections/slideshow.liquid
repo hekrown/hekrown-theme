@@ -36,7 +36,9 @@
             height="{{ 1920 | divided_by: block.settings.image.aspect_ratio | round }}"
           >
         {%- else -%}
-          <div class="slideshow__placeholder"></div>
+          <div class="slideshow__placeholder">
+            {{ 'lifestyle-' | append: forloop.index | placeholder_svg_tag: 'slideshow__placeholder-svg' }}
+          </div>
         {%- endif -%}
 
         <div class="slideshow__content slideshow__content--{{ block.settings.text_position }}">
@@ -148,6 +150,13 @@
     width: 100%;
     height: 100%;
     background-color: var(--color-off-white);
+  }
+
+  .slideshow__placeholder-svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
   }
 
   /* ── Text content overlay ── */

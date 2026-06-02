@@ -1,0 +1,208 @@
+{{ 'customer-account.css' | asset_url | stylesheet_tag }}
+
+<div class="account">
+  <div class="account__container">
+    <div class="account__header">
+      <a href="{{ routes.account_url }}" style="font-size: var(--font-size-sm); color: var(--color-mid-grey); text-decoration: none; display: inline-flex; align-items: center; gap: 4px; margin-bottom: var(--space-sm);">
+        ← {{ 'customer.account.return_to_account' | t }}
+      </a>
+      <h1 class="account__title">{{ 'customer.addresses.title' | t }}</h1>
+      <p class="account__subtitle">{{ 'customer.addresses.subtitle' | t }}</p>
+    </div>
+
+    {%- comment -%} Add New Address Button {%- endcomment -%}
+    <div style="margin-bottom: var(--space-xl);">
+      <button
+        type="button"
+        class="btn btn--secondary"
+        onclick="toggleAddressForm('add-address-form')"
+        aria-expanded="false"
+        data-address-toggle="add-address-form"
+      >
+        {{ 'customer.addresses.add_new' | t }}
+      </button>
+    </div>
+
+    {%- comment -%} Add New Address Form {%- endcomment -%}
+    <div id="add-address-form" class="account__section" style="display: none; margin-bottom: var(--space-xl);">
+      <div class="account__section-header">
+        <h2 class="account__section-title">{{ 'customer.addresses.add_new' | t }}</h2>
+      </div>
+
+      {%- form 'customer_address', customer.new_address, class: 'account-form', style: 'max-width: 640px;' -%}
+        <div class="form-row--half">
+          <div class="form-row">
+            <label for="add-first-name" class="form-label form-label--required">{{ 'customer.addresses.first_name' | t }}</label>
+            <input type="text" id="add-first-name" name="address[first_name]" class="form-input" autocomplete="given-name" required>
+          </div>
+          <div class="form-row">
+            <label for="add-last-name" class="form-label form-label--required">{{ 'customer.addresses.last_name' | t }}</label>
+            <input type="text" id="add-last-name" name="address[last_name]" class="form-input" autocomplete="family-name" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label for="add-company" class="form-label">{{ 'customer.addresses.company' | t }}</label>
+          <input type="text" id="add-company" name="address[company]" class="form-input" autocomplete="organization">
+        </div>
+
+        <div class="form-row">
+          <label for="add-address1" class="form-label form-label--required">{{ 'customer.addresses.address1' | t }}</label>
+          <input type="text" id="add-address1" name="address[address1]" class="form-input" autocomplete="address-line1" required>
+        </div>
+
+        <div class="form-row">
+          <label for="add-address2" class="form-label">{{ 'customer.addresses.address2' | t }}</label>
+          <input type="text" id="add-address2" name="address[address2]" class="form-input" autocomplete="address-line2">
+        </div>
+
+        <div class="form-row--half">
+          <div class="form-row">
+            <label for="add-city" class="form-label form-label--required">{{ 'customer.addresses.city' | t }}</label>
+            <input type="text" id="add-city" name="address[city]" class="form-input" autocomplete="address-level2" required>
+          </div>
+          <div class="form-row">
+            <label for="add-zip" class="form-label form-label--required">{{ 'customer.addresses.zip' | t }}</label>
+            <input type="text" id="add-zip" name="address[zip]" class="form-input" autocomplete="postal-code" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label for="add-country" class="form-label form-label--required">{{ 'customer.addresses.country' | t }}</label>
+          <select id="add-country" name="address[country]" class="form-select form-input" required data-country-selector>
+            {{ all_country_option_tags }}
+          </select>
+        </div>
+
+        <div class="form-row" id="add-province-row" style="display: none;">
+          <label for="add-province" class="form-label">{{ 'customer.addresses.province' | t }}</label>
+          <select id="add-province" name="address[province]" class="form-select form-input" data-province-selector>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <label for="add-phone" class="form-label">{{ 'customer.addresses.phone' | t }}</label>
+          <input type="tel" id="add-phone" name="address[phone]" class="form-input" autocomplete="tel">
+        </div>
+
+        <div class="form-row">
+          <label style="display: flex; align-items: center; gap: var(--space-sm); cursor: pointer;">
+            <input type="checkbox" name="address[default]" id="add-default" style="width: 16px; height: 16px; accent-color: var(--color-black);">
+            <span class="form-label" style="margin: 0;">{{ 'customer.addresses.set_default' | t }}</span>
+          </label>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn--primary">{{ 'customer.addresses.add' | t }}</button>
+          <button type="button" class="btn btn--secondary" onclick="toggleAddressForm('add-address-form')">{{ 'customer.addresses.cancel' | t }}</button>
+        </div>
+      {%- endform -%}
+    </div>
+
+    {%- comment -%} Existing Addresses {%- endcomment -%}
+    {%- if customer.addresses.size > 0 -%}
+      <div class="addresses-grid">
+        {%- for address in customer.addresses -%}
+          <div class="address-card">
+            {%- if address == customer.default_address -%}
+              <span class="address-card__default">{{ 'customer.addresses.default' | t }}</span>
+            {%- endif -%}
+
+            <address class="address-card__content">
+              {{ address | format_address }}
+            </address>
+
+            <div class="address-card__actions">
+              <button
+                type="button"
+                class="address-card__action"
+                onclick="toggleAddressForm('edit-address-{{ address.id }}')"
+              >
+                {{ 'customer.addresses.edit' | t }}
+              </button>
+
+              {%- form 'customer_address', address, id: 'delete-address-{{ address.id }}' -%}
+                <input type="hidden" name="_method" value="delete">
+                <button
+                  type="submit"
+                  class="address-card__action"
+                  onclick="return confirm('{{ 'customer.addresses.delete_confirm' | t | escape }}');"
+                >
+                  {{ 'customer.addresses.delete' | t }}
+                </button>
+              {%- endform -%}
+            </div>
+
+            {%- comment -%} Edit Form {%- endcomment -%}
+            <div id="edit-address-{{ address.id }}" style="display: none; margin-top: var(--space-md); padding-top: var(--space-md); border-top: 1px solid var(--color-border);">
+              {%- form 'customer_address', address, class: 'account-form' -%}
+                <div class="form-row--half">
+                  <div class="form-row">
+                    <label class="form-label form-label--required">{{ 'customer.addresses.first_name' | t }}</label>
+                    <input type="text" name="address[first_name]" class="form-input" value="{{ address.first_name }}" required>
+                  </div>
+                  <div class="form-row">
+                    <label class="form-label form-label--required">{{ 'customer.addresses.last_name' | t }}</label>
+                    <input type="text" name="address[last_name]" class="form-input" value="{{ address.last_name }}" required>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <label class="form-label form-label--required">{{ 'customer.addresses.address1' | t }}</label>
+                  <input type="text" name="address[address1]" class="form-input" value="{{ address.address1 }}" required>
+                </div>
+                <div class="form-row">
+                  <label class="form-label">{{ 'customer.addresses.address2' | t }}</label>
+                  <input type="text" name="address[address2]" class="form-input" value="{{ address.address2 }}">
+                </div>
+                <div class="form-row--half">
+                  <div class="form-row">
+                    <label class="form-label form-label--required">{{ 'customer.addresses.city' | t }}</label>
+                    <input type="text" name="address[city]" class="form-input" value="{{ address.city }}" required>
+                  </div>
+                  <div class="form-row">
+                    <label class="form-label form-label--required">{{ 'customer.addresses.zip' | t }}</label>
+                    <input type="text" name="address[zip]" class="form-input" value="{{ address.zip }}" required>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <label class="form-label form-label--required">{{ 'customer.addresses.country' | t }}</label>
+                  <select name="address[country]" class="form-select form-input" required>
+                    {{ all_country_option_tags }}
+                  </select>
+                </div>
+                <div class="form-row">
+                  <label style="display: flex; align-items: center; gap: var(--space-sm); cursor: pointer;">
+                    <input type="checkbox" name="address[default]" {% if address == customer.default_address %}checked{% endif %} style="width: 16px; height: 16px; accent-color: var(--color-black);">
+                    <span class="form-label" style="margin: 0;">{{ 'customer.addresses.set_default' | t }}</span>
+                  </label>
+                </div>
+                <div class="form-actions">
+                  <button type="submit" class="btn btn--primary">{{ 'customer.addresses.update' | t }}</button>
+                  <button type="button" class="btn btn--secondary" onclick="toggleAddressForm('edit-address-{{ address.id }}')">{{ 'customer.addresses.cancel' | t }}</button>
+                </div>
+              {%- endform -%}
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- else -%}
+      <div class="account-empty">
+        <div class="account-empty__icon">📍</div>
+        <h3 class="account-empty__title">{{ 'customer.addresses.no_addresses' | t }}</h3>
+        <p class="account-empty__text">{{ 'customer.addresses.no_addresses_description' | t }}</p>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+<script>
+  function toggleAddressForm(id) {
+    var el = document.getElementById(id);
+    var toggle = document.querySelector('[data-address-toggle="' + id + '"]');
+    if (!el) return;
+    var isHidden = el.style.display === 'none' || el.style.display === '';
+    el.style.display = isHidden ? 'block' : 'none';
+    if (toggle) toggle.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
+    if (isHidden) el.querySelector('input, select') && el.querySelector('input, select').focus();
+  }
+</script>

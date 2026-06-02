@@ -1,0 +1,43 @@
+{%- comment -%}
+  BreadcrumbList Schema — uses concat instead of push (Liquid compatible)
+  Usage: {% render 'schema-breadcrumbs' %}
+{%- endcomment -%}
+
+{%- liquid
+  assign bc_items = ''
+  assign home_item = '{"@type":"ListItem","position":1,"name":"Home","item":"' | append: shop.url | append: '"}'
+  assign bc_items = home_item
+  assign position = 2
+-%}
+
+{%- if template == 'product' -%}
+  {%- if collection -%}
+    {%- capture col_item -%}{"@type":"ListItem","position":{{ position }},"name":{{ collection.title | json }},"item":"{{ shop.url }}{{ collection.url }}"}{%- endcapture -%}
+    {%- assign bc_items = bc_items | append: ',' | append: col_item -%}
+    {%- assign position = position | plus: 1 -%}
+  {%- endif -%}
+  {%- capture product_item -%}{"@type":"ListItem","position":{{ position }},"name":{{ product.title | json }},"item":"{{ request.origin }}{{ product.url }}"}{%- endcapture -%}
+  {%- assign bc_items = bc_items | append: ',' | append: product_item -%}
+{%- elsif template == 'collection' -%}
+  {%- capture col_item -%}{"@type":"ListItem","position":{{ position }},"name":{{ collection.title | json }},"item":"{{ request.origin }}{{ collection.url }}"}{%- endcapture -%}
+  {%- assign bc_items = bc_items | append: ',' | append: col_item -%}
+{%- elsif template == 'page' -%}
+  {%- capture page_item -%}{"@type":"ListItem","position":{{ position }},"name":{{ page.title | json }},"item":"{{ request.origin }}{{ page.url }}"}{%- endcapture -%}
+  {%- assign bc_items = bc_items | append: ',' | append: page_item -%}
+{%- elsif template == 'article' -%}
+  {%- capture blog_item -%}{"@type":"ListItem","position":{{ position }},"name":{{ blog.title | json }},"item":"{{ shop.url }}{{ blog.url }}"}{%- endcapture -%}
+  {%- assign bc_items = bc_items | append: ',' | append: blog_item -%}
+  {%- assign position = position | plus: 1 -%}
+  {%- capture article_item -%}{"@type":"ListItem","position":{{ position }},"name":{{ article.title | json }},"item":"{{ request.origin }}{{ article.url }}"}{%- endcapture -%}
+  {%- assign bc_items = bc_items | append: ',' | append: article_item -%}
+{%- endif -%}
+
+{%- unless template == 'index' -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{{ bc_items }}]
+}
+</script>
+{%- endunless -%}

@@ -4,7 +4,7 @@
 {%- endcomment -%}
 
 {{ 'section-main-product.css' | asset_url | stylesheet_tag }}
-{{ 'section-main-product.js' | asset_url | script_tag }}
+<script src="{{ 'section-main-product.js' | asset_url }}" defer></script>
 
 {%- comment -%}
   Serialize all variant data into a JSON script tag.
@@ -37,7 +37,7 @@
   <div class="container">
     {%- comment -%} Breadcrumb {%- endcomment -%}
     <nav class="breadcrumb" aria-label="Breadcrumb">
-      <a href="/">Home</a>
+      <a href="{{ routes.root_url }}">Home</a>
       <span aria-hidden="true">&rsaquo;</span>
       {%- if collection -%}
         <a href="{{ collection.url }}">{{ collection.title }}</a>
@@ -208,7 +208,174 @@
   </div>
 </div>
 
-{%- comment -%} Size Guide Modal {%- endcomment -%}
+{%- comment -%} Sticky ATC bar for mobile {%- endcomment -%}
+<div class="product-page__sticky-atc" data-sticky-atc aria-hidden="true">
+  <div class="product-page__sticky-atc-inner">
+    <span class="product-page__sticky-atc-title">{{ product.title }}</span>
+    <span class="product-page__sticky-atc-price" data-sticky-price>{{ product.price | money }}</span>
+    <button
+      type="button"
+      class="btn btn--primary product-page__sticky-atc-btn"
+      data-sticky-atc-btn
+      {% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}
+    >
+      {%- if product.selected_or_first_available_variant.available -%}
+        Add to Basket
+      {%- else -%}
+        Out of Stock
+      {%- endif -%}
+    </button>
+  </div>
+</div>
+
+{%- comment -%} Back in stock notification form {%- endcomment -%}
+{%- unless product.available -%}
+  <div class="product-page__notify" id="product-notify-form">
+    <p class="product-page__notify-text">This product is currently out of stock.</p>
+    {%- form 'contact', id: 'notify-form' -%}
+      <input type="hidden" name="contact[body]" value="Back in stock notification request for: {{ product.title }} — {{ product.url | prepend: shop.url }}">
+      <input type="hidden" name="contact[tags]" value="back-in-stock">
+      <div class="product-page__notify-row">
+        <label for="notify-email" class="visually-hidden">Email address</label>
+        <input
+          type="email"
+          id="notify-email"
+          name="contact[email]"
+          class="input"
+          placeholder="Enter your email"
+          required
+          aria-label="Email address for back-in-stock notification"
+        >
+        <button type="submit" class="btn btn--primary">Notify Me</button>
+      </div>
+      <p class="product-page__notify-disclaimer">We'll email you when this product is back in stock.</p>
+    {%- endform -%}
+  </div>
+{%- endunless -%}
+
+<style>
+  /* Sticky ATC bar — mobile only */
+  .product-page__sticky-atc {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 200;
+    background-color: var(--color-white);
+    border-top: 1px solid var(--color-border);
+    padding: var(--space-md);
+    transform: translateY(100%);
+    transition: transform var(--transition-normal);
+    box-shadow: 0 -2px 16px rgba(0,0,0,0.08);
+  }
+
+  .product-page__sticky-atc.is-visible {
+    transform: translateY(0);
+  }
+
+  @media (min-width: 1024px) {
+    .product-page__sticky-atc {
+      display: none;
+    }
+  }
+
+  .product-page__sticky-atc-inner {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    max-width: var(--container-max-width);
+    margin: 0 auto;
+  }
+
+  .product-page__sticky-atc-title {
+    flex: 1;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .product-page__sticky-atc-price {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    white-space: nowrap;
+  }
+
+  .product-page__sticky-atc-btn {
+    white-space: nowrap;
+    padding: 12px 20px;
+    font-size: var(--font-size-sm);
+  }
+
+  /* Back in stock form */
+  .product-page__notify {
+    background-color: var(--color-off-white);
+    padding: var(--space-lg);
+    margin-top: var(--space-md);
+  }
+
+  .product-page__notify-text {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    margin-bottom: var(--space-md);
+  }
+
+  .product-page__notify-row {
+    display: flex;
+    gap: var(--space-sm);
+  }
+
+  .product-page__notify-row .input {
+    flex: 1;
+  }
+
+  .product-page__notify-disclaimer {
+    font-size: var(--font-size-xs);
+    color: var(--color-mid-grey);
+    margin-top: var(--space-sm);
+  }
+</style>
+
+<script>
+(function () {
+  var stickyBar = document.querySelector('[data-sticky-atc]');
+  var atcBtn    = document.querySelector('[data-atc-btn]');
+  var stickyBtn = document.querySelector('[data-sticky-atc-btn]');
+  var form      = document.querySelector('[data-product-form]');
+
+  if (!stickyBar || !atcBtn) return;
+
+  // Show sticky bar when main ATC button scrolls out of view
+  var observer = new IntersectionObserver(function (entries) {
+    var visible = entries[0].isIntersecting;
+    stickyBar.classList.toggle('is-visible', !visible);
+    stickyBar.setAttribute('aria-hidden', visible ? 'true' : 'false');
+  }, { threshold: 0 });
+
+  observer.observe(atcBtn);
+
+  // Sticky bar button triggers the main form submit
+  stickyBtn && stickyBtn.addEventListener('click', function () {
+    if (form) form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+  });
+
+  // Keep sticky price and state in sync with variant changes
+  document.addEventListener('variant:changed', function (e) {
+    var variant = e.detail.variant;
+    if (!variant) return;
+
+    var priceEl = document.querySelector('[data-sticky-price]');
+    if (priceEl && variant.price) {
+      priceEl.textContent = new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(variant.price / 100);
+    }
+    if (stickyBtn) {
+      stickyBtn.disabled = !variant.available;
+      stickyBtn.textContent = variant.available ? 'Add to Basket' : 'Out of Stock';
+    }
+  });
+})();
+</script>
 <div class="size-guide-modal" id="size-guide-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="size-guide-title" data-size-guide>
   <div class="size-guide-modal__overlay" data-size-guide-close></div>
   <div class="size-guide-modal__panel">

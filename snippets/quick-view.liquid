@@ -1,0 +1,329 @@
+{%- comment -%}
+  Quick View Modal
+  Renders a lightweight PDP preview from the collection grid.
+  Include once in theme.liquid before </body>
+{%- endcomment -%}
+
+<div
+  class="quick-view"
+  id="quick-view-modal"
+  aria-hidden="true"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Quick view"
+  data-quick-view-modal
+>
+  <div class="quick-view__overlay" data-quick-view-close></div>
+  <div class="quick-view__panel">
+    <button
+      class="quick-view__close"
+      data-quick-view-close
+      aria-label="Close quick view"
+    >
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+        <line x1="4" y1="4" x2="20" y2="20" stroke="currentColor" stroke-width="1.5"/>
+        <line x1="20" y1="4" x2="4" y2="20" stroke="currentColor" stroke-width="1.5"/>
+      </svg>
+    </button>
+
+    <div class="quick-view__content" data-quick-view-content>
+      <div class="quick-view__loading" data-quick-view-loading>
+        <div class="quick-view__spinner"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .quick-view {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-lg);
+  }
+
+  .quick-view.is-open {
+    display: flex;
+  }
+
+  .quick-view__overlay {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0,0,0,0.6);
+    cursor: pointer;
+  }
+
+  .quick-view__panel {
+    position: relative;
+    z-index: 1;
+    background-color: var(--color-white);
+    width: 100%;
+    max-width: 900px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .quick-view__close {
+    position: absolute;
+    top: var(--space-md);
+    right: var(--space-md);
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: var(--color-white);
+    color: var(--color-black);
+    cursor: pointer;
+    border: 1px solid var(--color-border);
+  }
+
+  .quick-view__close:hover { opacity: 0.7; }
+
+  .quick-view__content {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 640px) {
+    .quick-view__content {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .quick-view__loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    grid-column: 1 / -1;
+  }
+
+  .quick-view__spinner {
+    width: 36px;
+    height: 36px;
+    border: 2px solid var(--color-border);
+    border-top-color: var(--color-black);
+    border-radius: 50%;
+    animation: qv-spin 0.6s linear infinite;
+  }
+
+  @keyframes qv-spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* Quick view image */
+  .quick-view__img {
+    width: 100%;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+    display: block;
+    background-color: var(--color-off-white);
+  }
+
+  /* Quick view details */
+  .quick-view__details {
+    padding: var(--space-xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .quick-view__title {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-snug);
+  }
+
+  .quick-view__price {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  .quick-view__price-sale { color: var(--color-red); }
+  .quick-view__price-compare { text-decoration: line-through; color: var(--color-mid-grey); font-size: var(--font-size-base); margin-left: var(--space-sm); }
+
+  .quick-view__variants {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  .quick-view__variant-select {
+    width: 100%;
+    height: var(--input-height);
+    padding: 0 var(--space-md);
+    border: 1px solid var(--color-input-border);
+    font-size: var(--font-size-base);
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    cursor: pointer;
+  }
+
+  .quick-view__atc {
+    height: var(--button-height);
+  }
+
+  .quick-view__view-full {
+    text-align: center;
+    font-size: var(--font-size-sm);
+    color: var(--color-mid-grey);
+  }
+
+  .quick-view__view-full a {
+    color: var(--color-black);
+    text-decoration: underline;
+  }
+</style>
+
+<script>
+(function () {
+  'use strict';
+
+  var modal       = document.querySelector('[data-quick-view-modal]');
+  var contentEl   = document.querySelector('[data-quick-view-content]');
+  var closeBtns   = document.querySelectorAll('[data-quick-view-close]');
+
+  if (!modal) return;
+
+  // ── Open ──────────────────────────────────────────────────────────────────
+  function openQuickView(productHandle) {
+    modal.classList.add('is-open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('nav-open');
+
+    contentEl.innerHTML = '<div class="quick-view__loading" data-quick-view-loading><div class="quick-view__spinner"></div></div>';
+
+    fetch('/products/' + productHandle + '?view=quick-view')
+      .then(function (r) { return r.text(); })
+      .then(function (html) {
+        // Try to use a section render, fall back to product JSON API
+        renderFromApi(productHandle);
+      })
+      .catch(function () {
+        renderFromApi(productHandle);
+      });
+  }
+
+  function renderFromApi(productHandle) {
+    fetch('/products/' + productHandle + '.js')
+      .then(function (r) { return r.json(); })
+      .then(function (product) {
+        var img = product.images[0] || null;
+        var firstAvailableVariant = product.variants.find(function (v) { return v.available; }) || product.variants[0];
+
+        var priceHTML = '';
+        if (firstAvailableVariant.compare_at_price && firstAvailableVariant.compare_at_price > firstAvailableVariant.price) {
+          priceHTML = '<span class="quick-view__price-sale">' + fmt(firstAvailableVariant.price) + '</span>' +
+                      '<span class="quick-view__price-compare">' + fmt(firstAvailableVariant.compare_at_price) + '</span>';
+        } else {
+          priceHTML = fmt(firstAvailableVariant.price);
+        }
+
+        var variantsHTML = '';
+        if (!product.has_only_default_variant) {
+          variantsHTML = '<select class="quick-view__variant-select" data-qv-variant>' +
+            product.variants.map(function (v) {
+              return '<option value="' + v.id + '"' + (v.available ? '' : ' disabled') + '>' +
+                v.title + (v.available ? '' : ' — Sold Out') + '</option>';
+            }).join('') +
+          '</select>';
+        }
+
+        contentEl.innerHTML =
+          '<img src="' + (img ? img : '') + '" alt="' + product.title + '" class="quick-view__img">' +
+          '<div class="quick-view__details">' +
+            '<h2 class="quick-view__title">' + product.title + '</h2>' +
+            '<div class="quick-view__price" data-qv-price>' + priceHTML + '</div>' +
+            (variantsHTML ? '<div class="quick-view__variants">' + variantsHTML + '</div>' : '') +
+            '<form action="/cart/add" method="post" class="quick-view__form">' +
+              '<input type="hidden" name="id" value="' + firstAvailableVariant.id + '" data-qv-hidden-id>' +
+              '<button type="submit" class="btn btn--primary btn--full-width quick-view__atc">' +
+                (firstAvailableVariant.available ? 'Add to Basket' : 'Out of Stock') +
+              '</button>' +
+            '</form>' +
+            '<p class="quick-view__view-full"><a href="/products/' + product.handle + '">View full details →</a></p>' +
+          '</div>';
+
+        // Variant select sync
+        var variantSelect = contentEl.querySelector('[data-qv-variant]');
+        var hiddenId = contentEl.querySelector('[data-qv-hidden-id]');
+        var priceDisplay = contentEl.querySelector('[data-qv-price]');
+        var atcBtn = contentEl.querySelector('.quick-view__atc');
+
+        if (variantSelect) {
+          variantSelect.addEventListener('change', function () {
+            var selectedVariant = product.variants.find(function (v) { return v.id === parseInt(variantSelect.value); });
+            if (selectedVariant) {
+              hiddenId.value = selectedVariant.id;
+              atcBtn.disabled = !selectedVariant.available;
+              atcBtn.textContent = selectedVariant.available ? 'Add to Basket' : 'Out of Stock';
+            }
+          });
+        }
+
+        // AJAX ATC
+        var form = contentEl.querySelector('.quick-view__form');
+        if (form) {
+          form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            var variantId = parseInt(hiddenId.value);
+            atcBtn.textContent = 'Adding...';
+            atcBtn.disabled = true;
+
+            MossCart.addItem(variantId, 1)
+              .then(function () { return MossCart.getCart(); })
+              .then(function (cart) {
+                dispatchCartUpdate(cart);
+                atcBtn.textContent = 'Added ✓';
+                setTimeout(function () {
+                  closeQuickView();
+                }, 1000);
+              })
+              .catch(function () {
+                atcBtn.textContent = 'Error — try again';
+                atcBtn.disabled = false;
+              });
+          });
+        }
+
+        // Focus first element
+        var firstFocusable = modal.querySelector('button, [href], input, select');
+        firstFocusable && firstFocusable.focus();
+      })
+      .catch(function () {
+        contentEl.innerHTML = '<p style="padding:40px;text-align:center;color:var(--color-mid-grey);">Unable to load product. <a href="/products/' + productHandle + '">View product page →</a></p>';
+      });
+  }
+
+  function fmt(cents) {
+    try { return new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(Number(cents) / 100); }
+    catch (e) { return '£' + (Number(cents) / 100).toFixed(2); }
+  }
+
+  // ── Close ─────────────────────────────────────────────────────────────────
+  function closeQuickView() {
+    modal.classList.remove('is-open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('nav-open');
+    contentEl.innerHTML = '';
+  }
+
+  closeBtns.forEach(function (btn) {
+    btn.addEventListener('click', closeQuickView);
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && modal.classList.contains('is-open')) closeQuickView();
+  });
+
+  // ── Expose open function globally ─────────────────────────────────────────
+  window.openQuickView = openQuickView;
+})();
+</script>
