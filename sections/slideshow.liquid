@@ -1,54 +1,111 @@
 {%- comment -%}
   Hero / Slideshow Section
-  Full-width, edge-to-edge. 70-90vh desktop, 50-60vh mobile.
+  Full-width, edge-to-edge. Auto-plays with fade transitions.
+  Dot indicators + prev/next arrows. Pauses on hover.
 {%- endcomment -%}
 
-<div class="slideshow section-padding" style="--slideshow-height: {{ section.settings.height }}vh;">
-  {%- for block in section.blocks -%}
-    <div
-      class="slideshow__slide{% if forloop.first %} slideshow__slide--active{% endif %}"
-      {{ block.shopify_attributes }}
-    >
-      {%- if block.settings.image != blank -%}
-        <img
-          src="{{ block.settings.image | image_url: width: 1920 }}"
-          alt="{{ block.settings.heading | escape }}"
-          class="slideshow__image"
-          loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
-          width="1920"
-          height="{{ 1920 | divided_by: block.settings.image.aspect_ratio | round }}"
-        >
-      {%- else -%}
-        <div class="slideshow__placeholder"></div>
-      {%- endif -%}
+{%- if section.blocks.size > 0 -%}
+<div
+  class="slideshow"
+  style="--slideshow-height: {{ section.settings.height }}vh;"
+  data-slideshow
+  data-autoplay="{{ section.settings.autoplay }}"
+  data-interval="{{ section.settings.interval | times: 1000 }}"
+  aria-roledescription="carousel"
+  aria-label="Hero banner"
+>
+  {%- comment -%} Slides {%- endcomment -%}
+  <div class="slideshow__track" data-slideshow-track>
+    {%- for block in section.blocks -%}
+      <div
+        class="slideshow__slide{% if forloop.first %} slideshow__slide--active{% endif %}"
+        data-slide-index="{{ forloop.index0 }}"
+        role="group"
+        aria-roledescription="slide"
+        aria-label="{{ forloop.index }} of {{ section.blocks.size }}"
+        aria-hidden="{% if forloop.first %}false{% else %}true{% endif %}"
+        {{ block.shopify_attributes }}
+      >
+        {%- if block.settings.image != blank -%}
+          <img
+            src="{{ block.settings.image | image_url: width: 1920 }}"
+            alt="{{ block.settings.heading | escape }}"
+            class="slideshow__image"
+            loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+            width="1920"
+            height="{{ 1920 | divided_by: block.settings.image.aspect_ratio | round }}"
+          >
+        {%- else -%}
+          <div class="slideshow__placeholder"></div>
+        {%- endif -%}
 
-      <div class="slideshow__content slideshow__content--{{ block.settings.text_position }}">
-        {%- if block.settings.heading != blank -%}
-          <h2 class="slideshow__heading" style="color: {{ block.settings.text_color }};">
-            {{ block.settings.heading }}
-          </h2>
-        {%- endif -%}
-        {%- if block.settings.subheading != blank -%}
-          <p class="slideshow__subheading" style="color: {{ block.settings.text_color }};">
-            {{ block.settings.subheading }}
-          </p>
-        {%- endif -%}
-        {%- if block.settings.button_text != blank -%}
-          <a href="{{ block.settings.button_link }}" class="btn btn--primary slideshow__btn">
-            {{ block.settings.button_text }}
-          </a>
-        {%- endif -%}
+        <div class="slideshow__content slideshow__content--{{ block.settings.text_position }}">
+          {%- if block.settings.heading != blank -%}
+            <h2 class="slideshow__heading" style="color: {{ block.settings.text_color }};">
+              {{ block.settings.heading }}
+            </h2>
+          {%- endif -%}
+          {%- if block.settings.subheading != blank -%}
+            <p class="slideshow__subheading" style="color: {{ block.settings.text_color }};">
+              {{ block.settings.subheading }}
+            </p>
+          {%- endif -%}
+          {%- if block.settings.button_text != blank -%}
+            <a href="{{ block.settings.button_link }}" class="btn btn--primary slideshow__btn">
+              {{ block.settings.button_text }}
+            </a>
+          {%- endif -%}
+        </div>
       </div>
+    {%- endfor -%}
+  </div>
+
+  {%- comment -%} Prev / Next arrows (only if more than 1 slide) {%- endcomment -%}
+  {%- if section.blocks.size > 1 -%}
+    <button
+      class="slideshow__arrow slideshow__arrow--prev"
+      data-slideshow-prev
+      aria-label="Previous slide"
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true" width="24" height="24">
+        <polyline points="15 18 9 12 15 6" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    <button
+      class="slideshow__arrow slideshow__arrow--next"
+      data-slideshow-next
+      aria-label="Next slide"
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true" width="24" height="24">
+        <polyline points="9 18 15 12 9 6" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    {%- comment -%} Dot indicators {%- endcomment -%}
+    <div class="slideshow__dots" role="tablist" aria-label="Slide indicators" data-slideshow-dots>
+      {%- for block in section.blocks -%}
+        <button
+          class="slideshow__dot{% if forloop.first %} slideshow__dot--active{% endif %}"
+          role="tab"
+          aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+          aria-label="Go to slide {{ forloop.index }}"
+          data-dot-index="{{ forloop.index0 }}"
+        ></button>
+      {%- endfor -%}
     </div>
-  {%- endfor -%}
+  {%- endif -%}
 </div>
+{%- endif -%}
 
 <style>
+  /* ── Slideshow container ── */
   .slideshow {
     position: relative;
     width: 100%;
     height: var(--slideshow-height, 80vh);
     overflow: hidden;
+    background-color: var(--color-off-white);
   }
 
   @media (max-width: 639px) {
@@ -57,22 +114,34 @@
     }
   }
 
+  /* ── Track ── */
+  .slideshow__track {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* ── Slides — all stacked via absolute, fade in/out ── */
   .slideshow__slide {
     position: absolute;
     inset: 0;
     opacity: 0;
     transition: opacity 0.6s ease;
+    pointer-events: none;
   }
 
   .slideshow__slide--active {
     opacity: 1;
-    position: relative;
+    pointer-events: auto;
+    z-index: 1;
   }
 
+  /* ── Images ── */
   .slideshow__image {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    display: block;
   }
 
   .slideshow__placeholder {
@@ -81,9 +150,11 @@
     background-color: var(--color-off-white);
   }
 
+  /* ── Text content overlay ── */
   .slideshow__content {
     position: absolute;
     inset: 0;
+    z-index: 2;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -109,6 +180,7 @@
     font-weight: var(--font-weight-bold);
     line-height: var(--line-height-tight);
     color: var(--color-white);
+    max-width: 700px;
   }
 
   .slideshow__subheading {
@@ -117,7 +189,186 @@
     color: var(--color-white);
     max-width: 500px;
   }
+
+  /* ── Arrows ── */
+  .slideshow__arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.15);
+    color: var(--color-white);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    transition: background-color var(--transition-fast);
+    cursor: pointer;
+  }
+
+  .slideshow__arrow:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+  }
+
+  .slideshow__arrow--prev {
+    left: var(--space-md);
+  }
+
+  .slideshow__arrow--next {
+    right: var(--space-md);
+  }
+
+  @media (min-width: 1024px) {
+    .slideshow__arrow--prev { left: var(--space-xl); }
+    .slideshow__arrow--next { right: var(--space-xl); }
+  }
+
+  /* ── Dot indicators ── */
+  .slideshow__dots {
+    position: absolute;
+    bottom: var(--space-lg);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+
+  .slideshow__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.5);
+    border: none;
+    cursor: pointer;
+    transition: background-color var(--transition-fast), transform var(--transition-fast);
+    padding: 0;
+  }
+
+  .slideshow__dot--active {
+    background-color: var(--color-white);
+    transform: scale(1.3);
+  }
+
+  .slideshow__dot:hover:not(.slideshow__dot--active) {
+    background-color: rgba(255, 255, 255, 0.8);
+  }
 </style>
+
+<script>
+(function () {
+  'use strict';
+
+  var slideshowEl = document.querySelector('[data-slideshow]');
+  if (!slideshowEl) return;
+
+  var slides    = Array.from(slideshowEl.querySelectorAll('[data-slide-index]'));
+  var dots      = Array.from(slideshowEl.querySelectorAll('[data-dot-index]'));
+  var prevBtn   = slideshowEl.querySelector('[data-slideshow-prev]');
+  var nextBtn   = slideshowEl.querySelector('[data-slideshow-next]');
+
+  if (slides.length <= 1) return; // nothing to autoplay with 1 slide
+
+  var current    = 0;
+  var autoplay   = slideshowEl.dataset.autoplay !== 'false';
+  var interval   = parseInt(slideshowEl.dataset.interval, 10) || 5000;
+  var timer      = null;
+
+  // ── Go to a specific slide ───────────────────────────────────────────────
+  function goTo(index) {
+    // Wrap around
+    index = (index + slides.length) % slides.length;
+
+    // Deactivate current
+    slides[current].classList.remove('slideshow__slide--active');
+    slides[current].setAttribute('aria-hidden', 'true');
+    if (dots[current]) {
+      dots[current].classList.remove('slideshow__dot--active');
+      dots[current].setAttribute('aria-selected', 'false');
+    }
+
+    // Activate new
+    current = index;
+    slides[current].classList.add('slideshow__slide--active');
+    slides[current].setAttribute('aria-hidden', 'false');
+    if (dots[current]) {
+      dots[current].classList.add('slideshow__dot--active');
+      dots[current].setAttribute('aria-selected', 'true');
+    }
+  }
+
+  // ── Autoplay timer ───────────────────────────────────────────────────────
+  function startTimer() {
+    if (!autoplay) return;
+    timer = setInterval(function () {
+      goTo(current + 1);
+    }, interval);
+  }
+
+  function stopTimer() {
+    clearInterval(timer);
+  }
+
+  function resetTimer() {
+    stopTimer();
+    startTimer();
+  }
+
+  // ── Arrow buttons ────────────────────────────────────────────────────────
+  if (prevBtn) {
+    prevBtn.addEventListener('click', function () {
+      goTo(current - 1);
+      resetTimer();
+    });
+  }
+
+  if (nextBtn) {
+    nextBtn.addEventListener('click', function () {
+      goTo(current + 1);
+      resetTimer();
+    });
+  }
+
+  // ── Dot buttons ──────────────────────────────────────────────────────────
+  dots.forEach(function (dot) {
+    dot.addEventListener('click', function () {
+      goTo(parseInt(dot.dataset.dotIndex, 10));
+      resetTimer();
+    });
+  });
+
+  // ── Pause on hover ───────────────────────────────────────────────────────
+  slideshowEl.addEventListener('mouseenter', stopTimer);
+  slideshowEl.addEventListener('mouseleave', startTimer);
+
+  // ── Keyboard navigation ──────────────────────────────────────────────────
+  slideshowEl.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowLeft')  { goTo(current - 1); resetTimer(); }
+    if (e.key === 'ArrowRight') { goTo(current + 1); resetTimer(); }
+  });
+
+  // ── Touch / swipe support ────────────────────────────────────────────────
+  var touchStartX = 0;
+  slideshowEl.addEventListener('touchstart', function (e) {
+    touchStartX = e.changedTouches[0].screenX;
+  }, { passive: true });
+
+  slideshowEl.addEventListener('touchend', function (e) {
+    var diff = touchStartX - e.changedTouches[0].screenX;
+    if (Math.abs(diff) > 50) {
+      goTo(diff > 0 ? current + 1 : current - 1);
+      resetTimer();
+    }
+  }, { passive: true });
+
+  // ── Start ────────────────────────────────────────────────────────────────
+  startTimer();
+
+})();
+</script>
 
 {% schema %}
 {
@@ -134,6 +385,22 @@
       "step": 5,
       "default": 80,
       "unit": "vh"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Auto-play slides",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "interval",
+      "label": "Seconds per slide",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "default": 5,
+      "unit": "s"
     }
   ],
   "blocks": [
