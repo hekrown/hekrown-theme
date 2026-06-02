@@ -4,8 +4,36 @@
 {%- endcomment -%}
 
 {{ 'section-main-product.css' | asset_url | stylesheet_tag }}
+{{ 'section-main-product.js' | asset_url | script_tag }}
 
-<div class="product-page section-padding">
+{%- comment -%}
+  Serialize all variant data into a JSON script tag.
+  The JS reads this to update price, availability and images on option change.
+{%- endcomment -%}
+<script id="product-json-{{ product.id }}" type="application/json">
+  {
+    "id": {{ product.id }},
+    "variants": [
+      {%- for variant in product.variants -%}
+        {
+          "id": {{ variant.id }},
+          "title": {{ variant.title | json }},
+          "price": {{ variant.price }},
+          "compare_at_price": {{ variant.compare_at_price | default: 'null' }},
+          "available": {{ variant.available }},
+          "option1": {{ variant.option1 | json }},
+          "option2": {{ variant.option2 | json }},
+          "option3": {{ variant.option3 | json }},
+          "featured_media_id": {{ variant.featured_media.id | default: 'null' }}
+        }{% unless forloop.last %},{% endunless %}
+      {%- endfor -%}
+    ],
+    "options": {{ product.options | json }},
+    "money_format": {{ shop.money_format | json }}
+  }
+</script>
+
+<div class="product-page section-padding" data-product-id="{{ product.id }}">
   <div class="container">
     {%- comment -%} Breadcrumb {%- endcomment -%}
     <nav class="breadcrumb" aria-label="Breadcrumb">
@@ -87,6 +115,9 @@
               <fieldset class="product-page__option">
                 <legend class="product-page__option-label">
                   {{ option.name }}{% if option.name == 'Colour' or option.name == 'Color' %}: <span data-selected-color>{{ option.selected_value }}</span>{% endif %}
+                  {%- if option.name == 'Size' -%}
+                    <button type="button" class="product-page__size-guide-link" data-size-guide-open>Size Guide</button>
+                  {%- endif -%}
                 </legend>
 
                 <div class="product-page__option-values">
@@ -122,6 +153,7 @@
           <button
             type="submit"
             class="btn btn--primary btn--full-width product-page__atc"
+            data-atc-btn
             {% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}
           >
             {%- if product.selected_or_first_available_variant.available -%}
@@ -175,6 +207,174 @@
     </div>
   </div>
 </div>
+
+{%- comment -%} Size Guide Modal {%- endcomment -%}
+<div class="size-guide-modal" id="size-guide-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="size-guide-title" data-size-guide>
+  <div class="size-guide-modal__overlay" data-size-guide-close></div>
+  <div class="size-guide-modal__panel">
+    <div class="size-guide-modal__header">
+      <h2 class="size-guide-modal__title" id="size-guide-title">Size Guide</h2>
+      <button class="size-guide-modal__close" aria-label="Close size guide" data-size-guide-close>
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+          <line x1="4" y1="4" x2="20" y2="20" stroke="currentColor" stroke-width="1.5"/>
+          <line x1="20" y1="4" x2="4" y2="20" stroke="currentColor" stroke-width="1.5"/>
+        </svg>
+      </button>
+    </div>
+    <div class="size-guide-modal__body">
+      {%- if product.metafields.custom.size_guide -%}
+        {{ product.metafields.custom.size_guide | metafield_tag }}
+      {%- else -%}
+        <table class="size-guide-modal__table">
+          <thead>
+            <tr>
+              <th>Size</th>
+              <th>Chest (in)</th>
+              <th>Waist (in)</th>
+              <th>Hip (in)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>XS</td><td>34–36</td><td>28–30</td><td>34–36</td></tr>
+            <tr><td>S</td><td>36–38</td><td>30–32</td><td>36–38</td></tr>
+            <tr><td>M</td><td>38–40</td><td>32–34</td><td>38–40</td></tr>
+            <tr><td>L</td><td>40–42</td><td>34–36</td><td>40–42</td></tr>
+            <tr><td>XL</td><td>42–44</td><td>36–38</td><td>42–44</td></tr>
+            <tr><td>XXL</td><td>44–46</td><td>38–40</td><td>44–46</td></tr>
+          </tbody>
+        </table>
+        <p class="size-guide-modal__note">All measurements are in inches. If between sizes, size up.</p>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+<style>
+  .product-page__size-guide-link {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-regular);
+    color: var(--color-mid-grey);
+    text-decoration: underline;
+    margin-left: var(--space-sm);
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+  }
+
+  .product-page__size-guide-link:hover {
+    color: var(--color-black);
+  }
+
+  /* Size guide modal */
+  .size-guide-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .size-guide-modal.is-open {
+    display: flex;
+  }
+
+  .size-guide-modal__overlay {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0,0,0,0.5);
+  }
+
+  .size-guide-modal__panel {
+    position: relative;
+    z-index: 1;
+    background-color: var(--color-white);
+    width: 90%;
+    max-width: 560px;
+    max-height: 80vh;
+    overflow-y: auto;
+    padding: var(--space-xl);
+  }
+
+  .size-guide-modal__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-lg);
+  }
+
+  .size-guide-modal__title {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+  }
+
+  .size-guide-modal__close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    color: var(--color-black);
+    cursor: pointer;
+  }
+
+  .size-guide-modal__close:hover { opacity: 0.6; }
+
+  .size-guide-modal__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--font-size-sm);
+  }
+
+  .size-guide-modal__table th,
+  .size-guide-modal__table td {
+    padding: var(--space-sm) var(--space-md);
+    text-align: left;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .size-guide-modal__table th {
+    font-weight: var(--font-weight-semibold);
+    background-color: var(--color-off-white);
+  }
+
+  .size-guide-modal__note {
+    margin-top: var(--space-md);
+    font-size: var(--font-size-sm);
+    color: var(--color-mid-grey);
+  }
+</style>
+
+<script>
+(function () {
+  var modal     = document.querySelector('[data-size-guide]');
+  var openBtns  = document.querySelectorAll('[data-size-guide-open]');
+  var closeBtns = document.querySelectorAll('[data-size-guide-close]');
+  if (!modal) return;
+
+  function openModal() {
+    modal.classList.add('is-open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('nav-open');
+    var closeBtn = modal.querySelector('[data-size-guide-close]');
+    if (closeBtn) closeBtn.focus();
+  }
+
+  function closeModal() {
+    modal.classList.remove('is-open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('nav-open');
+  }
+
+  openBtns.forEach(function (btn) { btn.addEventListener('click', openModal); });
+  closeBtns.forEach(function (btn) { btn.addEventListener('click', closeModal); });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && modal.classList.contains('is-open')) closeModal();
+  });
+})();
+</script>
 
 {% schema %}
 {
