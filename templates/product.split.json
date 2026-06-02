@@ -1,0 +1,21 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product-split",
+      "settings": {
+        "enable_sticky_details": false,
+        "show_sku": true
+      }
+    },
+    "product-recommendations": {
+      "type": "product-recommendations",
+      "settings": {
+        "heading": "You May Also Like"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "product-recommendations"
+  ]
+}

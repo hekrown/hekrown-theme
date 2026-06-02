@@ -180,6 +180,11 @@
       updateATCButton(variant);
       updateGallery(variant);
       updateUnavailableStates(selectedOptions);
+
+      // Dispatch custom event for sticky ATC bar and other listeners
+      document.dispatchEvent(new CustomEvent('variant:changed', {
+        detail: { variant: variant, selectedOptions: selectedOptions }
+      }));
     }
 
     // ── Attach listeners to all radio inputs ─────────────────────────────────

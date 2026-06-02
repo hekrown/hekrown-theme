@@ -1,0 +1,139 @@
+{{ 'customer-account.css' | asset_url | stylesheet_tag }}
+
+<div class="auth-page">
+  <div class="auth-page__container">
+    <div class="auth-page__header">
+      <h1 class="auth-page__title">{{ 'customer.login.title' | t }}</h1>
+      <p class="auth-page__subtitle">{{ 'customer.login.subtitle' | t }}</p>
+    </div>
+
+    {%- if recover_success -%}
+      <div class="account-notice account-notice--success">
+        {{ 'customer.recover_password.success' | t }}
+      </div>
+    {%- endif -%}
+
+    {%- form 'customer_login', class: 'auth-page__form account-form', novalidate: 'novalidate' -%}
+      {%- if form.errors -%}
+        <div class="account-notice account-notice--error">
+          <strong>{{ 'form.errors.heading' | t }}</strong>
+          <ul>
+            {%- for field in form.errors -%}
+              <li>{{ form.errors.messages[field] }}</li>
+            {%- endfor -%}
+          </ul>
+        </div>
+      {%- endif -%}
+
+      <div class="form-row">
+        <label for="customer-email" class="form-label form-label--required">
+          {{ 'customer.login.email' | t }}
+        </label>
+        <input
+          type="email"
+          id="customer-email"
+          name="customer[email]"
+          class="form-input"
+          autocomplete="email"
+          autocorrect="off"
+          autocapitalize="off"
+          required
+          {% if form.email %}value="{{ form.email }}"{% endif %}
+        >
+      </div>
+
+      <div class="form-row">
+        <label for="customer-password" class="form-label form-label--required">
+          {{ 'customer.login.password' | t }}
+        </label>
+        <input
+          type="password"
+          id="customer-password"
+          name="customer[password]"
+          class="form-input"
+          autocomplete="current-password"
+          required
+        >
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn--primary">
+          {{ 'customer.login.sign_in' | t }}
+        </button>
+        <a href="#recover" class="btn btn--secondary" onclick="showRecoverForm(event)">
+          {{ 'customer.login.forgot_password' | t }}
+        </a>
+      </div>
+    {%- endform -%}
+
+    <div class="auth-page__footer">
+      {{ 'customer.login.new_customer' | t }}
+      <a href="{{ routes.account_register_url }}">{{ 'customer.login.create_account' | t }}</a>
+    </div>
+  </div>
+</div>
+
+{%- comment -%} Password Recovery Form {%- endcomment -%}
+<div id="recover-form" class="auth-page" style="display: none;">
+  <div class="auth-page__container">
+    <div class="auth-page__header">
+      <h1 class="auth-page__title">{{ 'customer.recover_password.title' | t }}</h1>
+      <p class="auth-page__subtitle">{{ 'customer.recover_password.subtitle' | t }}</p>
+    </div>
+
+    {%- form 'recover_customer_password', class: 'auth-page__form account-form' -%}
+      {%- if form.errors -%}
+        <div class="account-notice account-notice--error">
+          {{ form.errors.messages['form'] }}
+        </div>
+      {%- endif -%}
+
+      {%- if form.posted_successfully? -%}
+        <div class="account-notice account-notice--success">
+          {{ 'customer.recover_password.success' | t }}
+        </div>
+      {%- endif -%}
+
+      <div class="form-row">
+        <label for="recover-email" class="form-label form-label--required">
+          {{ 'customer.recover_password.email' | t }}
+        </label>
+        <input
+          type="email"
+          id="recover-email"
+          name="email"
+          class="form-input"
+          autocomplete="email"
+          required
+        >
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn--primary">
+          {{ 'customer.recover_password.submit' | t }}
+        </button>
+        <a href="{{ routes.account_login_url }}" class="btn btn--secondary">
+          {{ 'customer.recover_password.cancel' | t }}
+        </a>
+      </div>
+    {%- endform -%}
+  </div>
+</div>
+
+<script>
+  function showRecoverForm(e) {
+    e.preventDefault();
+    document.querySelector('.auth-page').style.display = 'none';
+    document.getElementById('recover-form').style.display = 'flex';
+  }
+
+  {%- if recover_success -%}
+    document.querySelector('.auth-page').style.display = 'none';
+    document.getElementById('recover-form').style.display = 'flex';
+  {%- endif -%}
+
+  if (window.location.hash === '#recover') {
+    document.querySelector('.auth-page').style.display = 'none';
+    document.getElementById('recover-form').style.display = 'flex';
+  }
+</script>

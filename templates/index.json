@@ -1,35 +1,48 @@
 {
   "sections": {
-    "slideshow": {
-      "type": "slideshow",
+    "sticky-hero": {
+      "type": "sticky-hero",
       "settings": {
-        "height": 80
+        "overlay_opacity": 15
       },
       "blocks": {
-        "slide_1": {
-          "type": "slide",
+        "link_1": {
+          "type": "link",
           "settings": {
-            "heading": "New Season Collection",
-            "subheading": "Refined essentials for the modern wardrobe",
-            "button_text": "Shop New Arrivals",
-            "button_link": "/collections/new-arrivals",
-            "text_position": "bottom-left",
-            "text_color": "#FFFFFF"
+            "label": "New In",
+            "link": "/collections/new-arrivals"
           }
         },
-        "slide_2": {
-          "type": "slide",
+        "link_2": {
+          "type": "link",
           "settings": {
-            "heading": "Linen Wear",
-            "subheading": "Lightweight fabrics for every occasion",
-            "button_text": "Explore Linen",
-            "button_link": "/collections/linen-wear",
-            "text_position": "bottom-left",
-            "text_color": "#FFFFFF"
+            "label": "Suits",
+            "link": "/collections/new-arrivals"
+          }
+        },
+        "link_3": {
+          "type": "link",
+          "settings": {
+            "label": "Shirts",
+            "link": "/collections/shirts"
+          }
+        },
+        "link_4": {
+          "type": "link",
+          "settings": {
+            "label": "Linen Wear",
+            "link": "/collections/linen-wear"
+          }
+        },
+        "link_5": {
+          "type": "link",
+          "settings": {
+            "label": "Essentials",
+            "link": "/collections/essentials"
           }
         }
       },
-      "block_order": ["slide_1", "slide_2"]
+      "block_order": ["link_1", "link_2", "link_3", "link_4", "link_5"]
     },
     "collection_grid": {
       "type": "collection-grid",
@@ -104,7 +117,7 @@
     }
   },
   "order": [
-    "slideshow",
+    "sticky-hero",
     "collection_grid",
     "featured_collection",
     "featured_collection_2",

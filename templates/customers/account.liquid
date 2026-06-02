@@ -1,0 +1,125 @@
+{{ 'customer-account.css' | asset_url | stylesheet_tag }}
+
+<div class="account">
+  <div class="account__container">
+    <div class="account__header">
+      <h1 class="account__title">{{ 'customer.account.title' | t }}</h1>
+      <p class="account__subtitle">{{ 'customer.account.welcome' | t: name: customer.first_name }}</p>
+    </div>
+
+    <div class="account__grid">
+      {%- comment -%} Sidebar Navigation {%- endcomment -%}
+      <nav class="account__nav" aria-label="{{ 'customer.account.navigation' | t }}">
+        <a href="{{ routes.account_url }}" class="account__nav-link account__nav-link--active">
+          {{ 'customer.account.overview' | t }}
+        </a>
+        <a href="{{ routes.account_addresses_url }}" class="account__nav-link">
+          {{ 'customer.account.addresses' | t }}
+        </a>
+        <a href="{{ routes.account_logout_url }}" class="account__nav-link">
+          {{ 'customer.account.log_out' | t }}
+        </a>
+      </nav>
+
+      {%- comment -%} Main Content {%- endcomment -%}
+      <div class="account__main">
+        {%- comment -%} Recent Orders {%- endcomment -%}
+        <div class="account__section">
+          <div class="account__section-header">
+            <h2 class="account__section-title">{{ 'customer.orders.title' | t }}</h2>
+          </div>
+
+          {%- if customer.orders.size > 0 -%}
+            <div style="overflow-x: auto;">
+              <table class="orders-table">
+                <thead>
+                  <tr>
+                    <th>{{ 'customer.orders.order_number' | t }}</th>
+                    <th>{{ 'customer.orders.date' | t }}</th>
+                    <th>{{ 'customer.orders.payment_status' | t }}</th>
+                    <th>{{ 'customer.orders.fulfillment_status' | t }}</th>
+                    <th>{{ 'customer.orders.total' | t }}</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {%- for order in customer.orders limit: 5 -%}
+                    <tr>
+                      <td data-label="{{ 'customer.orders.order_number' | t }}">
+                        <a href="{{ order.customer_url }}">#{{ order.name }}</a>
+                      </td>
+                      <td data-label="{{ 'customer.orders.date' | t }}">
+                        {{ order.created_at | date: format: 'abbreviated_date' }}
+                      </td>
+                      <td data-label="{{ 'customer.orders.payment_status' | t }}">
+                        <span class="order-status order-status--{{ order.financial_status | handle }}">
+                          {{ order.financial_status_label }}
+                        </span>
+                      </td>
+                      <td data-label="{{ 'customer.orders.fulfillment_status' | t }}">
+                        {%- if order.fulfillment_status -%}
+                          <span class="order-status order-status--{{ order.fulfillment_status | handle }}">
+                            {{ order.fulfillment_status_label }}
+                          </span>
+                        {%- else -%}
+                          <span class="order-status order-status--pending">
+                            {{ 'customer.orders.unfulfilled' | t }}
+                          </span>
+                        {%- endif -%}
+                      </td>
+                      <td data-label="{{ 'customer.orders.total' | t }}">
+                        {{ order.total_price | money_with_currency }}
+                      </td>
+                      <td>
+                        <a href="{{ order.customer_url }}" class="btn btn--secondary" style="white-space: nowrap; padding: 8px 16px; font-size: var(--font-size-xs);">
+                          {{ 'customer.orders.view' | t }}
+                        </a>
+                      </td>
+                    </tr>
+                  {%- endfor -%}
+                </tbody>
+              </table>
+            </div>
+
+            {%- if customer.orders.size > 5 -%}
+              <div style="margin-top: var(--space-md);">
+                <a href="{{ routes.account_url }}/orders" class="account__section-action">
+                  {{ 'customer.orders.view_all' | t }} ({{ customer.orders.size }})
+                </a>
+              </div>
+            {%- endif -%}
+          {%- else -%}
+            <div class="account-empty">
+              <div class="account-empty__icon">📦</div>
+              <h3 class="account-empty__title">{{ 'customer.orders.none' | t }}</h3>
+              <p class="account-empty__text">{{ 'customer.orders.none_description' | t }}</p>
+              <a href="{{ routes.all_products_collection_url }}" class="btn btn--primary">
+                {{ 'customer.orders.start_shopping' | t }}
+              </a>
+            </div>
+          {%- endif -%}
+        </div>
+
+        {%- comment -%} Default Address {%- endcomment -%}
+        <div class="account__section">
+          <div class="account__section-header">
+            <h2 class="account__section-title">{{ 'customer.account.default_address' | t }}</h2>
+            <a href="{{ routes.account_addresses_url }}" class="account__section-action">
+              {{ 'customer.account.view_addresses' | t }}
+            </a>
+          </div>
+
+          {%- if customer.default_address -%}
+            <address style="font-style: normal; line-height: var(--line-height-normal); color: var(--color-dark-grey);">
+              {{ customer.default_address | format_address }}
+            </address>
+          {%- else -%}
+            <p style="color: var(--color-mid-grey); font-size: var(--font-size-sm);">
+              {{ 'customer.addresses.no_addresses' | t }}
+            </p>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
