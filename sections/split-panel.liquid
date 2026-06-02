@@ -1,0 +1,182 @@
+{%- comment -%}
+  Split Panel Section
+  Two full-width portrait images side by side.
+  Category label bottom-left. Entire section is a link to a collection.
+  Mirrors the Moss.co.uk editorial split panels between hero and product grid.
+{%- endcomment -%}
+
+{%- assign panel_link = section.settings.link | default: '#' -%}
+
+<a
+  href="{{ panel_link }}"
+  class="split-panel"
+  aria-label="{{ section.settings.label | default: 'View collection' }}"
+  data-split-panel
+>
+  {%- comment -%} Left image {%- endcomment -%}
+  <div class="split-panel__img-wrap">
+    {%- if section.settings.image_left != blank -%}
+      <img
+        src="{{ section.settings.image_left | image_url: width: 1000 }}"
+        alt="{{ section.settings.image_left.alt | default: section.settings.label | escape }}"
+        class="split-panel__img"
+        loading="lazy"
+        width="1000"
+        height="{{ 1000 | divided_by: section.settings.image_left.aspect_ratio | round }}"
+      >
+    {%- else -%}
+      <div class="split-panel__placeholder">
+        <svg viewBox="0 0 400 500" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect width="400" height="500" fill="#f0f0f0"/>
+          <text x="200" y="260" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#999">Add image</text>
+        </svg>
+      </div>
+    {%- endif -%}
+  </div>
+
+  {%- comment -%} Right image {%- endcomment -%}
+  <div class="split-panel__img-wrap">
+    {%- if section.settings.image_right != blank -%}
+      <img
+        src="{{ section.settings.image_right | image_url: width: 1000 }}"
+        alt="{{ section.settings.image_right.alt | default: section.settings.label | escape }}"
+        class="split-panel__img"
+        loading="lazy"
+        width="1000"
+        height="{{ 1000 | divided_by: section.settings.image_right.aspect_ratio | round }}"
+      >
+    {%- else -%}
+      <div class="split-panel__placeholder">
+        <svg viewBox="0 0 400 500" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect width="400" height="500" fill="#e8e8e8"/>
+          <text x="200" y="260" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#999">Add image</text>
+        </svg>
+      </div>
+    {%- endif -%}
+  </div>
+
+  {%- comment -%} Category label — bottom-left over the images {%- endcomment -%}
+  {%- if section.settings.label != blank -%}
+    <span class="split-panel__label">{{ section.settings.label }}</span>
+  {%- endif -%}
+</a>
+
+<style>
+  .split-panel {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    text-decoration: none;
+    overflow: hidden;
+    background-color: var(--color-off-white);
+    /* Remove any gap between this and the section above/below */
+    display: grid;
+  }
+
+  .split-panel:hover {
+    text-decoration: none;
+  }
+
+  /* Image wrappers */
+  .split-panel__img-wrap {
+    position: relative;
+    overflow: hidden;
+    /* Portrait ratio — matches Moss.co.uk approx 4:5 */
+    aspect-ratio: 4 / 5;
+  }
+
+  @media (max-width: 639px) {
+    .split-panel__img-wrap {
+      aspect-ratio: 3 / 4;
+    }
+  }
+
+  .split-panel__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    display: block;
+    transition: transform var(--transition-slow);
+  }
+
+  .split-panel:hover .split-panel__img {
+    transform: scale(1.03);
+  }
+
+  .split-panel__placeholder {
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-off-white);
+  }
+
+  .split-panel__placeholder svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Category label */
+  .split-panel__label {
+    position: absolute;
+    bottom: var(--space-lg);
+    left: var(--space-lg);
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-black);
+    letter-spacing: var(--letter-spacing-tight);
+    background-color: transparent;
+    pointer-events: none;
+    /* Subtle text shadow so it reads on light images */
+    text-shadow: 0 1px 3px rgba(255,255,255,0.6);
+  }
+
+  @media (min-width: 1024px) {
+    .split-panel__label {
+      font-size: var(--font-size-xl);
+      bottom: var(--space-xl);
+      left: var(--space-xl);
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Split Panel",
+  "tag": "section",
+  "class": "split-panel-section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image_left",
+      "label": "Left image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_right",
+      "label": "Right image"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Category label",
+      "default": "Suits",
+      "info": "Displayed bottom-left over the images"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Collection link",
+      "info": "The whole panel links to this URL"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Split Panel",
+      "settings": {
+        "label": "Suits",
+        "link": "/collections/new-arrivals"
+      }
+    }
+  ]
+}
+{% endschema %}
