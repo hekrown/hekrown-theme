@@ -1,0 +1,33 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product-blocks",
+      "settings": {
+        "sticky_info": true,
+        "color_scheme": "1"
+      },
+      "blocks": {
+        "title": { "type": "product-title", "settings": {} },
+        "rating": { "type": "product-rating", "settings": {} },
+        "price": { "type": "product-price", "settings": { "show_save_badge": true } },
+        "variants": { "type": "product-variant-picker", "settings": { "picker_type": "buttons" } },
+        "buy_buttons": { "type": "product-buy-buttons", "settings": { "show_quantity": true, "show_dynamic_checkout": true } },
+        "inventory": { "type": "product-inventory", "settings": { "low_stock_threshold": 5 } },
+        "divider_1": { "type": "divider", "settings": {} },
+        "description": { "type": "product-description", "settings": { "collapsible": true } },
+        "tab_delivery": { "type": "collapsible-tab", "settings": { "heading": "Delivery & Returns", "content": "<p>Free UK standard delivery on orders over £200. Express delivery available. Easy returns within 30 days.</p>" } },
+        "tab_care": { "type": "collapsible-tab", "settings": { "heading": "Care Instructions", "content": "<p>Machine wash cold. Tumble dry low. Iron on low heat if needed.</p>" } },
+        "divider_2": { "type": "divider", "settings": {} },
+        "share": { "type": "share-buttons", "settings": {} }
+      },
+      "block_order": ["title", "rating", "price", "variants", "buy_buttons", "inventory", "divider_1", "description", "tab_delivery", "tab_care", "divider_2", "share"]
+    },
+    "recommendations": {
+      "type": "product-recommendations",
+      "settings": {
+        "heading": "You May Also Like"
+      }
+    }
+  },
+  "order": ["main", "recommendations"]
+}

@@ -1,0 +1,175 @@
+{%- comment -%}
+  Multicolumn Section
+  N columns of content — icons, images, headings, text. Each column is a @theme block.
+  Perfect for features, services, benefits, team, or any repeated content pattern.
+{%- endcomment -%}
+
+<div class="section-multicolumn section-padding color-scheme-{{ section.settings.color_scheme }}">
+  <div class="container">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="section-multicolumn__heading" style="
+        text-align: {{ section.settings.heading_alignment }};
+        font-size: var(--font-size-xl);
+        font-weight: var(--font-weight-bold);
+        margin-bottom: var(--space-xl);
+      ">
+        {{ section.settings.heading }}
+      </h2>
+    {%- endif -%}
+
+    {%- if section.settings.subheading != blank -%}
+      <p class="section-multicolumn__subheading" style="
+        text-align: {{ section.settings.heading_alignment }};
+        font-size: var(--font-size-base);
+        color: var(--color-mid-grey);
+        margin-bottom: var(--space-xl);
+        max-width: 640px;
+        {%- if section.settings.heading_alignment == 'center' -%}margin-inline: auto;{%- endif -%}
+      ">
+        {{ section.settings.subheading }}
+      </p>
+    {%- endif -%}
+
+    <div class="section-multicolumn__grid" style="
+      display: grid;
+      grid-template-columns: repeat(1, 1fr);
+      gap: {{ section.settings.gap }}px;
+      text-align: {{ section.settings.column_alignment }};
+    ">
+      {%- for block in section.blocks -%}
+        <div class="section-multicolumn__column" {{ block.shopify_attributes }}>
+          {{ block.content }}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+<style>
+  @media (min-width: 640px) {
+    .section-multicolumn__grid {
+      grid-template-columns: repeat(2, 1fr) !important;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .section-multicolumn__grid {
+      grid-template-columns: repeat({{ section.settings.columns }}, 1fr) !important;
+    }
+  }
+
+  .section-multicolumn__column {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Multicolumn",
+  "tag": "section",
+  "class": "multicolumn-section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "1", "label": "Scheme 1 (Light)" },
+        { "value": "2", "label": "Scheme 2 (Dark)" },
+        { "value": "3", "label": "Scheme 3 (Neutral)" }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading"
+    },
+    {
+      "type": "select",
+      "id": "heading_alignment",
+      "label": "Heading alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Columns (desktop)",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Gap between columns",
+      "min": 8,
+      "max": 64,
+      "step": 4,
+      "default": 24,
+      "unit": "px"
+    },
+    {
+      "type": "select",
+      "id": "column_alignment",
+      "label": "Column text alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "center"
+    }
+  ],
+  "blocks": [
+    { "type": "@theme" },
+    { "type": "@app" }
+  ],
+  "presets": [
+    {
+      "name": "Multicolumn",
+      "settings": {
+        "heading": "Our Services",
+        "columns": 3
+      },
+      "blocks": [
+        {
+          "type": "group",
+          "blocks": [
+            { "type": "icon", "settings": { "icon": "delivery", "size": 32 } },
+            { "type": "heading", "settings": { "heading": "Free Shipping", "heading_tag": "h3", "heading_size": "var(--font-size-md)" } },
+            { "type": "text", "settings": { "text": "<p>Free standard shipping on all orders over £200.</p>", "text_size": "var(--font-size-sm)" } }
+          ]
+        },
+        {
+          "type": "group",
+          "blocks": [
+            { "type": "icon", "settings": { "icon": "returns", "size": 32 } },
+            { "type": "heading", "settings": { "heading": "Easy Returns", "heading_tag": "h3", "heading_size": "var(--font-size-md)" } },
+            { "type": "text", "settings": { "text": "<p>30-day hassle-free returns on all purchases.</p>", "text_size": "var(--font-size-sm)" } }
+          ]
+        },
+        {
+          "type": "group",
+          "blocks": [
+            { "type": "icon", "settings": { "icon": "shield", "size": 32 } },
+            { "type": "heading", "settings": { "heading": "Secure Payment", "heading_tag": "h3", "heading_size": "var(--font-size-md)" } },
+            { "type": "text", "settings": { "text": "<p>Your payment information is encrypted and secure.</p>", "text_size": "var(--font-size-sm)" } }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

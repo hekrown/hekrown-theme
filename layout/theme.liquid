@@ -51,12 +51,124 @@
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
   {%- endif -%}
 
+  {%- comment -%} Dynamic theme settings as CSS custom properties {%- endcomment -%}
+  <style>
+    :root {
+      --page-width: {{ settings.page_width | default: 1440 }}px;
+      --section-spacing: {{ settings.section_spacing | default: 64 }}px;
+      --grid-gap-dynamic: {{ settings.grid_gap | default: 20 }}px;
+      --button-radius: {{ settings.button_border_radius | default: 0 }}px;
+      --button-border-width: {{ settings.button_border_width | default: 1 }}px;
+      --animation-speed: {{ settings.animation_speed | default: '0.4s' }};
+      --font-body-scale: {{ settings.font_body_scale | default: 100 }}%;
+      --font-heading-scale: {{ settings.font_heading_scale | default: 100 }}%;
+      --heading-transform: {{ settings.heading_transform | default: 'none' }};
+
+      /* Color Scheme 1 (default) */
+      --color-scheme-1-bg: {{ settings.scheme_1_background | default: '#FFFFFF' }};
+      --color-scheme-1-text: {{ settings.scheme_1_text | default: '#333333' }};
+      --color-scheme-1-heading: {{ settings.scheme_1_heading | default: '#000000' }};
+      --color-scheme-1-btn-bg: {{ settings.scheme_1_button_bg | default: '#000000' }};
+      --color-scheme-1-btn-text: {{ settings.scheme_1_button_text | default: '#FFFFFF' }};
+      --color-scheme-1-accent: {{ settings.scheme_1_accent | default: '#C0392B' }};
+
+      /* Color Scheme 2 (dark) */
+      --color-scheme-2-bg: {{ settings.scheme_2_background | default: '#000000' }};
+      --color-scheme-2-text: {{ settings.scheme_2_text | default: '#CCCCCC' }};
+      --color-scheme-2-heading: {{ settings.scheme_2_heading | default: '#FFFFFF' }};
+      --color-scheme-2-btn-bg: {{ settings.scheme_2_button_bg | default: '#FFFFFF' }};
+      --color-scheme-2-btn-text: {{ settings.scheme_2_button_text | default: '#000000' }};
+      --color-scheme-2-accent: {{ settings.scheme_2_accent | default: '#E74C3C' }};
+
+      /* Color Scheme 3 (neutral) */
+      --color-scheme-3-bg: {{ settings.scheme_3_background | default: '#F5F5F5' }};
+      --color-scheme-3-text: {{ settings.scheme_3_text | default: '#333333' }};
+      --color-scheme-3-heading: {{ settings.scheme_3_heading | default: '#000000' }};
+      --color-scheme-3-btn-bg: {{ settings.scheme_3_button_bg | default: '#333333' }};
+      --color-scheme-3-btn-text: {{ settings.scheme_3_button_text | default: '#FFFFFF' }};
+      --color-scheme-3-accent: {{ settings.scheme_3_accent | default: '#C0392B' }};
+    }
+
+    /* Font scaling */
+    body { font-size: calc(14px * var(--font-body-scale) / 100); }
+    h1, h2, h3, h4, h5, h6 { text-transform: var(--heading-transform); }
+
+    /* Dynamic button radius */
+    .btn, .input, select { border-radius: var(--button-radius); }
+
+    /* Color scheme utility classes */
+    .color-scheme-1 {
+      background-color: var(--color-scheme-1-bg);
+      color: var(--color-scheme-1-text);
+      --color-scheme-bg: var(--color-scheme-1-bg);
+      --color-scheme-text: var(--color-scheme-1-text);
+      --color-scheme-heading: var(--color-scheme-1-heading);
+      --color-scheme-btn-bg: var(--color-scheme-1-btn-bg);
+      --color-scheme-btn-text: var(--color-scheme-1-btn-text);
+      --color-scheme-accent: var(--color-scheme-1-accent);
+    }
+
+    .color-scheme-2 {
+      background-color: var(--color-scheme-2-bg);
+      color: var(--color-scheme-2-text);
+      --color-scheme-bg: var(--color-scheme-2-bg);
+      --color-scheme-text: var(--color-scheme-2-text);
+      --color-scheme-heading: var(--color-scheme-2-heading);
+      --color-scheme-btn-bg: var(--color-scheme-2-btn-bg);
+      --color-scheme-btn-text: var(--color-scheme-2-btn-text);
+      --color-scheme-accent: var(--color-scheme-2-accent);
+    }
+
+    .color-scheme-3 {
+      background-color: var(--color-scheme-3-bg);
+      color: var(--color-scheme-3-text);
+      --color-scheme-bg: var(--color-scheme-3-bg);
+      --color-scheme-text: var(--color-scheme-3-text);
+      --color-scheme-heading: var(--color-scheme-3-heading);
+      --color-scheme-btn-bg: var(--color-scheme-3-btn-bg);
+      --color-scheme-btn-text: var(--color-scheme-3-btn-text);
+      --color-scheme-accent: var(--color-scheme-3-accent);
+    }
+
+    /* Apply scheme to buttons within scheme context */
+    [class*="color-scheme-"] .btn--primary {
+      background-color: var(--color-scheme-btn-bg);
+      color: var(--color-scheme-btn-text);
+    }
+
+    [class*="color-scheme-"] .btn--secondary {
+      color: var(--color-scheme-btn-bg);
+      border-color: var(--color-scheme-btn-bg);
+    }
+
+    [class*="color-scheme-"] .btn--secondary:hover {
+      background-color: var(--color-scheme-btn-bg);
+      color: var(--color-scheme-btn-text);
+    }
+
+    [class*="color-scheme-"] h1,
+    [class*="color-scheme-"] h2,
+    [class*="color-scheme-"] h3,
+    [class*="color-scheme-"] h4,
+    [class*="color-scheme-"] h5,
+    [class*="color-scheme-"] h6 {
+      color: var(--color-scheme-heading);
+    }
+
+    /* Container uses dynamic page width */
+    .container { max-width: var(--page-width); }
+
+    /* Section padding uses dynamic spacing */
+    .section-padding { padding-block: var(--section-spacing); }
+  </style>
+
   {%- comment -%} CSS Reset + Design Tokens {%- endcomment -%}
   {{ 'base.css' | asset_url | stylesheet_tag }}
 
   {%- comment -%} Component styles {%- endcomment -%}
   {{ 'component-header.css' | asset_url | stylesheet_tag }}
   {{ 'component-footer.css' | asset_url | stylesheet_tag }}
+  {{ 'predictive-search.css' | asset_url | stylesheet_tag }}
 
   {{ content_for_header }}
 
@@ -94,5 +206,6 @@
   {%- endunless -%}
 
   <script src="{{ 'global.js' | asset_url }}" defer></script>
+  <script src="{{ 'predictive-search.js' | asset_url }}" defer></script>
 </body>
 </html>

@@ -1,0 +1,118 @@
+{%- comment -%}
+  Rich Text Section
+  A flexible content section composed entirely of reusable @theme blocks.
+  Merchants can add headings, text, buttons, images, spacers, dividers — in any order.
+{%- endcomment -%}
+
+<div class="section-rich-text section-padding color-scheme-{{ section.settings.color_scheme }}" style="
+  {%- if section.settings.full_width == false -%}
+    padding-inline: var(--container-padding-mobile);
+  {%- endif -%}
+">
+  <div class="section-rich-text__inner" style="
+    max-width: {{ section.settings.content_width }}px;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    gap: {{ section.settings.block_gap }}px;
+    text-align: {{ section.settings.text_alignment }};
+  ">
+    {%- for block in section.blocks -%}
+      <div {{ block.shopify_attributes }}>
+        {{ block.content }}
+      </div>
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Rich text",
+  "tag": "section",
+  "class": "rich-text-section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "1", "label": "Scheme 1 (Light)" },
+        { "value": "2", "label": "Scheme 2 (Dark)" },
+        { "value": "3", "label": "Scheme 3 (Neutral)" }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "label": "Content width",
+      "min": 400,
+      "max": 1200,
+      "step": 40,
+      "default": 720,
+      "unit": "px"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Default text alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "block_gap",
+      "label": "Space between blocks",
+      "min": 0,
+      "max": 48,
+      "step": 4,
+      "default": 16,
+      "unit": "px"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full width",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 120,
+      "step": 8,
+      "default": 64,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 120,
+      "step": 8,
+      "default": 64,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    { "type": "@theme" },
+    { "type": "@app" }
+  ],
+  "presets": [
+    {
+      "name": "Rich text",
+      "blocks": [
+        { "type": "heading", "settings": { "heading": "Talk about your brand" } },
+        { "type": "text", "settings": { "text": "<p>Share information about your brand with your customers. Describe a product, make announcements, or welcome customers to your store.</p>" } },
+        { "type": "button", "settings": { "label": "Learn More", "style": "secondary" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

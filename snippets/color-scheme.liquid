@@ -1,0 +1,47 @@
+{%- comment -%}
+  Color Scheme CSS Variables
+  Usage: {% render 'color-scheme', scheme: section.settings.color_scheme %}
+  Outputs CSS custom properties for the selected scheme.
+  Apply to a wrapper element via inline style or class.
+{%- endcomment -%}
+
+{%- liquid
+  case scheme
+    when '1'
+      assign bg = settings.scheme_1_background
+      assign txt = settings.scheme_1_text
+      assign heading = settings.scheme_1_heading
+      assign btn_bg = settings.scheme_1_button_bg
+      assign btn_txt = settings.scheme_1_button_text
+      assign accent = settings.scheme_1_accent
+    when '2'
+      assign bg = settings.scheme_2_background
+      assign txt = settings.scheme_2_text
+      assign heading = settings.scheme_2_heading
+      assign btn_bg = settings.scheme_2_button_bg
+      assign btn_txt = settings.scheme_2_button_text
+      assign accent = settings.scheme_2_accent
+    when '3'
+      assign bg = settings.scheme_3_background
+      assign txt = settings.scheme_3_text
+      assign heading = settings.scheme_3_heading
+      assign btn_bg = settings.scheme_3_button_bg
+      assign btn_txt = settings.scheme_3_button_text
+      assign accent = settings.scheme_3_accent
+    else
+      assign bg = settings.scheme_1_background
+      assign txt = settings.scheme_1_text
+      assign heading = settings.scheme_1_heading
+      assign btn_bg = settings.scheme_1_button_bg
+      assign btn_txt = settings.scheme_1_button_text
+      assign accent = settings.scheme_1_accent
+  endcase
+-%}
+--color-scheme-bg: {{ bg }};
+--color-scheme-text: {{ txt }};
+--color-scheme-heading: {{ heading }};
+--color-scheme-btn-bg: {{ btn_bg }};
+--color-scheme-btn-text: {{ btn_txt }};
+--color-scheme-accent: {{ accent }};
+background-color: var(--color-scheme-bg);
+color: var(--color-scheme-text);

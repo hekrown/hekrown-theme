@@ -1,0 +1,254 @@
+{%- comment -%}
+  Video Hero Section
+  Full-width background video with text overlay.
+  Supports Shopify-hosted video, YouTube, and Vimeo.
+  Falls back to image on mobile or when video unavailable.
+{%- endcomment -%}
+
+<div class="section-video-hero" style="--hero-height: {{ section.settings.height }}vh;">
+  {%- comment -%} Background Video / Image {%- endcomment -%}
+  <div class="section-video-hero__media">
+    {%- if section.settings.video_url != blank -%}
+      {%- assign video_url = section.settings.video_url -%}
+      {%- if video_url contains 'youtube.com' or video_url contains 'youtu.be' -%}
+        {%- liquid
+          if video_url contains 'youtu.be/'
+            assign yt_id = video_url | split: 'youtu.be/' | last | split: '?' | first
+          else
+            assign yt_id = video_url | split: 'v=' | last | split: '&' | first
+          endif
+        -%}
+        <iframe
+          src="https://www.youtube-nocookie.com/embed/{{ yt_id }}?autoplay=1&mute=1&loop=1&playlist={{ yt_id }}&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1"
+          class="section-video-hero__iframe"
+          allow="autoplay; encrypted-media"
+          loading="lazy"
+          title="Background video"
+        ></iframe>
+      {%- elsif video_url contains 'vimeo.com' -%}
+        {%- assign vimeo_id = video_url | split: 'vimeo.com/' | last | split: '?' | first -%}
+        <iframe
+          src="https://player.vimeo.com/video/{{ vimeo_id }}?autoplay=1&muted=1&loop=1&background=1"
+          class="section-video-hero__iframe"
+          allow="autoplay"
+          loading="lazy"
+          title="Background video"
+        ></iframe>
+      {%- endif -%}
+    {%- elsif section.settings.shopify_video != blank -%}
+      {{ section.settings.shopify_video | video_tag: autoplay: true, loop: true, muted: true, controls: false, class: 'section-video-hero__video' }}
+    {%- endif -%}
+
+    {%- comment -%} Fallback image (also shown on mobile if configured) {%- endcomment -%}
+    {%- if section.settings.image != blank -%}
+      <img
+        src="{{ section.settings.image | image_url: width: 1920 }}"
+        alt="{{ section.settings.heading | escape }}"
+        class="section-video-hero__fallback"
+        width="1920"
+        height="{{ 1920 | divided_by: section.settings.image.aspect_ratio | round }}"
+        loading="eager"
+      >
+    {%- endif -%}
+
+    {%- comment -%} Overlay {%- endcomment -%}
+    <div class="section-video-hero__overlay" style="background-color: rgba(0,0,0,{{ section.settings.overlay_opacity | divided_by: 100.0 }});"></div>
+  </div>
+
+  {%- comment -%} Content {%- endcomment -%}
+  <div class="section-video-hero__content section-video-hero__content--{{ section.settings.text_position }}">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="section-video-hero__heading" style="color: {{ section.settings.text_color }};">
+        {{ section.settings.heading }}
+      </h2>
+    {%- endif -%}
+    {%- if section.settings.subheading != blank -%}
+      <p class="section-video-hero__subheading" style="color: {{ section.settings.text_color }};">
+        {{ section.settings.subheading }}
+      </p>
+    {%- endif -%}
+    {%- if section.settings.button_text != blank -%}
+      <a href="{{ section.settings.button_link }}" class="btn btn--primary section-video-hero__btn">
+        {{ section.settings.button_text }}
+      </a>
+    {%- endif -%}
+  </div>
+</div>
+
+<style>
+  .section-video-hero {
+    position: relative;
+    width: 100%;
+    height: var(--hero-height, 80vh);
+    overflow: hidden;
+  }
+
+  @media (max-width: 639px) {
+    .section-video-hero { height: 60vh; }
+  }
+
+  .section-video-hero__media {
+    position: absolute;
+    inset: 0;
+  }
+
+  .section-video-hero__iframe,
+  .section-video-hero__video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 177.78vh; /* 16:9 */
+    min-width: 100%;
+    min-height: 100%;
+    transform: translate(-50%, -50%);
+    border: none;
+    pointer-events: none;
+  }
+
+  .section-video-hero__fallback {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Show fallback image on mobile, hide video */
+  @media (max-width: 767px) {
+    .section-video-hero__iframe,
+    .section-video-hero__video {
+      display: none;
+    }
+  }
+
+  .section-video-hero__overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+
+  .section-video-hero__content {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: var(--space-2xl) var(--container-padding-mobile);
+    gap: var(--space-md);
+  }
+
+  @media (min-width: 1024px) {
+    .section-video-hero__content {
+      padding: var(--space-3xl) var(--container-padding);
+    }
+  }
+
+  .section-video-hero__content--center {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  .section-video-hero__heading {
+    font-size: clamp(32px, 5vw, 64px);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-tight);
+    max-width: 700px;
+  }
+
+  .section-video-hero__subheading {
+    font-size: clamp(14px, 2vw, 18px);
+    max-width: 500px;
+    opacity: 0.9;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Video hero",
+  "tag": "section",
+  "class": "video-hero-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "video_url",
+      "label": "Video URL (YouTube or Vimeo)",
+      "info": "Autoplays muted in the background"
+    },
+    {
+      "type": "video",
+      "id": "shopify_video",
+      "label": "Or upload a video"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Fallback image (also used on mobile)"
+    },
+    {
+      "type": "range",
+      "id": "height",
+      "label": "Height (vh)",
+      "min": 40,
+      "max": 100,
+      "step": 5,
+      "default": 80,
+      "unit": "vh"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay darkness (%)",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "default": 30,
+      "unit": "%"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "New Season"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "select",
+      "id": "text_position",
+      "label": "Text position",
+      "options": [
+        { "value": "bottom-left", "label": "Bottom left" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "bottom-left"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#FFFFFF"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Video hero"
+    }
+  ]
+}
+{% endschema %}

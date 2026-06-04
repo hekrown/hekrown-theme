@@ -1,0 +1,53 @@
+{%- comment -%}
+  Commerce Block: Product Inventory
+  Shows stock status — in stock, low stock, or out of stock.
+  Low stock threshold is configurable.
+{%- endcomment -%}
+
+{%- assign current_variant = product.selected_or_first_available_variant -%}
+
+{%- if current_variant.inventory_management == 'shopify' -%}
+  <div class="block-product-inventory" style="display: flex; align-items: center; gap: var(--space-sm); font-size: var(--font-size-sm);">
+    {%- if current_variant.inventory_quantity <= 0 and current_variant.inventory_policy != 'continue' -%}
+      <span style="width: 8px; height: 8px; border-radius: 50%; background: var(--color-red);"></span>
+      <span style="color: var(--color-red); font-weight: var(--font-weight-medium);">Out of stock</span>
+    {%- elsif current_variant.inventory_quantity <= block.settings.low_stock_threshold -%}
+      <span style="width: 8px; height: 8px; border-radius: 50%; background: #E67E22;"></span>
+      <span style="color: #E67E22; font-weight: var(--font-weight-medium);">
+        {%- if block.settings.show_count -%}
+          Only {{ current_variant.inventory_quantity }} left in stock
+        {%- else -%}
+          Low stock — order soon
+        {%- endif -%}
+      </span>
+    {%- else -%}
+      <span style="width: 8px; height: 8px; border-radius: 50%; background: #27AE60;"></span>
+      <span style="color: #27AE60; font-weight: var(--font-weight-medium);">In stock</span>
+    {%- endif -%}
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Inventory status",
+  "tag": "div",
+  "class": "theme-block--product-inventory",
+  "settings": [
+    {
+      "type": "range",
+      "id": "low_stock_threshold",
+      "label": "Low stock threshold",
+      "min": 1,
+      "max": 20,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "checkbox",
+      "id": "show_count",
+      "label": "Show exact stock count",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,26 @@
+{%- comment -%}
+  Theme Block: Spacer
+  Adjustable vertical whitespace between blocks.
+{%- endcomment -%}
+
+<div class="block-spacer" style="height: {{ block.settings.height }}px;" aria-hidden="true"></div>
+
+{% schema %}
+{
+  "name": "Spacer",
+  "tag": "div",
+  "class": "theme-block--spacer",
+  "settings": [
+    {
+      "type": "range",
+      "id": "height",
+      "label": "Height",
+      "min": 4,
+      "max": 120,
+      "step": 4,
+      "default": 24,
+      "unit": "px"
+    }
+  ]
+}
+{% endschema %}

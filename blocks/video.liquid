@@ -1,0 +1,131 @@
+{%- comment -%}
+  Theme Block: Video
+  Supports Shopify-hosted video, YouTube, and Vimeo.
+{%- endcomment -%}
+
+<div class="block-video" style="
+  {%- if block.settings.max_width != blank -%}max-width: {{ block.settings.max_width }}px;{%- endif -%}
+  {%- if block.settings.alignment == 'center' -%}margin-inline: auto;{%- endif -%}
+  {%- if block.settings.alignment == 'right' -%}margin-left: auto;{%- endif -%}
+">
+  {%- if block.settings.video_url != blank -%}
+    {%- assign video_url = block.settings.video_url -%}
+
+    {%- if video_url contains 'youtube.com' or video_url contains 'youtu.be' -%}
+      {%- liquid
+        if video_url contains 'youtu.be/'
+          assign yt_id = video_url | split: 'youtu.be/' | last | split: '?' | first
+        else
+          assign yt_id = video_url | split: 'v=' | last | split: '&' | first
+        endif
+      -%}
+      <div class="block-video__responsive" style="aspect-ratio: 16/9;">
+        <iframe
+          src="https://www.youtube-nocookie.com/embed/{{ yt_id }}?rel=0{% if block.settings.autoplay %}&autoplay=1&mute=1{% endif %}"
+          title="{{ block.settings.title | default: 'Video' }}"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+          loading="lazy"
+          style="position: absolute; inset: 0; width: 100%; height: 100%; border: none;"
+        ></iframe>
+      </div>
+
+    {%- elsif video_url contains 'vimeo.com' -%}
+      {%- assign vimeo_id = video_url | split: 'vimeo.com/' | last | split: '?' | first | split: '/' | first -%}
+      <div class="block-video__responsive" style="aspect-ratio: 16/9;">
+        <iframe
+          src="https://player.vimeo.com/video/{{ vimeo_id }}?title=0&byline=0&portrait=0{% if block.settings.autoplay %}&autoplay=1&muted=1{% endif %}"
+          title="{{ block.settings.title | default: 'Video' }}"
+          allow="autoplay; fullscreen; picture-in-picture"
+          allowfullscreen
+          loading="lazy"
+          style="position: absolute; inset: 0; width: 100%; height: 100%; border: none;"
+        ></iframe>
+      </div>
+
+    {%- else -%}
+      <p style="padding: var(--space-md); background: var(--color-off-white); text-align: center; font-size: var(--font-size-sm); color: var(--color-mid-grey);">
+        Paste a YouTube or Vimeo URL to embed a video.
+      </p>
+    {%- endif -%}
+
+  {%- elsif block.settings.shopify_video != blank -%}
+    <div class="block-video__responsive" style="aspect-ratio: 16/9;">
+      {{ block.settings.shopify_video | video_tag: autoplay: block.settings.autoplay, loop: block.settings.loop, muted: true, controls: true, loading: 'lazy', style: 'width:100%;height:100%;object-fit:cover;' }}
+    </div>
+
+  {%- else -%}
+    <div style="aspect-ratio: 16/9; background: var(--color-off-white); display: flex; align-items: center; justify-content: center;">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--color-mid-grey)" stroke-width="1"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+    </div>
+  {%- endif -%}
+</div>
+
+<style>
+  .block-video__responsive {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    background-color: var(--color-black);
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Video",
+  "tag": "div",
+  "class": "theme-block--video",
+  "settings": [
+    {
+      "type": "text",
+      "id": "video_url",
+      "label": "Video URL (YouTube or Vimeo)",
+      "info": "Paste a YouTube or Vimeo link"
+    },
+    {
+      "type": "video",
+      "id": "shopify_video",
+      "label": "Or upload a video"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Video title (accessibility)",
+      "default": "Video"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Autoplay (muted)",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "loop",
+      "label": "Loop video",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width (px)",
+      "min": 200,
+      "max": 1200,
+      "step": 50,
+      "default": 800,
+      "unit": "px"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
+    }
+  ]
+}
+{% endschema %}
