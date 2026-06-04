@@ -1,0 +1,2 @@
+# Ignore system-managed files that cannot be deleted from the remote theme
+templates/gift_card.liquid
