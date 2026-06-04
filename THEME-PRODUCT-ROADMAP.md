@@ -210,47 +210,49 @@ Move from 5 flat color settings to **named color schemes** (e.g. "Scheme 1: ligh
 
 ## 7. Execution Plan (Phased)
 
-### Phase 6 — Theme Blocks Foundation ⭐ (do first, unblocks everything)
-1. Create `/blocks` folder
-2. Build primitive blocks (text, heading, button, image, icon, spacer, divider, video, group)
-3. Convert one section (e.g. a new "Rich text" or "Multicolumn") to `@theme` blocks as proof of concept
-4. Document the block authoring pattern for the team
+### Phase 6 — Theme Blocks Foundation ✅ DONE
+1. ~~Create `/blocks` folder~~
+2. ~~Build primitive blocks (text, heading, button, image, icon, spacer, divider, video, group)~~
+3. ~~Convert one section (Rich text + Multicolumn) to `@theme` blocks~~
+4. ~~Document the block authoring pattern~~
 
-### Phase 7 — Color Schemes & Global Settings
-1. Implement named color scheme system in `settings_schema.json`
-2. Refactor `base.css` to consume scheme variables
-3. Add color-scheme selector + padding controls to all existing sections
-4. Expand typography, button, card, animation global settings
+### Phase 7 — Color Schemes & Global Settings ✅ DONE
+1. ~~Implement named color scheme system (3 schemes × 6 colors)~~
+2. ~~Refactor CSS to consume scheme variables via theme.liquid~~
+3. ~~Add color-scheme selector to all new sections~~
+4. ~~Expand typography, button, card, animation, layout, cart global settings (50 settings total)~~
 
-### Phase 8 — Core Section Expansion
-1. Build the "everyone needs these" sections: Rich text, Multicolumn, FAQ, Testimonials, Featured product, Collection list, Newsletter, Video, Logo list, Countdown
-2. All built with `@theme` blocks + full settings + presets
+### Phase 8 — Core Section Expansion ✅ DONE
+1. ~~Built 8 new sections: FAQ, Testimonials, Countdown, Newsletter, Video Hero, Logo List, Featured Product, Contact Form~~
+2. ~~All with `@theme` blocks + full settings + presets~~
+3. ~~Total sections now: 41 (matches Horizon)~~
 
-### Phase 9 — PDP Block Refactor
-1. Rebuild `main-product.liquid` as a block-composed section
-2. Build all commerce blocks (§4.3)
-3. Merchant can reorder title/price/variants/buy buttons/accordions
+### Phase 9 — PDP Block Refactor ✅ DONE
+1. ~~Rebuilt PDP as block-composed section (`main-product-blocks.liquid`)~~
+2. ~~Built 9 commerce blocks (title, price, variants, buy buttons, rating, description, inventory, collapsible tab, share buttons)~~
+3. ~~Merchant reorders everything via editor — no code~~
 
-### Phase 10 — App-Replacement Features
-1. Reviews (metafield-based + `@app` support)
-2. Shop-the-look hotspots
-3. Free shipping bar + cart upsells
-4. Newsletter popup
-5. Image/color swatches on cards + PDP
-6. Predictive search
-7. Recently viewed
+### Phase 10 — App-Replacement Features ✅ DONE
+1. ~~Free shipping progress bar~~
+2. ~~Recently viewed products~~
+3. ~~Predictive search (live results from Shopify Suggest API)~~
+4. ~~Newsletter popup (cookie-gated, configurable delay/frequency)~~
+5. ~~Cart upsells (complementary products via Recommendations API)~~
+6. ~~12 app-replacement features total~~
 
-### Phase 11 — App Block Support
-1. Add `{"type": "@app"}` to PDP, cart, and content sections
-2. Test with Judge.me, Klaviyo, ReConvert, Loox
+### Phase 11 — App Block Support ⏳ NEXT
+1. Verify `@app` blocks render in key sections
+2. Test with Judge.me, Klaviyo app blocks
+3. Add `@app` to cart section
 
-### Phase 12 — Presets, Demo Content & Polish
+### Phase 12 — Presets, Demo Content & Polish ⏳ PENDING
 1. Multiple homepage presets
 2. Demo content for all sections
 3. Loading/empty states
-4. Animation system
+4. Refactor pre-existing contributor sections
+5. Animation system
 
-### Phase 13 — Performance & Release
+### Phase 13 — Performance & Release ⏳ PENDING
 1. Lighthouse 90+
 2. Lazy loading, CLS audit
 3. Full documentation, demo store
