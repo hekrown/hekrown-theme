@@ -1,0 +1,127 @@
+{%- comment -%}
+  Theme Block: Heading
+  Configurable heading element (h1-h6) with size, color, and alignment controls.
+{%- endcomment -%}
+
+{%- liquid
+  assign tag = block.settings.heading_tag
+  assign size = block.settings.heading_size
+-%}
+
+<{{ tag }} class="block-heading" style="
+  font-size: {{ size }};
+  text-align: {{ block.settings.alignment }};
+  font-weight: {{ block.settings.font_weight }};
+  {%- if block.settings.text_transform != 'none' -%}text-transform: {{ block.settings.text_transform }};{%- endif -%}
+  {%- if block.settings.letter_spacing != '0' -%}letter-spacing: {{ block.settings.letter_spacing }};{%- endif -%}
+  {%- if block.settings.heading_color != blank and block.settings.heading_color != 'rgba(0,0,0,0)' -%}color: {{ block.settings.heading_color }};{%- endif -%}
+  {%- if block.settings.max_width != 'none' -%}max-width: {{ block.settings.max_width }};margin-inline: auto;{%- endif -%}
+">
+  {{ block.settings.heading }}
+</{{ tag }}>
+
+{% schema %}
+{
+  "name": "Heading",
+  "tag": "div",
+  "class": "theme-block--heading",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Talk about your brand"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading level (SEO)",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" },
+        { "value": "h4", "label": "H4" },
+        { "value": "h5", "label": "H5" },
+        { "value": "h6", "label": "H6" },
+        { "value": "p", "label": "Paragraph (no SEO)" }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Size",
+      "options": [
+        { "value": "var(--font-size-md)", "label": "Small" },
+        { "value": "var(--font-size-lg)", "label": "Medium" },
+        { "value": "var(--font-size-xl)", "label": "Large" },
+        { "value": "var(--font-size-2xl)", "label": "Extra Large" },
+        { "value": "var(--font-size-3xl)", "label": "Huge" }
+      ],
+      "default": "var(--font-size-2xl)"
+    },
+    {
+      "type": "select",
+      "id": "font_weight",
+      "label": "Weight",
+      "options": [
+        { "value": "var(--font-weight-regular)", "label": "Regular" },
+        { "value": "var(--font-weight-medium)", "label": "Medium" },
+        { "value": "var(--font-weight-semibold)", "label": "Semibold" },
+        { "value": "var(--font-weight-bold)", "label": "Bold" }
+      ],
+      "default": "var(--font-weight-bold)"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "text_transform",
+      "label": "Transform",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "uppercase", "label": "Uppercase" },
+        { "value": "capitalize", "label": "Capitalize" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "select",
+      "id": "letter_spacing",
+      "label": "Letter spacing",
+      "options": [
+        { "value": "0", "label": "Normal" },
+        { "value": "var(--letter-spacing-tight)", "label": "Tight" },
+        { "value": "var(--letter-spacing-wide)", "label": "Wide" },
+        { "value": "var(--letter-spacing-wider)", "label": "Wider" }
+      ],
+      "default": "0"
+    },
+    {
+      "type": "select",
+      "id": "max_width",
+      "label": "Max width",
+      "options": [
+        { "value": "none", "label": "Full width" },
+        { "value": "640px", "label": "Medium" },
+        { "value": "800px", "label": "Wide" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Color"
+    }
+  ]
+}
+{% endschema %}

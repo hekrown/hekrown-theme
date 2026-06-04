@@ -1,0 +1,146 @@
+{%- comment -%}
+  Commerce Block: Variant Picker
+  Renders option selectors (buttons or dropdown) for all product options.
+  Works with section-main-product.js for dynamic updates.
+{%- endcomment -%}
+
+{%- unless product.has_only_default_variant -%}
+  <div class="block-variant-picker" data-variant-picker>
+    {%- for option in product.options_with_values -%}
+      <fieldset class="block-variant-picker__option">
+        <legend class="block-variant-picker__label">
+          {{ option.name }}
+          {%- if option.name == 'Colour' or option.name == 'Color' -%}
+            : <span data-selected-color>{{ option.selected_value }}</span>
+          {%- endif -%}
+          {%- if option.name == 'Size' and block.settings.show_size_guide -%}
+            <button type="button" class="block-variant-picker__size-guide" data-size-guide-open>Size Guide</button>
+          {%- endif -%}
+        </legend>
+
+        {%- if block.settings.picker_type == 'buttons' -%}
+          <div class="block-variant-picker__values">
+            {%- for value in option.values -%}
+              <label class="block-variant-picker__value{% if option.selected_value == value %} block-variant-picker__value--selected{% endif %}">
+                <input
+                  type="radio"
+                  name="option-{{ option.name | handleize }}"
+                  value="{{ value | escape }}"
+                  {% if option.selected_value == value %}checked{% endif %}
+                  class="visually-hidden"
+                >
+                <span>{{ value }}</span>
+              </label>
+            {%- endfor -%}
+          </div>
+        {%- else -%}
+          <select class="form-input" name="option-{{ option.name | handleize }}" style="height: 44px; width: 100%;">
+            {%- for value in option.values -%}
+              <option value="{{ value | escape }}" {% if option.selected_value == value %}selected{% endif %}>
+                {{ value }}
+              </option>
+            {%- endfor -%}
+          </select>
+        {%- endif -%}
+      </fieldset>
+    {%- endfor -%}
+  </div>
+{%- endunless -%}
+
+<style>
+  .block-variant-picker__option {
+    border: none;
+    margin-bottom: var(--space-md);
+  }
+
+  .block-variant-picker__label {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    margin-bottom: var(--space-sm);
+    display: block;
+  }
+
+  .block-variant-picker__size-guide {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-regular);
+    color: var(--color-mid-grey);
+    text-decoration: underline;
+    margin-left: var(--space-sm);
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+  }
+
+  .block-variant-picker__values {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+  }
+
+  .block-variant-picker__value {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    height: 44px;
+    padding: 0 var(--space-md);
+    border: 1px solid var(--color-border);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    cursor: pointer;
+    transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+  }
+
+  .block-variant-picker__value--selected {
+    background-color: var(--color-scheme-btn-bg, var(--color-black));
+    border-color: var(--color-scheme-btn-bg, var(--color-black));
+    color: var(--color-scheme-btn-text, var(--color-white));
+  }
+
+  .block-variant-picker__value:hover:not(.block-variant-picker__value--selected) {
+    border-color: var(--color-scheme-btn-bg, var(--color-black));
+  }
+
+  .block-variant-picker__value--unavailable {
+    opacity: 0.4;
+    position: relative;
+  }
+
+  .block-variant-picker__value--unavailable::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background-color: var(--color-mid-grey);
+    transform: rotate(-12deg);
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Variant picker",
+  "tag": "div",
+  "class": "theme-block--variant-picker",
+  "settings": [
+    {
+      "type": "select",
+      "id": "picker_type",
+      "label": "Picker style",
+      "options": [
+        { "value": "buttons", "label": "Buttons" },
+        { "value": "dropdown", "label": "Dropdown" }
+      ],
+      "default": "buttons"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_size_guide",
+      "label": "Show size guide link",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

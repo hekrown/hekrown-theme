@@ -1,0 +1,211 @@
+{%- comment -%}
+  Featured Product Section
+  Spotlight a single product with full buy form — usable on any page.
+{%- endcomment -%}
+
+{%- assign featured_product = all_products[section.settings.product] -%}
+
+<div class="section-featured-product section-padding color-scheme-{{ section.settings.color_scheme }}">
+  <div class="container">
+    {%- if featured_product != blank -%}
+      <div class="section-featured-product__grid">
+        <div class="section-featured-product__media">
+          {%- if featured_product.featured_image -%}
+            <img
+              src="{{ featured_product.featured_image | image_url: width: 900 }}"
+              alt="{{ featured_product.featured_image.alt | escape }}"
+              width="900"
+              height="{{ 900 | divided_by: featured_product.featured_image.aspect_ratio | round }}"
+              loading="lazy"
+              class="section-featured-product__image"
+            >
+          {%- endif -%}
+        </div>
+
+        <div class="section-featured-product__details">
+          {%- if section.settings.show_vendor and featured_product.vendor -%}
+            <p class="section-featured-product__vendor">{{ featured_product.vendor }}</p>
+          {%- endif -%}
+
+          <h2 class="section-featured-product__title" style="color: var(--color-scheme-heading, inherit);">
+            <a href="{{ featured_product.url }}">{{ featured_product.title }}</a>
+          </h2>
+
+          <div class="section-featured-product__price">
+            {%- if featured_product.compare_at_price > featured_product.price -%}
+              <span style="color: var(--color-scheme-accent, var(--color-red));">{{ featured_product.price | money }}</span>
+              <span style="text-decoration: line-through; color: var(--color-mid-grey); margin-left: var(--space-sm);">{{ featured_product.compare_at_price | money }}</span>
+            {%- else -%}
+              <span>{{ featured_product.price | money }}</span>
+            {%- endif -%}
+          </div>
+
+          {%- if section.settings.show_description and featured_product.description != blank -%}
+            <div class="section-featured-product__description">
+              {{ featured_product.description | truncate: 200 }}
+            </div>
+          {%- endif -%}
+
+          {%- form 'product', featured_product -%}
+            <input type="hidden" name="id" value="{{ featured_product.selected_or_first_available_variant.id }}">
+
+            {%- unless featured_product.has_only_default_variant -%}
+              <div class="section-featured-product__variants">
+                {%- for option in featured_product.options_with_values -%}
+                  <div class="form-row">
+                    <label class="form-label">{{ option.name }}</label>
+                    <select name="id" class="form-input" style="height: 44px;">
+                      {%- for variant in featured_product.variants -%}
+                        <option value="{{ variant.id }}" {% unless variant.available %}disabled{% endunless %}>
+                          {{ variant.title }}{% unless variant.available %} — Sold Out{% endunless %}
+                        </option>
+                      {%- endfor -%}
+                    </select>
+                  </div>
+                {%- endfor -%}
+              </div>
+            {%- endunless -%}
+
+            <button
+              type="submit"
+              class="btn btn--primary"
+              {% unless featured_product.available %}disabled{% endunless %}
+            >
+              {%- if featured_product.available -%}
+                Add to Basket
+              {%- else -%}
+                Sold Out
+              {%- endif -%}
+            </button>
+          {%- endform -%}
+
+          <a href="{{ featured_product.url }}" class="section-featured-product__link">
+            View full details →
+          </a>
+        </div>
+      </div>
+    {%- else -%}
+      <p style="text-align: center; padding: var(--space-2xl); color: var(--color-mid-grey);">
+        Select a product in the theme editor to preview.
+      </p>
+    {%- endif -%}
+  </div>
+</div>
+
+<style>
+  .section-featured-product__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-xl);
+    align-items: center;
+  }
+
+  @media (min-width: 1024px) {
+    .section-featured-product__grid {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-2xl);
+    }
+  }
+
+  .section-featured-product__image {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+    background-color: var(--color-off-white);
+  }
+
+  .section-featured-product__details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .section-featured-product__vendor {
+    font-size: var(--font-size-xs);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-wide);
+    color: var(--color-mid-grey);
+  }
+
+  .section-featured-product__title {
+    font-size: clamp(22px, 3vw, 32px);
+    font-weight: var(--font-weight-bold);
+  }
+
+  .section-featured-product__title a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .section-featured-product__title a:hover {
+    text-decoration: underline;
+  }
+
+  .section-featured-product__price {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  .section-featured-product__description {
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-normal);
+    color: var(--color-scheme-text, var(--color-dark-grey));
+  }
+
+  .section-featured-product__variants {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-sm);
+  }
+
+  .section-featured-product__link {
+    font-size: var(--font-size-sm);
+    color: var(--color-scheme-text, var(--color-dark-grey));
+    text-decoration: underline;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Featured product",
+  "tag": "section",
+  "class": "featured-product-section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "1", "label": "Scheme 1 (Light)" },
+        { "value": "2", "label": "Scheme 2 (Dark)" },
+        { "value": "3", "label": "Scheme 3 (Neutral)" }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "label": "Show vendor",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "Show description",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured product"
+    }
+  ]
+}
+{% endschema %}

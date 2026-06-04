@@ -144,7 +144,7 @@
   data-search-overlay
 >
   <div class="search-overlay__inner">
-    <form action="{{ routes.search_url }}" method="get" class="search-overlay__form" role="search">
+    <form action="{{ routes.search_url }}" method="get" class="search-overlay__form predictive-search" role="search" data-predictive-search>
       <input type="hidden" name="type" value="product">
       <label for="search-input" class="visually-hidden">Search</label>
       <input
@@ -155,6 +155,7 @@
         placeholder="Search for products..."
         autocomplete="off"
         data-search-input
+        data-predictive-input
       >
       <button type="submit" class="search-overlay__submit" aria-label="Submit search">
         <svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22">
@@ -168,6 +169,10 @@
           <line x1="20" y1="4" x2="4" y2="20" stroke="currentColor" stroke-width="1.5"/>
         </svg>
       </button>
+
+      {%- comment -%} Predictive search results dropdown {%- endcomment -%}
+      <div class="predictive__loading" data-predictive-loading>Searching...</div>
+      <div class="predictive-results" aria-hidden="true" data-predictive-results style="display: none;"></div>
     </form>
   </div>
 </div>
@@ -285,6 +290,8 @@
   </div>
 
   <div class="cart-drawer__footer" data-drawer-footer style="display:none;">
+    {% render 'free-shipping-bar', cart: cart %}
+    {% render 'cart-upsell' %}
     <div class="cart-drawer__subtotal">
       <span>Subtotal</span>
       <span data-drawer-subtotal></span>

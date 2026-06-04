@@ -1,0 +1,112 @@
+{%- comment -%}
+  Theme Block: Image
+  Responsive image with aspect ratio, link, and border radius controls.
+{%- endcomment -%}
+
+<div class="block-image" style="
+  {%- if block.settings.max_width != blank -%}max-width: {{ block.settings.max_width }}px;{%- endif -%}
+  {%- if block.settings.alignment == 'center' -%}margin-inline: auto;{%- endif -%}
+  {%- if block.settings.alignment == 'right' -%}margin-left: auto;{%- endif -%}
+">
+  {%- if block.settings.link != blank -%}<a href="{{ block.settings.link }}">{%- endif -%}
+
+    {%- if block.settings.image != blank -%}
+      <img
+        src="{{ block.settings.image | image_url: width: 1200 }}"
+        alt="{{ block.settings.image.alt | escape }}"
+        width="{{ block.settings.image.width }}"
+        height="{{ block.settings.image.height }}"
+        loading="lazy"
+        class="block-image__img"
+        style="
+          width: 100%;
+          height: auto;
+          display: block;
+          {%- if block.settings.aspect_ratio != 'natural' -%}
+            aspect-ratio: {{ block.settings.aspect_ratio }};
+            object-fit: cover;
+          {%- endif -%}
+          {%- if block.settings.border_radius != '0' -%}border-radius: {{ block.settings.border_radius }}px;{%- endif -%}
+        "
+      >
+    {%- else -%}
+      <div style="
+        background-color: var(--color-off-white);
+        {%- if block.settings.aspect_ratio != 'natural' -%}
+          aspect-ratio: {{ block.settings.aspect_ratio }};
+        {%- else -%}
+          aspect-ratio: 16/9;
+        {%- endif -%}
+        width: 100%;
+      ">
+        {{ 'image' | placeholder_svg_tag }}
+      </div>
+    {%- endif -%}
+
+  {%- if block.settings.link != blank -%}</a>{%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Image",
+  "tag": "div",
+  "class": "theme-block--image",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "aspect_ratio",
+      "label": "Aspect ratio",
+      "options": [
+        { "value": "natural", "label": "Natural" },
+        { "value": "1/1", "label": "Square (1:1)" },
+        { "value": "3/4", "label": "Portrait (3:4)" },
+        { "value": "4/3", "label": "Landscape (4:3)" },
+        { "value": "16/9", "label": "Widescreen (16:9)" },
+        { "value": "2/3", "label": "Tall (2:3)" }
+      ],
+      "default": "natural"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width (px)",
+      "min": 100,
+      "max": 1200,
+      "step": 50,
+      "default": 1200,
+      "unit": "px"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Corner radius",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "default": 0,
+      "unit": "px"
+    }
+  ]
+}
+{% endschema %}

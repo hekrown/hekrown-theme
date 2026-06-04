@@ -1,0 +1,334 @@
+{%- comment -%}
+  Newsletter Popup
+  Cookie-gated popup with configurable delay, frequency, and content.
+  Replaces: Privy, Justuno, Mailchimp popup ($15+/mo)
+{%- endcomment -%}
+
+{%- if section.settings.enable -%}
+<div
+  class="newsletter-popup"
+  id="newsletter-popup"
+  aria-hidden="true"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="newsletter-popup-heading"
+  data-newsletter-popup
+  data-delay="{{ section.settings.delay }}"
+  data-frequency="{{ section.settings.show_frequency }}"
+>
+  <div class="newsletter-popup__overlay" data-newsletter-popup-close></div>
+  <div class="newsletter-popup__panel">
+    <button class="newsletter-popup__close" aria-label="Close popup" data-newsletter-popup-close>
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+        <line x1="4" y1="4" x2="20" y2="20" stroke="currentColor" stroke-width="1.5"/>
+        <line x1="20" y1="4" x2="4" y2="20" stroke="currentColor" stroke-width="1.5"/>
+      </svg>
+    </button>
+
+    <div class="newsletter-popup__grid">
+      {%- if section.settings.image != blank -%}
+        <div class="newsletter-popup__media">
+          <img
+            src="{{ section.settings.image | image_url: width: 600 }}"
+            alt="{{ section.settings.heading | escape }}"
+            width="600"
+            height="{{ 600 | divided_by: section.settings.image.aspect_ratio | round }}"
+            loading="lazy"
+            class="newsletter-popup__image"
+          >
+        </div>
+      {%- endif -%}
+
+      <div class="newsletter-popup__content">
+        {%- if section.settings.heading != blank -%}
+          <h2 id="newsletter-popup-heading" class="newsletter-popup__heading">
+            {{ section.settings.heading }}
+          </h2>
+        {%- endif -%}
+
+        {%- if section.settings.description != blank -%}
+          <p class="newsletter-popup__description">{{ section.settings.description }}</p>
+        {%- endif -%}
+
+        {%- form 'customer', id: 'newsletter-popup-form' -%}
+          <input type="hidden" name="contact[tags]" value="newsletter,popup">
+          <div class="newsletter-popup__form">
+            <input
+              type="email"
+              name="contact[email]"
+              class="newsletter-popup__input"
+              placeholder="{{ section.settings.placeholder | default: 'Enter your email' }}"
+              required
+              aria-label="Email address"
+              autocomplete="email"
+            >
+            <button type="submit" class="btn btn--primary newsletter-popup__btn">
+              {{ section.settings.button_text | default: 'Subscribe' }}
+            </button>
+          </div>
+        {%- endform -%}
+
+        {%- if section.settings.disclaimer != blank -%}
+          <p class="newsletter-popup__disclaimer">{{ section.settings.disclaimer }}</p>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .newsletter-popup {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 3000;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-md);
+  }
+
+  .newsletter-popup.is-open { display: flex; }
+
+  .newsletter-popup__overlay {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0,0,0,0.5);
+    cursor: pointer;
+  }
+
+  .newsletter-popup__panel {
+    position: relative;
+    z-index: 1;
+    background-color: var(--color-white);
+    width: 100%;
+    max-width: 640px;
+    overflow: hidden;
+  }
+
+  .newsletter-popup__close {
+    position: absolute;
+    top: var(--space-md);
+    right: var(--space-md);
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: var(--color-white);
+    color: var(--color-black);
+    cursor: pointer;
+  }
+
+  .newsletter-popup__close:hover { opacity: 0.6; }
+
+  .newsletter-popup__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 640px) {
+    .newsletter-popup__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .newsletter-popup__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    min-height: 200px;
+  }
+
+  .newsletter-popup__content {
+    padding: var(--space-2xl);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--space-md);
+  }
+
+  .newsletter-popup__heading {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+  }
+
+  .newsletter-popup__description {
+    font-size: var(--font-size-base);
+    color: var(--color-dark-grey);
+    line-height: var(--line-height-normal);
+  }
+
+  .newsletter-popup__form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  .newsletter-popup__input {
+    width: 100%;
+    height: var(--input-height);
+    padding: 0 var(--space-md);
+    border: 1px solid var(--color-border);
+    font-size: var(--font-size-base);
+  }
+
+  .newsletter-popup__input:focus {
+    outline: none;
+    border-color: var(--color-black);
+  }
+
+  .newsletter-popup__disclaimer {
+    font-size: var(--font-size-xs);
+    color: var(--color-mid-grey);
+  }
+</style>
+
+<script>
+(function () {
+  'use strict';
+
+  var popup = document.querySelector('[data-newsletter-popup]');
+  if (!popup) return;
+
+  var COOKIE_KEY = 'moss_popup_dismissed';
+  var delay = parseInt(popup.dataset.delay, 10) || 5;
+  var frequency = parseInt(popup.dataset.frequency, 10) || 7;
+
+  // Check if already dismissed recently
+  var dismissed = getCookie(COOKIE_KEY);
+  if (dismissed) return;
+
+  // Don't show on customer account pages or checkout
+  if (window.location.pathname.indexOf('/account') !== -1) return;
+  if (window.location.pathname.indexOf('/checkout') !== -1) return;
+
+  // Show after delay
+  setTimeout(function () {
+    openPopup();
+  }, delay * 1000);
+
+  function openPopup() {
+    popup.classList.add('is-open');
+    popup.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('nav-open');
+    popup.querySelector('.newsletter-popup__close').focus();
+  }
+
+  function closePopup() {
+    popup.classList.remove('is-open');
+    popup.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('nav-open');
+    setCookie(COOKIE_KEY, '1', frequency);
+  }
+
+  // Close buttons
+  popup.querySelectorAll('[data-newsletter-popup-close]').forEach(function (btn) {
+    btn.addEventListener('click', closePopup);
+  });
+
+  // Escape key
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && popup.classList.contains('is-open')) closePopup();
+  });
+
+  // Close on form submit
+  var form = popup.querySelector('form');
+  if (form) {
+    form.addEventListener('submit', function () {
+      setCookie(COOKIE_KEY, '1', 365); // Don't show for a year after subscribing
+    });
+  }
+
+  // Cookie helpers
+  function setCookie(name, value, days) {
+    var expires = new Date(Date.now() + days * 86400000).toUTCString();
+    document.cookie = name + '=' + value + ';expires=' + expires + ';path=/;SameSite=Lax';
+  }
+
+  function getCookie(name) {
+    var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+    return match ? match[2] : null;
+  }
+})();
+</script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Newsletter popup",
+  "tag": "section",
+  "class": "newsletter-popup-section",
+  "limit": 1,
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable",
+      "label": "Enable popup",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "delay",
+      "label": "Show after (seconds)",
+      "min": 1,
+      "max": 30,
+      "step": 1,
+      "default": 5,
+      "unit": "s"
+    },
+    {
+      "type": "range",
+      "id": "show_frequency",
+      "label": "Days between showing again",
+      "min": 1,
+      "max": 30,
+      "step": 1,
+      "default": 7,
+      "unit": "d",
+      "info": "After a visitor dismisses, wait this many days before showing again"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Get 10% Off"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Sign up to our newsletter and get 10% off your first order."
+    },
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "Input placeholder",
+      "default": "Enter your email"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Subscribe"
+    },
+    {
+      "type": "text",
+      "id": "disclaimer",
+      "label": "Disclaimer",
+      "default": "By subscribing you agree to our Privacy Policy."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Newsletter popup"
+    }
+  ]
+}
+{% endschema %}

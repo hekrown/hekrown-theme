@@ -1,0 +1,81 @@
+{%- comment -%}
+  Commerce Block: Collapsible Tab
+  Custom accordion row with merchant-defined heading and content.
+  Used for Delivery & Returns, Care Instructions, etc.
+{%- endcomment -%}
+
+<details class="block-collapsible-tab"{% if block.settings.open_by_default %} open{% endif %}>
+  <summary class="block-collapsible-tab__trigger">
+    {{ block.settings.heading | default: 'Details' }}
+  </summary>
+  <div class="block-collapsible-tab__content rte">
+    {%- if block.settings.page != blank -%}
+      {{ block.settings.page.content }}
+    {%- else -%}
+      {{ block.settings.content }}
+    {%- endif -%}
+  </div>
+</details>
+
+<style>
+  .block-collapsible-tab {
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .block-collapsible-tab__trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: var(--space-md) 0;
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-medium);
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .block-collapsible-tab__trigger::-webkit-details-marker { display: none; }
+  .block-collapsible-tab__trigger::after { content: '+'; font-size: 18px; }
+  .block-collapsible-tab[open] .block-collapsible-tab__trigger::after { content: '−'; }
+
+  .block-collapsible-tab__content {
+    padding-bottom: var(--space-md);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-normal);
+    color: var(--color-scheme-text, var(--color-dark-grey));
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Collapsible tab",
+  "tag": "div",
+  "class": "theme-block--collapsible-tab",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Delivery & Returns"
+    },
+    {
+      "type": "richtext",
+      "id": "content",
+      "label": "Content",
+      "default": "<p>Free UK standard delivery on orders over £200. Express delivery available. Easy returns within 30 days of purchase.</p>"
+    },
+    {
+      "type": "page",
+      "id": "page",
+      "label": "Or use a page content",
+      "info": "Overrides the content above"
+    },
+    {
+      "type": "checkbox",
+      "id": "open_by_default",
+      "label": "Open by default",
+      "default": false
+    }
+  ]
+}
+{% endschema %}

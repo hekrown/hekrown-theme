@@ -268,7 +268,8 @@
   "form": {
     "errors": {
       "heading": "Please correct the following:"
-    }
+    },
+    "email_address": "Email address"
   },
   "gift_cards": {
     "issued": {

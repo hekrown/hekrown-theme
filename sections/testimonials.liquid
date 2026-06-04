@@ -1,0 +1,237 @@
+{%- comment -%}
+  Testimonials Section
+  Customer quotes in grid or slider layout with star ratings and avatars.
+{%- endcomment -%}
+
+<div class="section-testimonials section-padding color-scheme-{{ section.settings.color_scheme }}">
+  <div class="container">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="section-testimonials__heading" style="
+        text-align: {{ section.settings.heading_alignment }};
+        font-size: var(--font-size-2xl);
+        font-weight: var(--font-weight-bold);
+        margin-bottom: var(--space-xl);
+        color: var(--color-scheme-heading, inherit);
+      ">
+        {{ section.settings.heading }}
+      </h2>
+    {%- endif -%}
+
+    <div class="section-testimonials__grid section-testimonials__grid--{{ section.settings.columns }}">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'testimonial' -%}
+          <div class="testimonial-card" {{ block.shopify_attributes }}>
+            {%- if block.settings.rating > 0 -%}
+              <div class="testimonial-card__stars" aria-label="{{ block.settings.rating }} out of 5 stars">
+                {%- for i in (1..5) -%}
+                  <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                      fill="{% if i <= block.settings.rating %}var(--color-scheme-heading, var(--color-black)){% else %}var(--color-border){% endif %}"
+                      stroke="none"
+                    />
+                  </svg>
+                {%- endfor -%}
+              </div>
+            {%- endif -%}
+
+            {%- if block.settings.quote != blank -%}
+              <blockquote class="testimonial-card__quote">
+                {{ block.settings.quote }}
+              </blockquote>
+            {%- endif -%}
+
+            <div class="testimonial-card__author">
+              {%- if block.settings.avatar != blank -%}
+                <img
+                  src="{{ block.settings.avatar | image_url: width: 80 }}"
+                  alt="{{ block.settings.name }}"
+                  class="testimonial-card__avatar"
+                  width="40"
+                  height="40"
+                  loading="lazy"
+                >
+              {%- endif -%}
+              <div class="testimonial-card__author-info">
+                {%- if block.settings.name != blank -%}
+                  <span class="testimonial-card__name">{{ block.settings.name }}</span>
+                {%- endif -%}
+                {%- if block.settings.title != blank -%}
+                  <span class="testimonial-card__title">{{ block.settings.title }}</span>
+                {%- endif -%}
+              </div>
+            </div>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+<style>
+  .section-testimonials__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+
+  @media (min-width: 640px) {
+    .section-testimonials__grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (min-width: 1024px) {
+    .section-testimonials__grid--2 { grid-template-columns: repeat(2, 1fr); }
+    .section-testimonials__grid--3 { grid-template-columns: repeat(3, 1fr); }
+    .section-testimonials__grid--4 { grid-template-columns: repeat(4, 1fr); }
+  }
+
+  .testimonial-card {
+    border: 1px solid var(--color-border);
+    padding: var(--space-xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .testimonial-card__stars {
+    display: flex;
+    gap: 2px;
+  }
+
+  .testimonial-card__quote {
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-normal);
+    font-style: italic;
+    flex: 1;
+  }
+
+  .testimonial-card__author {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-top: auto;
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .testimonial-card__avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .testimonial-card__author-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .testimonial-card__name {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-scheme-heading, var(--color-black));
+  }
+
+  .testimonial-card__title {
+    font-size: var(--font-size-xs);
+    color: var(--color-scheme-text, var(--color-mid-grey));
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Testimonials",
+  "tag": "section",
+  "class": "testimonials-section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "1", "label": "Scheme 1 (Light)" },
+        { "value": "2", "label": "Scheme 2 (Dark)" },
+        { "value": "3", "label": "Scheme 3 (Neutral)" }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "What Our Customers Say"
+    },
+    {
+      "type": "select",
+      "id": "heading_alignment",
+      "label": "Heading alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "columns",
+      "label": "Columns (desktop)",
+      "options": [
+        { "value": "2", "label": "2" },
+        { "value": "3", "label": "3" },
+        { "value": "4", "label": "4" }
+      ],
+      "default": "3"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        {
+          "type": "range",
+          "id": "rating",
+          "label": "Star rating",
+          "min": 0,
+          "max": 5,
+          "step": 1,
+          "default": 5
+        },
+        {
+          "type": "richtext",
+          "id": "quote",
+          "label": "Quote",
+          "default": "<p>Excellent quality and fast delivery. The fit is perfect and the fabric feels premium.</p>"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Customer name",
+          "default": "John D."
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title / location",
+          "default": "Verified Buyer"
+        },
+        {
+          "type": "image_picker",
+          "id": "avatar",
+          "label": "Photo (optional)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonials",
+      "blocks": [
+        { "type": "testimonial", "settings": { "name": "James T.", "title": "Verified Buyer", "quote": "<p>Excellent quality and fast delivery. The fit is perfect and the fabric feels premium.</p>", "rating": 5 } },
+        { "type": "testimonial", "settings": { "name": "Sarah M.", "title": "Repeat Customer", "quote": "<p>I've ordered multiple times now. Consistent sizing and the linen collection is outstanding.</p>", "rating": 5 } },
+        { "type": "testimonial", "settings": { "name": "David R.", "title": "First-time Buyer", "quote": "<p>Impressed with the attention to detail. Will definitely be ordering again.</p>", "rating": 4 } }
+      ]
+    }
+  ]
+}
+{% endschema %}

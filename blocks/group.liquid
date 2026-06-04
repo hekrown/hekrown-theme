@@ -1,0 +1,110 @@
+{%- comment -%}
+  Theme Block: Group
+  Container block that holds nested blocks. Enables layout flexibility.
+  Supports: row/column direction, gap, alignment, padding, background.
+{%- endcomment -%}
+
+<div class="block-group" style="
+  display: flex;
+  flex-direction: {{ block.settings.direction }};
+  {%- if block.settings.direction == 'row' -%}flex-wrap: wrap;{%- endif -%}
+  gap: {{ block.settings.gap }}px;
+  align-items: {{ block.settings.align_items }};
+  justify-content: {{ block.settings.justify_content }};
+  padding: {{ block.settings.padding }}px;
+  {%- if block.settings.background_color != blank and block.settings.background_color != 'rgba(0,0,0,0)' -%}
+    background-color: {{ block.settings.background_color }};
+  {%- endif -%}
+  {%- if block.settings.max_width != blank -%}
+    max-width: {{ block.settings.max_width }}px;
+    {%- if block.settings.center -%}margin-inline: auto;{%- endif -%}
+  {%- endif -%}
+">
+  {{ block.content }}
+</div>
+
+{% schema %}
+{
+  "name": "Group",
+  "tag": "div",
+  "class": "theme-block--group",
+  "blocks": [{ "type": "@theme" }],
+  "settings": [
+    {
+      "type": "select",
+      "id": "direction",
+      "label": "Layout direction",
+      "options": [
+        { "value": "column", "label": "Vertical (stacked)" },
+        { "value": "row", "label": "Horizontal (side by side)" }
+      ],
+      "default": "column"
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Gap between items",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "default": 16,
+      "unit": "px"
+    },
+    {
+      "type": "select",
+      "id": "align_items",
+      "label": "Cross-axis alignment",
+      "options": [
+        { "value": "flex-start", "label": "Start" },
+        { "value": "center", "label": "Center" },
+        { "value": "flex-end", "label": "End" },
+        { "value": "stretch", "label": "Stretch" }
+      ],
+      "default": "flex-start"
+    },
+    {
+      "type": "select",
+      "id": "justify_content",
+      "label": "Main-axis alignment",
+      "options": [
+        { "value": "flex-start", "label": "Start" },
+        { "value": "center", "label": "Center" },
+        { "value": "flex-end", "label": "End" },
+        { "value": "space-between", "label": "Space between" }
+      ],
+      "default": "flex-start"
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "label": "Inner padding",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "default": 0,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width (px)",
+      "min": 200,
+      "max": 1440,
+      "step": 40,
+      "default": 1440,
+      "unit": "px"
+    },
+    {
+      "type": "checkbox",
+      "id": "center",
+      "label": "Center horizontally",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color"
+    }
+  ]
+}
+{% endschema %}

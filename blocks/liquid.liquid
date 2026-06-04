@@ -1,0 +1,22 @@
+{%- comment -%}
+  Theme Block: Custom Liquid
+  Escape hatch for power users — renders raw Liquid code.
+{%- endcomment -%}
+
+{{ block.settings.code }}
+
+{% schema %}
+{
+  "name": "Custom Liquid",
+  "tag": "div",
+  "class": "theme-block--liquid",
+  "settings": [
+    {
+      "type": "liquid",
+      "id": "code",
+      "label": "Custom Liquid",
+      "info": "Add custom Liquid code. Use for advanced customizations."
+    }
+  ]
+}
+{% endschema %}

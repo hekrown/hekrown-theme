@@ -1,0 +1,73 @@
+{%- comment -%}
+  Theme Block: Text
+  Rich text content with alignment, size, and color controls.
+  Reusable in any section that accepts @theme blocks.
+{%- endcomment -%}
+
+<div class="block-text" style="
+  text-align: {{ block.settings.alignment }};
+  {%- if block.settings.max_width != 'none' -%}max-width: {{ block.settings.max_width }};margin-inline: auto;{%- endif -%}
+">
+  <div class="block-text__content rte" style="
+    font-size: {{ block.settings.text_size }};
+    {%- if block.settings.text_color != blank and block.settings.text_color != 'rgba(0,0,0,0)' -%}color: {{ block.settings.text_color }};{%- endif -%}
+  ">
+    {{ block.settings.text }}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Text",
+  "tag": "div",
+  "class": "theme-block--text",
+  "settings": [
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>Share information about your brand with your customers. Describe a product, make announcements, or welcome customers to your store.</p>"
+    },
+    {
+      "type": "select",
+      "id": "text_size",
+      "label": "Text size",
+      "options": [
+        { "value": "var(--font-size-sm)", "label": "Small" },
+        { "value": "var(--font-size-base)", "label": "Base" },
+        { "value": "var(--font-size-md)", "label": "Medium" },
+        { "value": "var(--font-size-lg)", "label": "Large" }
+      ],
+      "default": "var(--font-size-base)"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "max_width",
+      "label": "Max width",
+      "options": [
+        { "value": "none", "label": "Full width" },
+        { "value": "480px", "label": "Narrow" },
+        { "value": "640px", "label": "Medium" },
+        { "value": "800px", "label": "Wide" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color"
+    }
+  ]
+}
+{% endschema %}

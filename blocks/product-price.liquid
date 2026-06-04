@@ -1,0 +1,76 @@
+{%- comment -%}
+  Commerce Block: Product Price
+  Shows current price, compare-at, sale badge, and optional unit price.
+  Updated dynamically by section-main-product.js via [data-product-price].
+{%- endcomment -%}
+
+<div class="block-product-price" data-product-price style="
+  font-size: {{ block.settings.font_size }}px;
+  font-weight: var(--font-weight-semibold);
+">
+  {%- if product.compare_at_price > product.price -%}
+    <span class="block-product-price__sale" style="color: var(--color-scheme-accent, var(--color-red));">
+      {{ product.price | money }}
+    </span>
+    <span class="block-product-price__compare" style="text-decoration: line-through; color: var(--color-mid-grey); font-weight: var(--font-weight-regular); margin-left: var(--space-sm);">
+      {{ product.compare_at_price | money }}
+    </span>
+    {%- if block.settings.show_save_badge -%}
+      {%- assign save_percent = product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price -%}
+      <span class="block-product-price__badge" style="
+        display: inline-block;
+        margin-left: var(--space-sm);
+        padding: 2px 8px;
+        font-size: var(--font-size-xs);
+        font-weight: var(--font-weight-semibold);
+        background-color: var(--color-scheme-accent, var(--color-red));
+        color: var(--color-white);
+      ">
+        Save {{ save_percent }}%
+      </span>
+    {%- endif -%}
+  {%- else -%}
+    <span>{{ product.price | money }}</span>
+  {%- endif -%}
+
+  {%- if block.settings.show_tax_notice -%}
+    <p style="font-size: var(--font-size-xs); color: var(--color-mid-grey); font-weight: var(--font-weight-regular); margin-top: 4px;">
+      {%- if cart.taxes_included -%}
+        Tax included.
+      {%- endif -%}
+      Shipping calculated at checkout.
+    </p>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Product price",
+  "tag": "div",
+  "class": "theme-block--product-price",
+  "settings": [
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Font size (px)",
+      "min": 16,
+      "max": 32,
+      "step": 2,
+      "default": 20,
+      "unit": "px"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_save_badge",
+      "label": "Show save percentage badge",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_tax_notice",
+      "label": "Show tax / shipping notice",
+      "default": false
+    }
+  ]
+}
+{% endschema %}

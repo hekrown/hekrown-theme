@@ -1,0 +1,52 @@
+{%- comment -%}
+  Commerce Block: Product Title
+  Displays the product title with optional vendor above.
+  Context: Must be used inside a section where `product` is available.
+{%- endcomment -%}
+
+{%- if block.settings.show_vendor and product.vendor != blank -%}
+  <p class="block-product-title__vendor" style="
+    font-size: var(--font-size-xs);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-wide);
+    color: var(--color-mid-grey);
+    margin-bottom: var(--space-xs);
+  ">
+    {{ product.vendor }}
+  </p>
+{%- endif -%}
+
+<h1 class="block-product-title" style="
+  font-size: clamp(20px, 3vw, {{ block.settings.font_size }}px);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-snug);
+  color: var(--color-scheme-heading, var(--color-black));
+">
+  {{ product.title }}
+</h1>
+
+{% schema %}
+{
+  "name": "Product title",
+  "tag": "div",
+  "class": "theme-block--product-title",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "label": "Show vendor",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Max font size (px)",
+      "min": 20,
+      "max": 40,
+      "step": 2,
+      "default": 26,
+      "unit": "px"
+    }
+  ]
+}
+{% endschema %}

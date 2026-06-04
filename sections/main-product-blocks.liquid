@@ -1,0 +1,201 @@
+{%- comment -%}
+  Main Product Section — Block Composed
+  Gallery is section-controlled. Details column = merchant-arrangeable @theme blocks.
+  This is the "Horizon-style" product page where merchants reorder everything.
+{%- endcomment -%}
+
+{{ 'section-main-product.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'section-main-product.js' | asset_url }}" defer></script>
+
+{%- comment -%} Variant JSON for JS {%- endcomment -%}
+<script id="product-json-{{ product.id }}" type="application/json">
+  {
+    "id": {{ product.id }},
+    "variants": [
+      {%- for variant in product.variants -%}
+        {
+          "id": {{ variant.id }},
+          "title": {{ variant.title | json }},
+          "price": {{ variant.price }},
+          "compare_at_price": {{ variant.compare_at_price | default: 'null' }},
+          "available": {{ variant.available }},
+          "option1": {{ variant.option1 | json }},
+          "option2": {{ variant.option2 | json }},
+          "option3": {{ variant.option3 | json }},
+          "featured_media_id": {{ variant.featured_media.id | default: 'null' }}
+        }{% unless forloop.last %},{% endunless %}
+      {%- endfor -%}
+    ],
+    "options": {{ product.options | json }},
+    "money_format": {{ shop.money_format | json }}
+  }
+</script>
+
+<div class="product-blocks section-padding color-scheme-{{ section.settings.color_scheme }}" data-product-id="{{ product.id }}">
+  <div class="container">
+    {%- comment -%} Breadcrumb {%- endcomment -%}
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="{{ routes.root_url }}">Home</a>
+      <span aria-hidden="true">&rsaquo;</span>
+      {%- if collection -%}
+        <a href="{{ collection.url }}">{{ collection.title }}</a>
+        <span aria-hidden="true">&rsaquo;</span>
+      {%- endif -%}
+      <span aria-current="page">{{ product.title }}</span>
+    </nav>
+
+    <div class="product-blocks__grid">
+      {%- comment -%} ═══ IMAGE GALLERY (section-controlled) ═══ {%- endcomment -%}
+      <div class="product-blocks__media">
+        <div class="product-blocks__gallery" data-product-gallery>
+          {%- for media in product.media -%}
+            <div class="product-blocks__media-item{% if forloop.first %} product-page__media-item--active{% endif %}" data-media-id="{{ media.id }}">
+              {%- if media.media_type == 'image' -%}
+                <img
+                  src="{{ media | image_url: width: 900 }}"
+                  alt="{{ media.alt | escape }}"
+                  width="900"
+                  height="{{ 900 | divided_by: media.aspect_ratio | round }}"
+                  loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                  class="product-page__image"
+                >
+              {%- endif -%}
+            </div>
+          {%- endfor -%}
+        </div>
+
+        {%- if product.media.size > 1 -%}
+          <div class="product-page__thumbnails">
+            {%- for media in product.media -%}
+              <button
+                class="product-page__thumbnail{% if forloop.first %} product-page__thumbnail--active{% endif %}"
+                data-thumbnail="{{ media.id }}"
+                aria-label="View image {{ forloop.index }}"
+              >
+                <img src="{{ media | image_url: width: 100 }}" alt="" width="80" height="80" loading="lazy">
+              </button>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      </div>
+
+      {%- comment -%} ═══ PRODUCT INFO (block-composed, merchant reorderable) ═══ {%- endcomment -%}
+      <div class="product-blocks__info" style="
+        {%- if section.settings.sticky_info -%}position: sticky; top: 100px; align-self: start;{%- endif -%}
+      ">
+        {%- for block in section.blocks -%}
+          <div class="product-blocks__block" {{ block.shopify_attributes }}>
+            {{ block.content }}
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .product-blocks__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-xl);
+  }
+
+  @media (min-width: 1024px) {
+    .product-blocks__grid {
+      grid-template-columns: 57% 1fr;
+      gap: var(--space-2xl);
+    }
+  }
+
+  .product-blocks__media {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  @media (min-width: 1024px) {
+    .product-blocks__media {
+      flex-direction: row-reverse;
+      gap: var(--space-md);
+    }
+  }
+
+  .product-blocks__gallery {
+    flex: 1;
+  }
+
+  @media (max-width: 1023px) {
+    .product-blocks__gallery {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .product-blocks__media-item {
+      flex: 0 0 100%;
+      scroll-snap-align: start;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .product-blocks__media-item { display: none; }
+    .product-blocks__media-item.product-page__media-item--active { display: block; }
+  }
+
+  .product-blocks__info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Product (blocks)",
+  "tag": "section",
+  "class": "main-product-blocks-section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "1", "label": "Scheme 1 (Light)" },
+        { "value": "2", "label": "Scheme 2 (Dark)" },
+        { "value": "3", "label": "Scheme 3 (Neutral)" }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "checkbox",
+      "id": "sticky_info",
+      "label": "Sticky product info (desktop)",
+      "default": true
+    }
+  ],
+  "blocks": [
+    { "type": "@theme" },
+    { "type": "@app" }
+  ],
+  "presets": [
+    {
+      "name": "Product (blocks)",
+      "blocks": [
+        { "type": "product-title" },
+        { "type": "product-rating" },
+        { "type": "product-price" },
+        { "type": "product-variant-picker" },
+        { "type": "product-buy-buttons" },
+        { "type": "product-inventory" },
+        { "type": "divider" },
+        { "type": "product-description", "settings": { "collapsible": true } },
+        { "type": "collapsible-tab", "settings": { "heading": "Delivery & Returns", "content": "<p>Free UK standard delivery on orders over £200. Express delivery available. Easy returns within 30 days of purchase.</p>" } },
+        { "type": "collapsible-tab", "settings": { "heading": "Care Instructions", "content": "<p>Machine wash cold. Tumble dry low. Iron on low heat if needed.</p>" } },
+        { "type": "divider" },
+        { "type": "share-buttons" }
+      ]
+    }
+  ]
+}
+{% endschema %}

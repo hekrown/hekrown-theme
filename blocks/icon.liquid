@@ -1,0 +1,99 @@
+{%- comment -%}
+  Theme Block: Icon
+  Preset icon library + custom SVG escape hatch.
+{%- endcomment -%}
+
+{%- liquid
+  assign icon_size = block.settings.size | default: 24
+  assign icon_color = block.settings.color | default: 'currentColor'
+-%}
+
+<div class="block-icon" style="text-align: {{ block.settings.alignment }};">
+  <div class="block-icon__wrapper" style="display: inline-flex; align-items: center; justify-content: center; width: {{ icon_size }}px; height: {{ icon_size }}px; color: {{ icon_color }};">
+    {%- case block.settings.icon -%}
+      {%- when 'delivery' -%}
+        <svg viewBox="0 0 24 24" width="{{ icon_size }}" height="{{ icon_size }}" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+      {%- when 'returns' -%}
+        <svg viewBox="0 0 24 24" width="{{ icon_size }}" height="{{ icon_size }}" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+      {%- when 'shield' -%}
+        <svg viewBox="0 0 24 24" width="{{ icon_size }}" height="{{ icon_size }}" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      {%- when 'heart' -%}
+        <svg viewBox="0 0 24 24" width="{{ icon_size }}" height="{{ icon_size }}" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      {%- when 'star' -%}
+        <svg viewBox="0 0 24 24" width="{{ icon_size }}" height="{{ icon_size }}" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      {%- when 'clock' -%}
+        <svg viewBox="0 0 24 24" width="{{ icon_size }}" height="{{ icon_size }}" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      {%- when 'globe' -%}
+        <svg viewBox="0 0 24 24" width="{{ icon_size }}" height="{{ icon_size }}" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      {%- when 'gift' -%}
+        <svg viewBox="0 0 24 24" width="{{ icon_size }}" height="{{ icon_size }}" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+      {%- when 'check' -%}
+        <svg viewBox="0 0 24 24" width="{{ icon_size }}" height="{{ icon_size }}" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="20 6 9 17 4 12"/></svg>
+      {%- when 'custom' -%}
+        {{ block.settings.custom_svg }}
+      {%- else -%}
+        <svg viewBox="0 0 24 24" width="{{ icon_size }}" height="{{ icon_size }}" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/></svg>
+    {%- endcase -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Icon",
+  "tag": "div",
+  "class": "theme-block--icon",
+  "settings": [
+    {
+      "type": "select",
+      "id": "icon",
+      "label": "Icon",
+      "options": [
+        { "value": "delivery", "label": "Delivery truck" },
+        { "value": "returns", "label": "Returns" },
+        { "value": "shield", "label": "Shield / Security" },
+        { "value": "heart", "label": "Heart" },
+        { "value": "star", "label": "Star" },
+        { "value": "clock", "label": "Clock" },
+        { "value": "globe", "label": "Globe" },
+        { "value": "gift", "label": "Gift" },
+        { "value": "check", "label": "Checkmark" },
+        { "value": "custom", "label": "Custom SVG" }
+      ],
+      "default": "delivery"
+    },
+    {
+      "type": "html",
+      "id": "custom_svg",
+      "label": "Custom SVG code",
+      "info": "Paste raw SVG code. Only used when icon is set to Custom SVG."
+    },
+    {
+      "type": "range",
+      "id": "size",
+      "label": "Size",
+      "min": 16,
+      "max": 64,
+      "step": 4,
+      "default": 24,
+      "unit": "px"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "color",
+      "id": "color",
+      "label": "Color",
+      "default": "#000000"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,230 @@
+{%- comment -%}
+  Contact Form Section
+  Configurable contact form with optional map embed.
+{%- endcomment -%}
+
+<div class="section-contact section-padding color-scheme-{{ section.settings.color_scheme }}">
+  <div class="container">
+    <div class="section-contact__grid section-contact__grid--{{ section.settings.layout }}">
+      {%- comment -%} Info column {%- endcomment -%}
+      <div class="section-contact__info">
+        {%- if section.settings.heading != blank -%}
+          <h2 class="section-contact__heading" style="color: var(--color-scheme-heading, inherit);">
+            {{ section.settings.heading }}
+          </h2>
+        {%- endif -%}
+        {%- if section.settings.description != blank -%}
+          <div class="section-contact__description">{{ section.settings.description }}</div>
+        {%- endif -%}
+
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'info_row' -%}
+            <div class="section-contact__info-row" {{ block.shopify_attributes }}>
+              {%- if block.settings.label != blank -%}
+                <strong>{{ block.settings.label }}</strong>
+              {%- endif -%}
+              {%- if block.settings.text != blank -%}
+                <span>{{ block.settings.text }}</span>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+
+      {%- comment -%} Form column {%- endcomment -%}
+      <div class="section-contact__form-wrapper">
+        {%- form 'contact', id: 'contact-section', class: 'account-form' -%}
+          {%- if form.posted_successfully? -%}
+            <div class="account-notice account-notice--success">
+              {{ section.settings.success_message | default: 'Thank you for your message. We will get back to you shortly.' }}
+            </div>
+          {%- endif -%}
+
+          {%- if form.errors -%}
+            <div class="account-notice account-notice--error">
+              {{ form.errors | default_errors }}
+            </div>
+          {%- endif -%}
+
+          <div class="form-row--half">
+            <div class="form-row">
+              <label for="contact-name-{{ section.id }}" class="form-label form-label--required">Name</label>
+              <input type="text" id="contact-name-{{ section.id }}" name="contact[name]" class="form-input" required autocomplete="name">
+            </div>
+            <div class="form-row">
+              <label for="contact-email-{{ section.id }}" class="form-label form-label--required">Email</label>
+              <input type="email" id="contact-email-{{ section.id }}" name="contact[email]" class="form-input" required autocomplete="email">
+            </div>
+          </div>
+
+          {%- if section.settings.show_phone -%}
+            <div class="form-row">
+              <label for="contact-phone-{{ section.id }}" class="form-label">Phone</label>
+              <input type="tel" id="contact-phone-{{ section.id }}" name="contact[phone]" class="form-input" autocomplete="tel">
+            </div>
+          {%- endif -%}
+
+          {%- if section.settings.show_subject -%}
+            <div class="form-row">
+              <label for="contact-subject-{{ section.id }}" class="form-label">Subject</label>
+              <input type="text" id="contact-subject-{{ section.id }}" name="contact[subject]" class="form-input">
+            </div>
+          {%- endif -%}
+
+          <div class="form-row">
+            <label for="contact-body-{{ section.id }}" class="form-label form-label--required">Message</label>
+            <textarea id="contact-body-{{ section.id }}" name="contact[body]" class="form-textarea" rows="6" required></textarea>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn--primary">{{ section.settings.button_text | default: 'Send Message' }}</button>
+          </div>
+        {%- endform -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .section-contact__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-2xl);
+  }
+
+  @media (min-width: 1024px) {
+    .section-contact__grid--side-by-side {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .section-contact__info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .section-contact__heading {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+  }
+
+  .section-contact__description {
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-normal);
+    color: var(--color-scheme-text, var(--color-dark-grey));
+  }
+
+  .section-contact__info-row {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: var(--font-size-sm);
+  }
+
+  .section-contact__info-row strong {
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-scheme-heading, var(--color-black));
+  }
+
+  .section-contact__info-row span {
+    color: var(--color-scheme-text, var(--color-mid-grey));
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Contact form",
+  "tag": "section",
+  "class": "contact-form-section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "1", "label": "Scheme 1 (Light)" },
+        { "value": "2", "label": "Scheme 2 (Dark)" },
+        { "value": "3", "label": "Scheme 3 (Neutral)" }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        { "value": "stacked", "label": "Stacked" },
+        { "value": "side-by-side", "label": "Side by side" }
+      ],
+      "default": "side-by-side"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Get in Touch"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Have a question or need help? Fill out the form below and we'll get back to you within 24 hours.</p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_phone",
+      "label": "Show phone field",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_subject",
+      "label": "Show subject field",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Submit button text",
+      "default": "Send Message"
+    },
+    {
+      "type": "text",
+      "id": "success_message",
+      "label": "Success message",
+      "default": "Thank you for your message. We'll get back to you shortly."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "info_row",
+      "name": "Contact info",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Email"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "hello@yourstore.com"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Contact form",
+      "blocks": [
+        { "type": "info_row", "settings": { "label": "Email", "text": "hello@yourstore.com" } },
+        { "type": "info_row", "settings": { "label": "Phone", "text": "+44 20 1234 5678" } },
+        { "type": "info_row", "settings": { "label": "Hours", "text": "Mon–Fri, 9am–5pm GMT" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

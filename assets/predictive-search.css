@@ -1,0 +1,111 @@
+/* ==========================================================================
+   Predictive Search Dropdown Styles
+   ========================================================================== */
+
+.predictive-search {
+  position: relative;
+}
+
+.predictive-results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background-color: var(--color-white);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-dropdown);
+  max-height: 480px;
+  overflow-y: auto;
+  display: none;
+}
+
+.predictive__group {
+  padding: var(--space-md);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.predictive__group:last-of-type {
+  border-bottom: none;
+}
+
+.predictive__group-title {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+  color: var(--color-mid-grey);
+  margin-bottom: var(--space-sm);
+}
+
+.predictive__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm);
+  text-decoration: none;
+  color: inherit;
+  transition: background-color var(--transition-fast);
+  border-radius: 2px;
+}
+
+.predictive__item:hover {
+  background-color: var(--color-off-white);
+  text-decoration: none;
+}
+
+.predictive__item-img {
+  width: 50px;
+  height: 65px;
+  object-fit: cover;
+  flex-shrink: 0;
+  background-color: var(--color-off-white);
+}
+
+.predictive__item-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.predictive__item-title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-black);
+}
+
+.predictive__item-price {
+  font-size: var(--font-size-sm);
+  color: var(--color-mid-grey);
+}
+
+.predictive__view-all {
+  display: block;
+  padding: var(--space-md);
+  text-align: center;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-black);
+  text-decoration: underline;
+  border-top: 1px solid var(--color-border);
+}
+
+.predictive__view-all:hover {
+  background-color: var(--color-off-white);
+}
+
+.predictive__empty {
+  padding: var(--space-xl);
+  text-align: center;
+  font-size: var(--font-size-sm);
+  color: var(--color-mid-grey);
+}
+
+.predictive__loading {
+  display: none;
+  padding: var(--space-md);
+  text-align: center;
+  font-size: var(--font-size-sm);
+  color: var(--color-mid-grey);
+}

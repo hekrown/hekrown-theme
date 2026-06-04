@@ -1,0 +1,85 @@
+{%- comment -%}
+  Theme Block: Divider
+  Horizontal line with style, thickness, and color controls.
+{%- endcomment -%}
+
+<hr class="block-divider" style="
+  border: none;
+  border-top: {{ block.settings.thickness }}px {{ block.settings.style }} {{ block.settings.color | default: 'var(--color-border)' }};
+  margin: {{ block.settings.spacing }}px 0;
+  {%- if block.settings.width != '100%' -%}
+    width: {{ block.settings.width }};
+    {%- if block.settings.alignment == 'center' -%}margin-inline: auto;{%- endif -%}
+    {%- if block.settings.alignment == 'right' -%}margin-left: auto;{%- endif -%}
+  {%- endif -%}
+" aria-hidden="true">
+
+{% schema %}
+{
+  "name": "Divider",
+  "tag": "div",
+  "class": "theme-block--divider",
+  "settings": [
+    {
+      "type": "select",
+      "id": "style",
+      "label": "Style",
+      "options": [
+        { "value": "solid", "label": "Solid" },
+        { "value": "dashed", "label": "Dashed" },
+        { "value": "dotted", "label": "Dotted" }
+      ],
+      "default": "solid"
+    },
+    {
+      "type": "range",
+      "id": "thickness",
+      "label": "Thickness",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "default": 1,
+      "unit": "px"
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "Width",
+      "options": [
+        { "value": "100%", "label": "Full width" },
+        { "value": "75%", "label": "75%" },
+        { "value": "50%", "label": "50%" },
+        { "value": "25%", "label": "25%" }
+      ],
+      "default": "100%"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "spacing",
+      "label": "Vertical spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "default": 16,
+      "unit": "px"
+    },
+    {
+      "type": "color",
+      "id": "color",
+      "label": "Color",
+      "default": "#DDDDDD"
+    }
+  ]
+}
+{% endschema %}
