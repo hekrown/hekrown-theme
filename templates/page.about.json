@@ -1,0 +1,61 @@
+{
+  "sections": {
+    "hero": {
+      "type": "rich-text",
+      "settings": {
+        "color_scheme": "1",
+        "content_width": 720,
+        "text_alignment": "center",
+        "block_gap": 16,
+        "full_width": false,
+        "padding_top": 96,
+        "padding_bottom": 48
+      },
+      "blocks": {
+        "eyebrow": { "type": "heading", "settings": { "heading": "Our Story", "heading_tag": "p", "heading_size": "var(--font-size-md)", "font_weight": "var(--font-weight-regular)", "alignment": "center", "text_transform": "uppercase", "letter_spacing": "var(--letter-spacing-wider)" } },
+        "title": { "type": "heading", "settings": { "heading": "Crafted for the Modern Wardrobe", "heading_tag": "h1", "heading_size": "var(--font-size-3xl)", "alignment": "center" } },
+        "body": { "type": "text", "settings": { "text": "<p>We believe in timeless style over fleeting trends. Every piece in our collection is designed to last — in both quality and relevance.</p>", "alignment": "center", "max_width": "640px" } }
+      },
+      "block_order": ["eyebrow", "title", "body"]
+    },
+    "image_text": {
+      "type": "image-with-text",
+      "settings": {
+        "heading": "Quality First",
+        "eyebrow": "Our Philosophy",
+        "body": "<p>From sourcing the finest fabrics to perfecting every stitch, we obsess over the details so you don't have to think twice about what you're wearing.</p>",
+        "button_text": "Shop Collection",
+        "button_link": "/collections/all",
+        "image_position": "left"
+      }
+    },
+    "values": {
+      "type": "multicolumn",
+      "settings": {
+        "heading": "What We Stand For",
+        "heading_alignment": "center",
+        "columns": 3,
+        "gap": 32,
+        "column_alignment": "center",
+        "color_scheme": "3"
+      },
+      "blocks": {
+        "v1": { "type": "group", "blocks": { "i1": { "type": "icon", "settings": { "icon": "shield", "size": 32 } }, "h1": { "type": "heading", "settings": { "heading": "Ethical Sourcing", "heading_tag": "h3", "heading_size": "var(--font-size-md)", "alignment": "center" } }, "t1": { "type": "text", "settings": { "text": "<p>All materials responsibly sourced with full supply chain transparency.</p>", "alignment": "center", "text_size": "var(--font-size-sm)" } } } },
+        "v2": { "type": "group", "blocks": { "i2": { "type": "icon", "settings": { "icon": "heart", "size": 32 } }, "h2": { "type": "heading", "settings": { "heading": "Made to Last", "heading_tag": "h3", "heading_size": "var(--font-size-md)", "alignment": "center" } }, "t2": { "type": "text", "settings": { "text": "<p>Every garment is built to endure years of wear without losing its shape or character.</p>", "alignment": "center", "text_size": "var(--font-size-sm)" } } } },
+        "v3": { "type": "group", "blocks": { "i3": { "type": "icon", "settings": { "icon": "globe", "size": 32 } }, "h3": { "type": "heading", "settings": { "heading": "Carbon Neutral", "heading_tag": "h3", "heading_size": "var(--font-size-md)", "alignment": "center" } }, "t3": { "type": "text", "settings": { "text": "<p>We offset 100% of our shipping emissions and use recycled packaging materials.</p>", "alignment": "center", "text_size": "var(--font-size-sm)" } } } }
+      },
+      "block_order": ["v1", "v2", "v3"]
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {
+        "heading": "Join the Community",
+        "description": "Get early access to new collections and exclusive member-only offers.",
+        "button_text": "Subscribe",
+        "color_scheme": "2",
+        "layout": "text-only"
+      }
+    }
+  },
+  "order": ["hero", "image_text", "values", "newsletter"]
+}

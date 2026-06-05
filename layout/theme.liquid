@@ -169,6 +169,7 @@
   {{ 'component-header.css' | asset_url | stylesheet_tag }}
   {{ 'component-footer.css' | asset_url | stylesheet_tag }}
   {{ 'predictive-search.css' | asset_url | stylesheet_tag }}
+  {{ 'states.css' | asset_url | stylesheet_tag }}
 
   {{ content_for_header }}
 
@@ -177,7 +178,7 @@
   </script>
 </head>
 
-<body class="template-{{ template.name }}{% if template.suffix %} template-{{ template.name }}-{{ template.suffix }}{% endif %}">
+<body class="template-{{ template.name }}{% if template.suffix %} template-{{ template.name }}-{{ template.suffix }}{% endif %}" data-animations="{{ settings.enable_scroll_animations }}">
   <a class="skip-to-content" href="#main-content">
     {{ 'accessibility.skip_to_content' | t }}
   </a>
@@ -207,5 +208,6 @@
 
   <script src="{{ 'global.js' | asset_url }}" defer></script>
   <script src="{{ 'predictive-search.js' | asset_url }}" defer></script>
+  <script src="{{ 'scroll-reveal.js' | asset_url }}" defer></script>
 </body>
 </html>
