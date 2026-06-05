@@ -1,103 +1,136 @@
 {
   "sections": {
-    "sticky-hero": {
-      "type": "sticky-hero",
+    "slideshow": {
+      "type": "slideshow",
       "settings": {
-        "overlay_opacity": 15
+        "height": 80,
+        "autoplay": true,
+        "interval": 5
       },
       "blocks": {
-        "link_1": {
-          "type": "link",
-          "settings": { "label": "New In", "link": "/collections/new-arrivals" }
+        "slide_1": {
+          "type": "slide",
+          "settings": {
+            "heading": "New Season Collection",
+            "subheading": "Refined essentials for the modern wardrobe",
+            "button_text": "Shop New Arrivals",
+            "button_link": "/collections/new-arrivals",
+            "text_position": "bottom-left",
+            "text_color": "#FFFFFF"
+          }
         },
-        "link_2": {
-          "type": "link",
-          "settings": { "label": "Suits", "link": "/collections/new-arrivals" }
-        },
-        "link_3": {
-          "type": "link",
-          "settings": { "label": "Shirts", "link": "/collections/shirts" }
-        },
-        "link_4": {
-          "type": "link",
-          "settings": { "label": "Linen Wear", "link": "/collections/linen-wear" }
-        },
-        "link_5": {
-          "type": "link",
-          "settings": { "label": "Essentials", "link": "/collections/essentials" }
+        "slide_2": {
+          "type": "slide",
+          "settings": {
+            "heading": "Linen Wear",
+            "subheading": "Lightweight fabrics for every occasion",
+            "button_text": "Explore Linen",
+            "button_link": "/collections/linen-wear",
+            "text_position": "bottom-left",
+            "text_color": "#FFFFFF"
+          }
         }
       },
-      "block_order": ["link_1", "link_2", "link_3", "link_4", "link_5"]
+      "block_order": ["slide_1", "slide_2"]
     },
-    "split_panel_suits": {
-      "type": "split-panel",
+    "logo_list": {
+      "type": "logo-list",
       "settings": {
-        "label": "Suits",
-        "link": "/collections/new-arrivals"
-      }
-    },
-    "full_banner_shirts": {
-      "type": "full-banner",
-      "settings": {
-        "label": "Shirts",
-        "link": "/collections/shirts",
-        "height": 70
-      }
-    },
-    "split_panel_linen": {
-      "type": "split-panel",
-      "settings": {
-        "label": "Linen Wear",
-        "link": "/collections/linen-wear"
-      }
-    },
-    "full_banner_essentials": {
-      "type": "full-banner",
-      "settings": {
-        "label": "Essentials",
-        "link": "/collections/essentials",
-        "height": 70
-      }
-    },
-    "services_links": {
-      "type": "services-links",
-      "settings": {},
-      "blocks": {
-        "svc_1": { "type": "link", "settings": { "label": "Hire", "link": "/pages/contact" } },
-        "svc_2": { "type": "link", "settings": { "label": "Custom Made", "link": "/pages/contact" } },
-        "svc_3": { "type": "link", "settings": { "label": "Size Guide", "link": "/pages/contact" } },
-        "svc_4": { "type": "link", "settings": { "label": "Gift Cards", "link": "/pages/contact" } },
-        "svc_5": { "type": "link", "settings": { "label": "Editorial", "link": "/pages/contact", "underline": true } }
+        "heading": "As Seen In",
+        "color_scheme": "1",
+        "logo_height": 28
       },
-      "block_order": ["svc_1", "svc_2", "svc_3", "svc_4", "svc_5"]
+      "blocks": {
+        "logo_1": { "type": "logo", "settings": { "alt": "GQ" } },
+        "logo_2": { "type": "logo", "settings": { "alt": "Esquire" } },
+        "logo_3": { "type": "logo", "settings": { "alt": "Vogue" } },
+        "logo_4": { "type": "logo", "settings": { "alt": "The Times" } },
+        "logo_5": { "type": "logo", "settings": { "alt": "Wallpaper" } }
+      },
+      "block_order": ["logo_1", "logo_2", "logo_3", "logo_4", "logo_5"]
     },
-    "store_finder": {
-      "type": "store-finder",
+    "collection_grid": {
+      "type": "collection-grid",
       "settings": {
-        "heading": "Find your nearest store",
-        "body": "Visit one of our stores for customisations, fittings & styling advice.",
-        "button_text": "Book An Appointment",
-        "button_link": "/pages/contact"
+        "heading": "Shop by Category",
+        "columns": 4
+      },
+      "blocks": {
+        "tile_shirts": { "type": "tile", "settings": { "title": "Shirts", "link": "/collections/shirts" } },
+        "tile_linen": { "type": "tile", "settings": { "title": "Linen Wear", "link": "/collections/linen-wear" } },
+        "tile_essentials": { "type": "tile", "settings": { "title": "Essentials", "link": "/collections/essentials" } },
+        "tile_new": { "type": "tile", "settings": { "title": "New Arrivals", "link": "/collections/new-arrivals" } }
+      },
+      "block_order": ["tile_shirts", "tile_linen", "tile_essentials", "tile_new"]
+    },
+    "featured_collection": {
+      "type": "featured-collection",
+      "settings": {
+        "heading": "New Arrivals",
+        "collection": "new-arrivals",
+        "products_to_show": 4,
+        "show_view_all": true
       }
     },
-    "brand_story": {
-      "type": "brand-story",
+    "image_with_text": {
+      "type": "image-with-text",
       "settings": {
-        "eyebrow": "ON FORM SINCE 1851",
-        "body_1": "For big days and everydays, for life's milestones and more minor moments — it all matters, and it's all worthy of a great outfit.",
-        "body_2": "With over 170 years around the tailoring block and a collection of modern suiting, elevated daily wear and carefully curated accessories, we are the menswear destination for dressed-up moments and refined everyday wardrobes.",
-        "newsletter_text": "Sign up today to get the latest news and be the first to hear about our exclusive offers."
+        "heading": "Our Story",
+        "eyebrow": "Hekrown Fashion",
+        "body": "<p>Refined, contemporary clothing crafted for the modern wardrobe. From relaxed linen shirts to tailored essentials — quality you can feel.</p>",
+        "button_text": "Discover",
+        "button_link": "/pages/about",
+        "image_position": "left"
       }
+    },
+    "testimonials": {
+      "type": "testimonials",
+      "settings": {
+        "heading": "What Our Customers Say",
+        "heading_alignment": "center",
+        "columns": "3",
+        "color_scheme": "3"
+      },
+      "blocks": {
+        "t1": { "type": "testimonial", "settings": { "name": "James T.", "title": "Verified Buyer", "quote": "<p>Excellent quality and fast delivery. The fit is perfect and the fabric feels premium.</p>", "rating": 5 } },
+        "t2": { "type": "testimonial", "settings": { "name": "Sarah M.", "title": "Repeat Customer", "quote": "<p>I've ordered multiple times now. Consistent sizing and the linen collection is outstanding.</p>", "rating": 5 } },
+        "t3": { "type": "testimonial", "settings": { "name": "David R.", "title": "First-time Buyer", "quote": "<p>Impressed with the attention to detail. Will definitely be ordering again.</p>", "rating": 4 } }
+      },
+      "block_order": ["t1", "t2", "t3"]
+    },
+    "featured_collection_2": {
+      "type": "featured-collection",
+      "settings": {
+        "heading": "Bestsellers",
+        "collection": "shirts",
+        "products_to_show": 4,
+        "show_view_all": true
+      }
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {
+        "heading": "Stay in the Loop",
+        "description": "Subscribe to receive updates, access to exclusive deals, and more.",
+        "button_text": "Subscribe",
+        "color_scheme": "2",
+        "layout": "text-only"
+      }
+    },
+    "usp_bar": {
+      "type": "usp-bar",
+      "settings": {}
     }
   },
   "order": [
-    "sticky-hero",
-    "split_panel_suits",
-    "full_banner_shirts",
-    "split_panel_linen",
-    "full_banner_essentials",
-    "services_links",
-    "store_finder",
-    "brand_story"
+    "slideshow",
+    "logo_list",
+    "collection_grid",
+    "featured_collection",
+    "image_with_text",
+    "testimonials",
+    "featured_collection_2",
+    "newsletter",
+    "usp_bar"
   ]
 }

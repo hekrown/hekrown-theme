@@ -1,0 +1,38 @@
+{
+  "sections": {
+    "main": {
+      "type": "contact-form",
+      "settings": {
+        "heading": "Get in Touch",
+        "description": "<p>Have a question or need help? Fill out the form below and we'll get back to you within 24 hours.</p>",
+        "layout": "side-by-side",
+        "show_phone": true,
+        "show_subject": true,
+        "color_scheme": "1"
+      },
+      "blocks": {
+        "email": { "type": "info_row", "settings": { "label": "Email", "text": "hello@yourstore.com" } },
+        "phone": { "type": "info_row", "settings": { "label": "Phone", "text": "+44 20 1234 5678" } },
+        "hours": { "type": "info_row", "settings": { "label": "Hours", "text": "Mon–Fri, 9am–5pm GMT" } },
+        "address": { "type": "info_row", "settings": { "label": "Address", "text": "123 Fashion Street, London, UK" } }
+      },
+      "block_order": ["email", "phone", "hours", "address"]
+    },
+    "faq": {
+      "type": "faq",
+      "settings": {
+        "heading": "Common Questions",
+        "heading_alignment": "center",
+        "content_width": 800,
+        "color_scheme": "3"
+      },
+      "blocks": {
+        "q1": { "type": "question", "settings": { "question": "What are your delivery times?", "answer": "<p>Standard delivery takes 3-5 working days. Express next-day delivery is available for orders placed before 2pm.</p>" } },
+        "q2": { "type": "question", "settings": { "question": "Can I change or cancel my order?", "answer": "<p>Orders can be changed or cancelled within 1 hour of placing them. After that, contact us and we'll do our best to help.</p>" } },
+        "q3": { "type": "question", "settings": { "question": "Do you offer gift wrapping?", "answer": "<p>Yes! Add gift wrapping at checkout for £5. Your item will arrive beautifully wrapped with a personalised note.</p>" } }
+      },
+      "block_order": ["q1", "q2", "q3"]
+    }
+  },
+  "order": ["main", "faq"]
+}
