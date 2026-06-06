@@ -336,9 +336,18 @@ document.addEventListener('cart:updated', (event) => {
 
   // ── Format money ─────────────────────────────────────────────────────────
   function fmt(cents) {
-    try {
-      return new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(cents / 100);
-    } catch (e) { return '£' + (cents / 100).toFixed(2); }
+    return window.MossTheme && window.MossTheme.moneyFormat
+      ? formatMoneyFromString(cents, window.MossTheme.moneyFormat)
+      : '£' + (cents / 100).toFixed(2);
+  }
+
+  function formatMoneyFromString(cents, format) {
+    var amount = (cents / 100).toFixed(2);
+    return format
+      .replace(/\{\{\s*amount\s*\}\}/, amount)
+      .replace(/\{\{\s*amount_no_decimals\s*\}\}/, Math.round(cents / 100))
+      .replace(/\{\{\s*amount_with_comma_separator\s*\}\}/, amount.replace('.', ','))
+      .replace(/\{\{\s*amount_no_decimals_with_comma_separator\s*\}\}/, Math.round(cents / 100));
   }
 
   // ── Render cart items into drawer ─────────────────────────────────────────

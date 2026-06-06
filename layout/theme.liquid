@@ -197,6 +197,14 @@
   <script>
     document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
   </script>
+
+  {%- comment -%} Global theme config — accessible to all JS files {%- endcomment -%}
+  <script>
+    window.MossTheme = window.MossTheme || {};
+    window.MossTheme.moneyFormat = {{ shop.money_format | json }};
+    window.MossTheme.currency = {{ cart.currency.iso_code | json }};
+    window.MossTheme.locale = {{ request.locale.iso_code | json }};
+  </script>
 </head>
 
 <body class="template-{{ template.name }}{% if template.suffix %} template-{{ template.name }}-{{ template.suffix }}{% endif %}" data-animations="{{ settings.enable_scroll_animations }}">

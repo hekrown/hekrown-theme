@@ -367,7 +367,13 @@
 
     var priceEl = document.querySelector('[data-sticky-price]');
     if (priceEl && variant.price) {
-      priceEl.textContent = new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(variant.price / 100);
+      var format = window.MossTheme && window.MossTheme.moneyFormat;
+      if (format) {
+        var amount = (variant.price / 100).toFixed(2);
+        priceEl.textContent = format.replace(/\{\{\s*amount\s*\}\}/, amount);
+      } else {
+        priceEl.textContent = '£' + (variant.price / 100).toFixed(2);
+      }
     }
     if (stickyBtn) {
       stickyBtn.disabled = !variant.available;

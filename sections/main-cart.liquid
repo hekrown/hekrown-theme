@@ -294,18 +294,15 @@
   if (!cartPage) return;
 
   // ── Money formatting ─────────────────────────────────────────────────────
-  // Shopify returns cents — format as £X.XX using the store's currency symbol
   function formatMoney(cents) {
+    var format = window.MossTheme && window.MossTheme.moneyFormat;
+    if (!format) return '£' + (cents / 100).toFixed(2);
     var amount = (cents / 100).toFixed(2);
-    // Use Intl if available, otherwise simple fallback
-    try {
-      return new Intl.NumberFormat('en-GB', {
-        style: 'currency',
-        currency: 'GBP'
-      }).format(cents / 100);
-    } catch (e) {
-      return '£' + amount;
-    }
+    return format
+      .replace(/\{\{\s*amount\s*\}\}/, amount)
+      .replace(/\{\{\s*amount_no_decimals\s*\}\}/, Math.round(cents / 100))
+      .replace(/\{\{\s*amount_with_comma_separator\s*\}\}/, amount.replace('.', ','))
+      .replace(/\{\{\s*amount_no_decimals_with_comma_separator\s*\}\}/, Math.round(cents / 100));
   }
 
   // ── Set loading state ────────────────────────────────────────────────────
