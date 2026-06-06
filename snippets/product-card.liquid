@@ -50,9 +50,9 @@
 
       {%- comment -%} Badges {%- endcomment -%}
       {%- if product.compare_at_price > product.price -%}
-        <span class="product-card__badge product-card__badge--sale">Sale</span>
+        <span class="product-card__badge product-card__badge--sale">{{ 'products.general.sale' | t }}</span>
       {%- elsif product.tags contains 'new' or product.tags contains 'New' -%}
-        <span class="product-card__badge product-card__badge--new">New</span>
+        <span class="product-card__badge product-card__badge--new">{{ 'products.general.new' | t }}</span>
       {%- endif -%}
     </a>
 
@@ -77,7 +77,7 @@
           aria-expanded="false"
           data-quick-add-toggle
         >
-          Quick Add
+          {{ 'products.product.quick_add' | t }}
         </button>
         <div class="product-card__size-picker" aria-hidden="true" data-size-picker>
           {%- if size_option -%}
@@ -106,7 +106,7 @@
               class="product-card__size-btn"
               data-quick-add-size="{{ product.first_available_variant.id }}"
             >
-              Add to Basket
+              {{ 'products.product.add_to_cart' | t }}
             </button>
           {%- endif -%}
         </div>

@@ -5,12 +5,12 @@
 
 <div class="cart-page section-padding" data-cart-page>
   <div class="container">
-    <h1 class="cart-page__heading">Your Basket</h1>
+    <h1 class="cart-page__heading">{{ 'cart.general.title' | t }}</h1>
 
     {%- if cart.item_count == 0 -%}
       <div class="cart-page__empty" data-cart-empty>
-        <p>Your basket is empty</p>
-        <a href="{{ routes.all_products_collection_url }}" class="btn btn--primary">Continue Shopping</a>
+        <p>{{ 'cart.general.empty' | t }}</p>
+        <a href="{{ routes.all_products_collection_url }}" class="btn btn--primary">{{ 'cart.general.continue_shopping' | t }}</a>
       </div>
     {%- else -%}
       <div class="cart-page__grid" data-cart-grid>
@@ -42,7 +42,7 @@
                     <span data-qty-value>{{ item.quantity }}</span>
                     <button type="button" data-qty-plus aria-label="Increase quantity">+</button>
                   </div>
-                  <button type="button" class="cart-page__item-remove" data-remove-item>Remove</button>
+                  <button type="button" class="cart-page__item-remove" data-remove-item>{{ 'cart.general.remove' | t }}</button>
                 </div>
               </div>
             </div>
@@ -52,31 +52,31 @@
         {%- comment -%} Order Summary {%- endcomment -%}
         <div class="cart-page__summary">
           <div class="cart-page__summary-box">
-            <h2 class="cart-page__summary-heading">Order Summary</h2>
+            <h2 class="cart-page__summary-heading">{{ 'cart.general.order_summary' | t | default: 'Order Summary' }}</h2>
 
             <div class="cart-page__summary-row">
-              <span>Subtotal</span>
+              <span>{{ 'cart.general.subtotal' | t }}</span>
               <span data-cart-subtotal>{{ cart.total_price | money }}</span>
             </div>
 
             <div class="cart-page__summary-row">
-              <span>Delivery</span>
-              <span>Calculated at checkout</span>
+              <span>{{ 'cart.general.shipping' | t }}</span>
+              <span>{{ 'cart.general.calculated_at_checkout' | t | default: 'Calculated at checkout' }}</span>
             </div>
 
             {%- comment -%} Discount code {%- endcomment -%}
             <div class="cart-page__discount">
-              <input type="text" placeholder="Discount code" class="input" data-discount-input>
-              <button type="button" class="btn btn--secondary">Apply</button>
+              <input type="text" placeholder="{{ 'cart.discount.placeholder' | t }}" class="input" data-discount-input>
+              <button type="button" class="btn btn--secondary">{{ 'cart.discount.apply' | t }}</button>
             </div>
 
             <div class="cart-page__summary-total">
-              <span>Total</span>
+              <span>{{ 'cart.general.total' | t }}</span>
               <span data-cart-total>{{ cart.total_price | money }}</span>
             </div>
 
             <a href="/checkout" class="btn btn--primary btn--full-width cart-page__checkout-btn">
-              Proceed to Checkout
+              {{ 'cart.general.checkout' | t }}
             </a>
 
             <div class="cart-page__payment-icons">

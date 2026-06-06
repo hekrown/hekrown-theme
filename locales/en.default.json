@@ -94,7 +94,14 @@
       "type": "Type",
       "added_to_cart": "Added to basket",
       "quick_add": "Quick Add",
-      "view_product": "View product"
+      "view_product": "View product",
+      "description": "Description",
+      "product_details": "Product Details",
+      "delivery_returns": "Delivery & Returns",
+      "notify_me": "Notify Me",
+      "notify_email_placeholder": "Enter your email",
+      "notify_disclaimer": "We'll email you when this product is back in stock.",
+      "out_of_stock_notice": "This product is currently out of stock."
     },
     "recommendations": {
       "title": "You May Also Like"
@@ -107,6 +114,8 @@
       "continue_shopping": "Continue Shopping",
       "subtotal": "Subtotal",
       "total": "Total",
+      "order_summary": "Order Summary",
+      "calculated_at_checkout": "Calculated at checkout",
       "taxes_and_shipping_at_checkout": "Taxes and shipping calculated at checkout",
       "taxes_included_and_shipping_at_checkout": "Tax included and shipping calculated at checkout",
       "taxes_included_but_shipping_at_checkout": "Tax included. Shipping calculated at checkout",
