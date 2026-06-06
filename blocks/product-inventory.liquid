@@ -1,13 +1,15 @@
-{%- comment -%}
-  Commerce Block: Product Inventory
-  Shows stock status — in stock, low stock, or out of stock.
-  Low stock threshold is configurable.
-{%- endcomment -%}
+{%- doc -%}
+  Commerce Block: Inventory Status
+  Shows real-time stock status: in stock, low stock, or out of stock.
+  Low stock threshold is configurable. Only renders when Shopify manages inventory.
+  @param {range} low_stock_threshold - Qty below which "Low stock" warning shows
+  @param {checkbox} show_count - Whether to show exact quantity when low
+{%- enddoc -%}
 
 {%- assign current_variant = product.selected_or_first_available_variant -%}
 
 {%- if current_variant.inventory_management == 'shopify' -%}
-  <div class="block-product-inventory" style="display: flex; align-items: center; gap: var(--space-sm); font-size: var(--font-size-sm);">
+  <div class="block-product-inventory" {{ block.shopify_attributes }} style="display: flex; align-items: center; gap: var(--space-sm); font-size: var(--font-size-sm);">
     {%- if current_variant.inventory_quantity <= 0 and current_variant.inventory_policy != 'continue' -%}
       <span style="width: 8px; height: 8px; border-radius: 50%; background: var(--color-red);"></span>
       <span style="color: var(--color-red); font-weight: var(--font-weight-medium);">Out of stock</span>
@@ -30,7 +32,7 @@
 {% schema %}
 {
   "name": "Inventory status",
-  "tag": "div",
+  "tag": null,
   "class": "theme-block--product-inventory",
   "settings": [
     {

@@ -1,14 +1,18 @@
-{%- comment -%}
+{%- doc -%}
   Theme Block: Custom Liquid
   Escape hatch for power users — renders raw Liquid code.
-{%- endcomment -%}
+  Use for advanced customizations not covered by other blocks.
+  @param {liquid} code - Raw Liquid code to render
+{%- enddoc -%}
 
-{{ block.settings.code }}
+<div {{ block.shopify_attributes }}>
+  {{ block.settings.code }}
+</div>
 
 {% schema %}
 {
   "name": "Custom Liquid",
-  "tag": "div",
+  "tag": null,
   "class": "theme-block--liquid",
   "settings": [
     {

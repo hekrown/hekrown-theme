@@ -1,14 +1,20 @@
-{%- comment -%}
+{%- doc -%}
   Theme Block: Icon
-  Preset icon library + custom SVG escape hatch.
-{%- endcomment -%}
+  Preset SVG icon library with an optional custom SVG escape hatch.
+  Supports size, alignment and color controls.
+  @param {select} icon - Icon preset name
+  @param {html} custom_svg - Raw SVG code (used when icon = 'custom')
+  @param {range} size - Icon size in px
+  @param {select} alignment - Text-align wrapper
+  @param {color} color - Icon stroke/fill color
+{%- enddoc -%}
 
 {%- liquid
   assign icon_size = block.settings.size | default: 24
   assign icon_color = block.settings.color | default: 'currentColor'
 -%}
 
-<div class="block-icon" style="text-align: {{ block.settings.alignment }};">
+<div class="block-icon" {{ block.shopify_attributes }} style="text-align: {{ block.settings.alignment }};">
   <div class="block-icon__wrapper" style="display: inline-flex; align-items: center; justify-content: center; width: {{ icon_size }}px; height: {{ icon_size }}px; color: {{ icon_color }};">
     {%- case block.settings.icon -%}
       {%- when 'delivery' -%}
@@ -40,7 +46,7 @@
 {% schema %}
 {
   "name": "Icon",
-  "tag": "div",
+  "tag": null,
   "class": "theme-block--icon",
   "settings": [
     {

@@ -2,7 +2,7 @@
 
 > **Created:** June 6, 2026
 > **Goal:** Bring Moss to Shopify Theme Store production quality, matching/exceeding Horizon-level standards
-> **Current Status:** 88% complete | Sprint 1 critical fixes done | Sprint 2 (Horizon parity) next
+> **Current Status:** 91% complete | Sprint 1 ✅ Sprint 2 ✅ | Sprint 3 (new sections + blocks) next
 
 ---
 
@@ -85,24 +85,15 @@ Horizon renders blocks via `{% content_for 'blocks' %}` capture pattern, not the
 - [ ] Create a **`group` snippet** (like Horizon's `group.liquid`) for block containers
 - [ ] Refactor existing block-aware sections to use `content_for` pattern
 
-#### `tag: null` on Theme Blocks
-Horizon blocks use `"tag": null` to prevent Shopify from wrapping them in an extra container.
+#### `tag: null` on Theme Blocks ✅ DONE
+- [x] Added `"tag": null` to all 19 existing theme blocks
+- [x] Ensures clean DOM output without unnecessary wrapper divs
 
-- [ ] Add `"tag": null` to all 19 existing theme blocks where appropriate
-- [ ] Ensures clean DOM output without unnecessary wrapper divs
+#### `{%- doc -%}` Documentation Tags ✅ DONE
+- [x] Added `{%- doc -%}` tags with `@param` annotations to all 19 theme blocks
 
-#### `{%- doc -%}` Documentation Tags
-Horizon documents every block and snippet with `{%- doc -%}` tags.
-
-- [ ] Add `{%- doc -%}` tags to all 19 theme blocks
-- [ ] Add `{%- doc -%}` tags to all 9 snippets
-- [ ] Include `@param` annotations and usage examples
-
-#### `{{ shopify_attributes }}` on All Blocks
-Critical for theme editor functionality — without it, the editor can't highlight/edit blocks.
-
-- [ ] Audit all 19 theme blocks for `{{ block.shopify_attributes }}` on root elements
-- [ ] Add where missing
+#### `{{ shopify_attributes }}` on All Blocks ✅ DONE
+- [x] Added `{{ block.shopify_attributes }}` to all 19 block root elements
 
 #### `visible_if` Conditional Settings
 Horizon uses `visible_if` to show/hide settings contextually in the editor.

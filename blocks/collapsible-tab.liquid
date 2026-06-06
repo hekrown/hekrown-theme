@@ -1,10 +1,14 @@
-{%- comment -%}
+{%- doc -%}
   Commerce Block: Collapsible Tab
-  Custom accordion row with merchant-defined heading and content.
-  Used for Delivery & Returns, Care Instructions, etc.
-{%- endcomment -%}
+  Accordion row with merchant-defined heading and rich text or page content.
+  Used for Delivery & Returns, Care Instructions, FAQs, etc.
+  @param {text} heading - Accordion trigger label
+  @param {richtext} content - Body content (used if no page selected)
+  @param {page} page - Optional page — overrides content above
+  @param {checkbox} open_by_default - Whether accordion starts open
+{%- enddoc -%}
 
-<details class="block-collapsible-tab"{% if block.settings.open_by_default %} open{% endif %}>
+<details class="block-collapsible-tab" {{ block.shopify_attributes }} {% if block.settings.open_by_default %} open{% endif %}>
   <summary class="block-collapsible-tab__trigger">
     {{ block.settings.heading | default: 'Details' }}
   </summary>
@@ -49,7 +53,7 @@
 {% schema %}
 {
   "name": "Collapsible tab",
-  "tag": "div",
+  "tag": null,
   "class": "theme-block--collapsible-tab",
   "settings": [
     {

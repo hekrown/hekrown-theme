@@ -1,13 +1,23 @@
-{%- comment -%}
+{%- doc -%}
   Theme Block: Text
-  Rich text content with alignment, size, and color controls.
+  Rich text content with alignment, size, max-width and color controls.
   Reusable in any section that accepts @theme blocks.
-{%- endcomment -%}
 
-<div class="block-text" style="
-  text-align: {{ block.settings.alignment }};
-  {%- if block.settings.max_width != 'none' -%}max-width: {{ block.settings.max_width }};margin-inline: auto;{%- endif -%}
-">
+  @param {richtext} text - Rich text content
+  @param {select} text_size - Font size via CSS custom property
+  @param {select} alignment - Text alignment (left/center/right)
+  @param {select} max_width - Optional max-width constraint
+  @param {color} text_color - Override text colour (optional)
+{%- enddoc -%}
+
+<div
+  class="block-text"
+  {{ block.shopify_attributes }}
+  style="
+    text-align: {{ block.settings.alignment }};
+    {%- if block.settings.max_width != 'none' -%}max-width: {{ block.settings.max_width }};margin-inline: auto;{%- endif -%}
+  "
+>
   <div class="block-text__content rte" style="
     font-size: {{ block.settings.text_size }};
     {%- if block.settings.text_color != blank and block.settings.text_color != 'rgba(0,0,0,0)' -%}color: {{ block.settings.text_color }};{%- endif -%}
@@ -19,7 +29,7 @@
 {% schema %}
 {
   "name": "Text",
-  "tag": "div",
+  "tag": null,
   "class": "theme-block--text",
   "settings": [
     {
