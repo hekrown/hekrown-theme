@@ -11,7 +11,7 @@
   --color-white: #FFFFFF;
   --color-off-white: #F5F5F5;
   --color-off-white-alt: #FAFAFA;
-  --color-mid-grey: #888888;
+  --color-mid-grey: #767676;
   --color-dark-grey: #333333;
   --color-border: #DDDDDD;
   --color-border-alt: #E0E0E0;
@@ -291,6 +291,30 @@ h1, h2, h3, h4, h5, h6 {
    Desktop: 1024px – 1280px
    Large:   1280px+
    -------------------------------------------------------------------------- */
+
+/* --------------------------------------------------------------------------
+   Accessibility — Global Focus Styles (WCAG 2.4.7)
+   -------------------------------------------------------------------------- */
+:focus-visible {
+  outline: 2px solid var(--color-black);
+  outline-offset: 2px;
+}
+
+/* Remove focus ring for mouse users, keep for keyboard */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Ensure buttons, links and inputs always show focus ring on keyboard nav */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--color-black);
+  outline-offset: 2px;
+}
 
 /* --------------------------------------------------------------------------
    Homepage Transparent Header Overlay & Stacking

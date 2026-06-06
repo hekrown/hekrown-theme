@@ -137,7 +137,8 @@
       "title": "Discount code",
       "placeholder": "Discount code",
       "apply": "Apply",
-      "remove": "Remove discount code"
+      "remove": "Remove discount code",
+      "apply_at_checkout": "Discount codes can be applied at checkout"
     }
   },
   "customer": {

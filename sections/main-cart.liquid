@@ -64,10 +64,10 @@
               <span>{{ 'cart.general.calculated_at_checkout' | t | default: 'Calculated at checkout' }}</span>
             </div>
 
-            {%- comment -%} Discount code {%- endcomment -%}
-            <div class="cart-page__discount">
-              <input type="text" placeholder="{{ 'cart.discount.placeholder' | t }}" class="input" data-discount-input>
-              <button type="button" class="btn btn--secondary">{{ 'cart.discount.apply' | t }}</button>
+            {%- comment -%} Discount code — applied at checkout {%- endcomment -%}
+            <div class="cart-page__discount-note">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              {{ 'cart.discount.apply_at_checkout' | t | default: 'Discount codes can be applied at checkout' }}
             </div>
 
             <div class="cart-page__summary-total">
@@ -266,6 +266,15 @@
     font-weight: var(--font-weight-bold);
     padding-top: var(--space-md);
     border-top: 1px solid var(--color-border);
+  }
+
+  .cart-page__discount-note {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    font-size: var(--font-size-xs);
+    color: var(--color-mid-grey);
+    padding: var(--space-sm) 0;
   }
 
   .cart-page__checkout-btn {
