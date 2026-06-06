@@ -1,0 +1,91 @@
+{%- doc -%}
+  Theme Block: Card
+  Generic card container: image + heading + text + optional button + optional link.
+  Works in any section accepting @theme blocks. Common use: feature grids, editorial tiles.
+  @param {image_picker} image - Card image
+  @param {select} image_ratio - Image aspect ratio
+  @param {text} heading - Card heading
+  @param {richtext} text - Card body text
+  @param {text} button_label - CTA button text
+  @param {url} button_link - CTA destination (also wraps entire card if no button)
+  @param {select} button_style - primary or secondary
+  @param {select} text_align - Text alignment
+  @param {color} background - Card background color
+{%- enddoc -%}
+
+{%- liquid
+  assign has_link = false
+  if block.settings.button_link != blank
+    assign has_link = true
+  endif
+-%}
+
+<div
+  class="block-card"
+  {{ block.shopify_attributes }}
+  style="
+    {%- if block.settings.background != blank and block.settings.background != 'rgba(0,0,0,0)' -%}
+      background-color: {{ block.settings.background }};
+    {%- endif -%}
+    text-align: {{ block.settings.text_align }};
+  "
+>
+  {%- if block.settings.image != blank -%}
+    <div class="block-card__media" style="aspect-ratio: {{ block.settings.image_ratio }}; overflow: hidden;">
+      {%- if has_link and block.settings.button_label == blank -%}<a href="{{ block.settings.button_link }}">{%- endif -%}
+      <img
+        src="{{ block.settings.image | image_url: width: 800 }}"
+        alt="{{ block.settings.image.alt | default: block.settings.heading | escape }}"
+        width="800"
+        height="{{ 800 | divided_by: block.settings.image.aspect_ratio | round }}"
+        loading="lazy"
+        class="block-card__img"
+      >
+      {%- if has_link and block.settings.button_label == blank -%}</a>{%- endif -%}
+    </div>
+  {%- endif -%}
+
+  <div class="block-card__body">
+    {%- if block.settings.heading != blank -%}
+      <h3 class="block-card__heading">{{ block.settings.heading }}</h3>
+    {%- endif -%}
+
+    {%- if block.settings.text != blank -%}
+      <div class="block-card__text rte">{{ block.settings.text }}</div>
+    {%- endif -%}
+
+    {%- if block.settings.button_label != blank and has_link -%}
+      <a href="{{ block.settings.button_link }}" class="btn btn--{{ block.settings.button_style }} block-card__btn">
+        {{ block.settings.button_label }}
+      </a>
+    {%- endif -%}
+  </div>
+</div>
+
+<style>
+  .block-card { display: flex; flex-direction: column; }
+  .block-card__img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform var(--transition-slow); }
+  .block-card__media:hover .block-card__img { transform: scale(1.04); }
+  .block-card__body { padding: var(--space-md) 0; display: flex; flex-direction: column; gap: var(--space-sm); }
+  .block-card__heading { font-size: var(--font-size-md); font-weight: var(--font-weight-semibold); color: var(--color-scheme-heading, var(--color-black)); }
+  .block-card__text { font-size: var(--font-size-base); color: var(--color-scheme-text, var(--color-dark-grey)); line-height: var(--line-height-normal); }
+</style>
+
+{% schema %}
+{
+  "name": "Card",
+  "tag": null,
+  "class": "theme-block--card",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    { "type": "select", "id": "image_ratio", "label": "Image ratio", "options": [{ "value": "1/1", "label": "Square" }, { "value": "3/4", "label": "Portrait (3:4)" }, { "value": "4/3", "label": "Landscape (4:3)" }, { "value": "16/9", "label": "Widescreen" }, { "value": "natural", "label": "Natural" }], "default": "3/4" },
+    { "type": "text", "id": "heading", "label": "Heading" },
+    { "type": "richtext", "id": "text", "label": "Text" },
+    { "type": "text", "id": "button_label", "label": "Button label" },
+    { "type": "url", "id": "button_link", "label": "Link" },
+    { "type": "select", "id": "button_style", "label": "Button style", "options": [{ "value": "primary", "label": "Primary" }, { "value": "secondary", "label": "Secondary" }], "default": "secondary" },
+    { "type": "select", "id": "text_align", "label": "Text alignment", "options": [{ "value": "left", "label": "Left" }, { "value": "center", "label": "Center" }], "default": "left" },
+    { "type": "color", "id": "background", "label": "Background color" }
+  ]
+}
+{% endschema %}

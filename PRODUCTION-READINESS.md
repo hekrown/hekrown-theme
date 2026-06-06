@@ -2,7 +2,7 @@
 
 > **Created:** June 6, 2026
 > **Goal:** Bring Moss to Shopify Theme Store production quality, matching/exceeding Horizon-level standards
-> **Current Status:** 91% complete | Sprint 1 ✅ Sprint 2 ✅ | Sprint 3 (new sections + blocks) next
+> **Current Status:** 93% complete | Sprint 1 ✅ Sprint 2 ✅ Sprint 3 ✅ | Sprint 4 (performance + polish) next
 
 ---
 
@@ -109,40 +109,24 @@ Horizon uses static blocks for fixed structural elements (logo, menu).
 - [ ] Use `{% content_for 'block', type: '_header-logo', id: 'header-logo' %}` pattern
 - [ ] Prevents merchants from accidentally removing essential header elements
 
-### 2.2 Missing Sections (Horizon Has, Moss Doesn't)
+### 2.2 Missing Sections ✅ DONE (high priority)
 
-| Section | Horizon Feature | Priority |
-|---|---|---|
-| `_blocks.liquid` (universal section) | Accepts ANY @theme block + @app — the ultimate flexible section | High |
-| `hero.liquid` | Hero banners with layered media, video backgrounds, overlay controls | High |
-| `carousel.liquid` | Universal carousel for products/content/collections | High |
-| `media-with-content.liquid` | Rich media + text side-by-side with advanced layout options | Medium |
-| `collection-list.liquid` | Collection cards in grid/carousel with various layouts | Medium |
-| `hotspot / shop-the-look` | Interactive image with product pins | Medium |
-| `bento-grid.liquid` | Mixed-size grid tiles (masonry-like) for editorial layouts | Medium |
-| `marquee.liquid` | Scrolling text/logo ticker | Low |
-| `before-after.liquid` | Draggable image comparison slider | Low |
+| Section | Status |
+|---|---|
+| `_blocks.liquid` (universal section) | ✅ Built — accepts any @theme + @app block, 1–4 col grid, color scheme, padding |
+| `hero.liquid` | ✅ Built — image/video bg, overlay, content position, heading/text/button blocks |
+| `carousel.liquid` | ✅ Built — autoplay, arrows, dots, swipe, per-slide image/heading/text/button |
+| `media-with-content.liquid` | ⏳ Sprint 4 |
+| `collection-list.liquid` | ⏳ Sprint 4 |
 
-**Current Moss count: 41 sections | Target: 45+ sections**
+### 2.3 Missing Theme Blocks ✅ DONE (high priority)
 
-### 2.3 Missing Theme Blocks (Horizon Has 94, Moss Has 19)
-
-We don't need 94 (many of Horizon's are highly specific), but we need to fill key gaps:
-
-| Block | Purpose | Priority |
-|---|---|---|
-| `_card.liquid` | Generic card container (image + heading + text + button + link) | High |
-| `_content.liquid` (nestable) | Container that accepts @theme blocks inside it — enables layout composition | High |
-| `_marquee.liquid` | Scrolling ticker text | Medium |
-| `_accordion-row.liquid` | Single collapsible row (for FAQ-style content anywhere) | Medium |
-| `_product-metafield.liquid` | Display any product metafield | Medium |
-| `_hotspot-product.liquid` | Interactive product hotspot on images | Medium |
-| `_media.liquid` | Video/image with autoplay/loop controls | Medium |
-| `_inline-text.liquid` | Inline rich text with more granular typography controls | Low |
-| `_carousel-content.liquid` | Content slide for carousels | Low |
-| `_layered-slide.liquid` | Layered slideshow slides | Low |
-
-**Current: 19 blocks | Target: 25–30 blocks**
+| Block | Status |
+|---|---|
+| `_card.liquid` | ✅ Built — image + heading + text + button, hover zoom, link wrapping |
+| `_content.liquid` (nestable) | ✅ Built — accepts @theme blocks, bg/padding/border/radius/max-width |
+| `_marquee.liquid` | ⏳ Sprint 4 |
+| `_accordion-row.liquid` | ⏳ Sprint 4 |
 
 ### 2.4 Advanced Features Horizon Ships With
 
