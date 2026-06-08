@@ -275,7 +275,7 @@
   data-cart-drawer
 >
   <div class="cart-drawer__header">
-    <h2 class="cart-drawer__title">Your Basket (<span data-drawer-count>0</span>)</h2>
+    <h2 class="cart-drawer__title">{{ 'cart.general.title' | t }} (<span data-drawer-count>0</span>)</h2>
     <button class="cart-drawer__close" aria-label="Close basket" data-cart-drawer-close>
       <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
         <line x1="4" y1="4" x2="20" y2="20" stroke="currentColor" stroke-width="1.5"/>
@@ -285,7 +285,15 @@
   </div>
 
   <div class="cart-drawer__body" data-drawer-body>
-    <p class="cart-drawer__empty" data-drawer-empty>Your basket is empty</p>
+    <div class="cart-drawer__empty-state" data-drawer-empty>
+      <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true">
+        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <path d="M16 10a4 4 0 0 1-8 0"/>
+      </svg>
+      <p>{{ 'cart.general.empty' | t }}</p>
+      <a href="{{ routes.all_products_collection_url }}" class="btn btn--secondary">{{ 'cart.general.continue_shopping' | t }}</a>
+    </div>
     <div class="cart-drawer__items" data-drawer-items></div>
   </div>
 
@@ -315,7 +323,7 @@
   data-wishlist-drawer
 >
   <div class="cart-drawer__header">
-    <h2 class="cart-drawer__title">Your Wishlist (<span data-wishlist-count>0</span>)</h2>
+    <h2 class="cart-drawer__title">{{ 'wishlist.title' | t | default: 'Your Wishlist' }} (<span data-wishlist-count>0</span>)</h2>
     <button class="cart-drawer__close" aria-label="Close wishlist" data-wishlist-drawer-close>
       <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
         <line x1="4" y1="4" x2="20" y2="20" stroke="currentColor" stroke-width="1.5"/>

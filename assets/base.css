@@ -317,6 +317,39 @@ textarea:focus-visible,
 }
 
 /* --------------------------------------------------------------------------
+   CLS Prevention — aspect-ratio on all image containers
+   Prevents layout shift while images load
+   -------------------------------------------------------------------------- */
+img {
+  /* Ensure images don't cause layout shift — width/height attrs handle this
+     but aspect-ratio provides a fallback */
+  max-width: 100%;
+  height: auto;
+}
+
+/* Product card images — fixed ratio prevents CLS */
+.product-card__image-wrapper {
+  aspect-ratio: 3 / 4;
+}
+
+/* Collection grid tiles */
+.collection-grid__image-wrapper {
+  aspect-ratio: 3 / 4;
+}
+
+/* --------------------------------------------------------------------------
+   SVH units — fix mobile viewport height (100svh not 100vh)
+   100vh on mobile includes the browser chrome, 100svh excludes it
+   -------------------------------------------------------------------------- */
+@supports (height: 100svh) {
+  .slideshow,
+  .hero,
+  .sticky-hero {
+    height: 100svh;
+  }
+}
+
+/* --------------------------------------------------------------------------
    Homepage Transparent Header Overlay & Stacking
    -------------------------------------------------------------------------- */
 .template-index .header-section {

@@ -5,7 +5,17 @@
     "previous": "Previous",
     "next": "Next"
   },
+  "wishlist": {
+    "title": "Your Wishlist",
+    "empty": "Your wishlist is empty",
+    "add": "Add to wishlist",
+    "remove": "Remove from wishlist"
+  },
   "general": {
+    "newsletter": {
+      "subscribe": "Subscribe",
+      "email_placeholder": "Enter your email"
+    },
     "meta": {
       "tags": "Tagged \"{{ tags }}\"",
       "page": "Page {{ page }}"

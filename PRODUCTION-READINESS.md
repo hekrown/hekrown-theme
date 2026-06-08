@@ -2,7 +2,7 @@
 
 > **Created:** June 6, 2026
 > **Goal:** Bring Moss to Shopify Theme Store production quality, matching/exceeding Horizon-level standards
-> **Current Status:** 93% complete | Sprint 1 ✅ Sprint 2 ✅ Sprint 3 ✅ | Sprint 4 (performance + polish) next
+> **Current Status:** 96% complete | Sprint 1 ✅ Sprint 2 ✅ Sprint 3 ✅ Sprint 4 ✅ | Sprint 5 (release prep) final
 
 ---
 
@@ -39,11 +39,10 @@ This document tracks every issue, gap, and improvement needed before Moss can sh
 - [ ] Fix in `header.liquid`: "Your Basket", "Your Wishlist" — _next sprint_
 - [ ] Fix in `footer.liquid`: "Enter your email", "Subscribe" — _next sprint_
 
-### 1.4 settings_data.json Presets
-- [ ] **Create Preset 1: "Minimal"** — clean white, minimal sections
-- [ ] **Create Preset 2: "Editorial"** — image-heavy, brand story focused
-- [ ] **Create Preset 3: "Bold"** — full-featured homepage
-- [ ] Include demo block configurations for block-based sections
+### 1.4 settings_data.json Presets ✅ DONE
+- [x] **Preset 1: "Minimal"** — clean white, restrained typography, zoom hover
+- [x] **Preset 2: "Editorial"** — warm off-white, serif heading font, generous spacing
+- [x] **Preset 3: "Bold"** — uppercase headings, strong contrast, full-featured
 
 ### 1.5 Non-Functional UI ✅ DONE
 - [x] **Discount code field fixed** — replaced non-functional input with "Discount codes can be applied at checkout" info note
@@ -130,13 +129,13 @@ Horizon uses static blocks for fixed structural elements (logo, menu).
 
 ### 2.4 Advanced Features Horizon Ships With
 
-#### Performance
-- [ ] **`{% stylesheet %}` scoped CSS** — move inline `<style>` blocks to scoped `{% stylesheet %}` tags where supported
-- [ ] **SVH units** for mobile viewport — replace `100vh` with `100svh` for proper mobile heights
-- [ ] **Preconnect hints** — `<link rel="preconnect" href="https://cdn.shopify.com" crossorigin>`
-- [ ] **Lazy load section CSS/JS** — only load section-specific assets when that section is used on the page
-- [ ] **Image preloading** for above-fold hero images
-- [ ] **CLS prevention** — add `aspect-ratio` CSS to all image containers
+#### Performance ✅ DONE (partial)
+- [x] **SVH units** — `100svh` applied to hero/slideshow via `@supports` in `base.css`
+- [x] **Preconnect hints** — `<link rel="preconnect">` for Shopify CDN + fonts CDN in `theme.liquid`
+- [x] **CLS prevention** — `aspect-ratio` added to product card and collection grid image containers
+- [ ] `{% stylesheet %}` scoped CSS — Sprint 5
+- [ ] Lazy load section CSS/JS — Sprint 5
+- [ ] Image preloading for above-fold hero — Sprint 5
 
 #### Responsive Settings
 - [ ] **Desktop/mobile width controls** on blocks (e.g., 25%/50%/100% width for desktop, separate for mobile)
@@ -202,14 +201,12 @@ Horizon uses `t:` prefixes for ALL schema labels and setting names (not just cus
 | Cumulative Layout Shift | < 0.1 | Unknown | [ ] |
 | Total Blocking Time | < 200ms | Unknown | [ ] |
 
-### 3.3 Loading & Empty States
-
-- [ ] **Skeleton loaders** for product cards during AJAX filtering
-- [ ] **Skeleton loader** for cart drawer items while fetching
-- [ ] **Empty wishlist state** — illustration + product suggestions
-- [ ] **Empty cart state** — illustration + stronger CTA + featured products
-- [ ] **No search results** — suggestions + popular products
-- [ ] **Out-of-stock card styling** — greyed image, clear visual indicator
+### 3.3 Loading & Empty States ✅ DONE (partial)
+- [x] **Skeleton loaders** for cart drawer items while fetching
+- [x] **Empty cart state** — bag icon + "Your basket is empty" + Continue Shopping CTA
+- [ ] Skeleton loaders for product cards during AJAX filtering
+- [ ] Empty wishlist state with product suggestions
+- [ ] No search results state
 
 ### 3.4 Legacy Section Refactor
 

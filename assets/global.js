@@ -403,6 +403,13 @@ document.addEventListener('cart:updated', (event) => {
     toggleBtn.setAttribute('aria-expanded', 'true');
     document.body.classList.add('nav-open');
 
+    // Show skeleton loader while fetching
+    if (drawerItems) {
+      drawerItems.innerHTML =
+        '<div class="skeleton-item"><div class="skeleton skeleton-item__img"></div><div class="skeleton-item__body"><div class="skeleton skeleton-item__line skeleton-item__line--medium"></div><div class="skeleton skeleton-item__line skeleton-item__line--short"></div><div class="skeleton skeleton-item__line skeleton-item__line--long"></div></div></div>'.repeat(2);
+    }
+    if (drawerEmpty) drawerEmpty.style.display = 'none';
+
     // Fetch fresh cart data
     MossCart.getCart().then(function (cart) {
       renderCart(cart);
