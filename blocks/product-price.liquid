@@ -1,10 +1,13 @@
-{%- comment -%}
+{%- doc -%}
   Commerce Block: Product Price
-  Shows current price, compare-at, sale badge, and optional unit price.
+  Shows current price, compare-at price, optional save-% badge, and tax notice.
   Updated dynamically by section-main-product.js via [data-product-price].
-{%- endcomment -%}
+  @param {range} font_size - Price font size in px
+  @param {checkbox} show_save_badge - Show "Save X%" badge on sale items
+  @param {checkbox} show_tax_notice - Show tax/shipping notice below price
+{%- enddoc -%}
 
-<div class="block-product-price" data-product-price style="
+<div class="block-product-price" {{ block.shopify_attributes }} data-product-price style="
   font-size: {{ block.settings.font_size }}px;
   font-weight: var(--font-weight-semibold);
 ">
@@ -18,16 +21,12 @@
     {%- if block.settings.show_save_badge -%}
       {%- assign save_percent = product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price -%}
       <span class="block-product-price__badge" style="
-        display: inline-block;
-        margin-left: var(--space-sm);
-        padding: 2px 8px;
-        font-size: var(--font-size-xs);
+        display: inline-block; margin-left: var(--space-sm);
+        padding: 2px 8px; font-size: var(--font-size-xs);
         font-weight: var(--font-weight-semibold);
         background-color: var(--color-scheme-accent, var(--color-red));
         color: var(--color-white);
-      ">
-        Save {{ save_percent }}%
-      </span>
+      ">Save {{ save_percent }}%</span>
     {%- endif -%}
   {%- else -%}
     <span>{{ product.price | money }}</span>
@@ -35,9 +34,7 @@
 
   {%- if block.settings.show_tax_notice -%}
     <p style="font-size: var(--font-size-xs); color: var(--color-mid-grey); font-weight: var(--font-weight-regular); margin-top: 4px;">
-      {%- if cart.taxes_included -%}
-        Tax included.
-      {%- endif -%}
+      {%- if cart.taxes_included -%}Tax included.{%- endif -%}
       Shipping calculated at checkout.
     </p>
   {%- endif -%}
@@ -46,7 +43,7 @@
 {% schema %}
 {
   "name": "Product price",
-  "tag": "div",
+  "tag": null,
   "class": "theme-block--product-price",
   "settings": [
     {

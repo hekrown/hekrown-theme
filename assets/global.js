@@ -336,9 +336,18 @@ document.addEventListener('cart:updated', (event) => {
 
   // ── Format money ─────────────────────────────────────────────────────────
   function fmt(cents) {
-    try {
-      return new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(cents / 100);
-    } catch (e) { return '£' + (cents / 100).toFixed(2); }
+    return window.MossTheme && window.MossTheme.moneyFormat
+      ? formatMoneyFromString(cents, window.MossTheme.moneyFormat)
+      : '£' + (cents / 100).toFixed(2);
+  }
+
+  function formatMoneyFromString(cents, format) {
+    var amount = (cents / 100).toFixed(2);
+    return format
+      .replace(/\{\{\s*amount\s*\}\}/, amount)
+      .replace(/\{\{\s*amount_no_decimals\s*\}\}/, Math.round(cents / 100))
+      .replace(/\{\{\s*amount_with_comma_separator\s*\}\}/, amount.replace('.', ','))
+      .replace(/\{\{\s*amount_no_decimals_with_comma_separator\s*\}\}/, Math.round(cents / 100));
   }
 
   // ── Render cart items into drawer ─────────────────────────────────────────
@@ -393,6 +402,13 @@ document.addEventListener('cart:updated', (event) => {
     drawer.setAttribute('aria-hidden', 'false');
     toggleBtn.setAttribute('aria-expanded', 'true');
     document.body.classList.add('nav-open');
+
+    // Show skeleton loader while fetching
+    if (drawerItems) {
+      drawerItems.innerHTML =
+        '<div class="skeleton-item"><div class="skeleton skeleton-item__img"></div><div class="skeleton-item__body"><div class="skeleton skeleton-item__line skeleton-item__line--medium"></div><div class="skeleton skeleton-item__line skeleton-item__line--short"></div><div class="skeleton skeleton-item__line skeleton-item__line--long"></div></div></div>'.repeat(2);
+    }
+    if (drawerEmpty) drawerEmpty.style.display = 'none';
 
     // Fetch fresh cart data
     MossCart.getCart().then(function (cart) {

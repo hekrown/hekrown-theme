@@ -686,3 +686,79 @@ body.nav-open {
   height: 44px;
   font-size: var(--font-size-sm);
 }
+
+/* ==========================================================================
+   Skeleton Loaders
+   Used while AJAX content is loading (cart drawer, wishlist drawer)
+   ========================================================================== */
+
+@keyframes skeleton-shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, var(--color-off-white) 25%, var(--color-border) 50%, var(--color-off-white) 75%);
+  background-size: 800px 100%;
+  animation: skeleton-shimmer 1.4s ease infinite;
+  border-radius: 2px;
+}
+
+.skeleton-item {
+  display: flex;
+  gap: var(--space-md);
+  padding: var(--space-md) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.skeleton-item__img {
+  width: 72px;
+  height: 90px;
+  flex-shrink: 0;
+}
+
+.skeleton-item__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding-top: 4px;
+}
+
+.skeleton-item__line {
+  height: 12px;
+  border-radius: 2px;
+}
+
+.skeleton-item__line--short { width: 60%; }
+.skeleton-item__line--medium { width: 80%; }
+.skeleton-item__line--long { width: 100%; }
+
+/* ==========================================================================
+   Enhanced Empty States
+   ========================================================================== */
+
+.cart-drawer__empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-lg);
+  padding: var(--space-2xl) var(--space-lg);
+  text-align: center;
+  height: 100%;
+  min-height: 300px;
+}
+
+.cart-drawer__empty-state svg {
+  color: var(--color-border);
+}
+
+.cart-drawer__empty-state p {
+  font-size: var(--font-size-base);
+  color: var(--color-mid-grey);
+}
+
+.cart-drawer__empty-state .btn {
+  min-width: 160px;
+}

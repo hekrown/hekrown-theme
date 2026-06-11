@@ -1,32 +1,46 @@
-{%- comment -%}
+{%- doc -%}
   Theme Block: Group
-  Container block that holds nested blocks. Enables layout flexibility.
-  Supports: row/column direction, gap, alignment, padding, background.
-{%- endcomment -%}
+  Nestable container block that holds other @theme blocks.
+  Enables flexible layout composition: row/column, gap, alignment, padding, background.
+  Accepts @theme blocks as children via {{ block.content }}.
 
-<div class="block-group" style="
-  display: flex;
-  flex-direction: {{ block.settings.direction }};
-  {%- if block.settings.direction == 'row' -%}flex-wrap: wrap;{%- endif -%}
-  gap: {{ block.settings.gap }}px;
-  align-items: {{ block.settings.align_items }};
-  justify-content: {{ block.settings.justify_content }};
-  padding: {{ block.settings.padding }}px;
-  {%- if block.settings.background_color != blank and block.settings.background_color != 'rgba(0,0,0,0)' -%}
-    background-color: {{ block.settings.background_color }};
-  {%- endif -%}
-  {%- if block.settings.max_width != blank -%}
-    max-width: {{ block.settings.max_width }}px;
-    {%- if block.settings.center -%}margin-inline: auto;{%- endif -%}
-  {%- endif -%}
-">
+  @param {select} direction - Flex direction: column (stacked) or row (side by side)
+  @param {range} gap - Gap between child blocks in px
+  @param {select} align_items - Cross-axis alignment
+  @param {select} justify_content - Main-axis alignment
+  @param {range} padding - Inner padding in px
+  @param {range} max_width - Optional max width in px
+  @param {checkbox} center - Center the group horizontally
+  @param {color} background_color - Optional background colour
+{%- enddoc -%}
+
+<div
+  class="block-group"
+  {{ block.shopify_attributes }}
+  style="
+    display: flex;
+    flex-direction: {{ block.settings.direction }};
+    {%- if block.settings.direction == 'row' -%}flex-wrap: wrap;{%- endif -%}
+    gap: {{ block.settings.gap }}px;
+    align-items: {{ block.settings.align_items }};
+    justify-content: {{ block.settings.justify_content }};
+    padding: {{ block.settings.padding }}px;
+    {%- if block.settings.background_color != blank and block.settings.background_color != 'rgba(0,0,0,0)' -%}
+      background-color: {{ block.settings.background_color }};
+    {%- endif -%}
+    {%- if block.settings.max_width != blank -%}
+      max-width: {{ block.settings.max_width }}px;
+      {%- if block.settings.center -%}margin-inline: auto;{%- endif -%}
+    {%- endif -%}
+  "
+>
   {{ block.content }}
 </div>
 
 {% schema %}
 {
   "name": "Group",
-  "tag": "div",
+  "tag": null,
   "class": "theme-block--group",
   "blocks": [{ "type": "@theme" }],
   "settings": [

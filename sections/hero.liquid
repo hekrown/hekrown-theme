@@ -1,0 +1,315 @@
+{%- comment -%}
+  Hero Section
+  Full-width hero with layered media (image or video), text overlay,
+  optional gradient overlay, and configurable height.
+  Supports multiple content blocks: heading, text, button.
+{%- endcomment -%}
+
+{%- liquid
+  assign pt = section.settings.padding_top
+  assign pb = section.settings.padding_bottom
+-%}
+
+<div
+  class="hero"
+  style="
+    --hero-height: {{ section.settings.height }}vh;
+    padding-top: {{ pt }}px;
+    padding-bottom: {{ pb }}px;
+  "
+>
+  {%- comment -%} Background media {%- endcomment -%}
+  <div class="hero__media">
+    {%- if section.settings.video != blank -%}
+      {{ section.settings.video | video_tag:
+        autoplay: true,
+        loop: true,
+        muted: true,
+        playsinline: true,
+        class: 'hero__video'
+      }}
+    {%- elsif section.settings.image != blank -%}
+      <img
+        src="{{ section.settings.image | image_url: width: 1920 }}"
+        alt="{{ section.settings.image.alt | escape }}"
+        class="hero__image"
+        loading="eager"
+        width="1920"
+        height="{{ 1920 | divided_by: section.settings.image.aspect_ratio | round }}"
+      >
+    {%- else -%}
+      <div class="hero__placeholder">
+        {{ 'lifestyle-1' | placeholder_svg_tag: 'hero__placeholder-svg' }}
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} Overlay {%- endcomment -%}
+    {%- if section.settings.overlay_opacity > 0 -%}
+      <div class="hero__overlay" style="
+        background: {%- if section.settings.overlay_style == 'gradient' -%}
+          linear-gradient(to top, rgba(0,0,0,{{ section.settings.overlay_opacity | divided_by: 100.0 }}) 0%, transparent 60%)
+        {%- else -%}
+          rgba(0,0,0,{{ section.settings.overlay_opacity | divided_by: 100.0 }})
+        {%- endif -%};
+      "></div>
+    {%- endif -%}
+  </div>
+
+  {%- comment -%} Content {%- endcomment -%}
+  <div class="hero__content hero__content--{{ section.settings.content_position }}">
+    <div class="hero__content-inner container">
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when 'heading' -%}
+            <h2 class="hero__heading" {{ block.shopify_attributes }} style="color: {{ block.settings.color | default: '#ffffff' }}; font-size: clamp({{ block.settings.size_mobile }}px, 5vw, {{ block.settings.size_desktop }}px);">
+              {{ block.settings.heading }}
+            </h2>
+
+          {%- when 'subheading' -%}
+            <p class="hero__subheading" {{ block.shopify_attributes }} style="color: {{ block.settings.color | default: '#ffffff' }};">
+              {{ block.settings.text }}
+            </p>
+
+          {%- when 'button' -%}
+            {%- if block.settings.label != blank -%}
+              <a href="{{ block.settings.link }}" class="btn btn--{{ block.settings.style }} hero__btn" {{ block.shopify_attributes }}>
+                {{ block.settings.label }}
+              </a>
+            {%- endif -%}
+        {%- endcase -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+<style>
+  .hero {
+    position: relative;
+    width: 100%;
+    height: var(--hero-height, 80vh);
+    overflow: hidden;
+    display: flex;
+    align-items: stretch;
+  }
+
+  @media (max-width: 639px) {
+    .hero { height: 55vh; }
+  }
+
+  .hero__media {
+    position: absolute;
+    inset: 0;
+  }
+
+  .hero__image,
+  .hero__video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .hero__placeholder,
+  .hero__placeholder-svg {
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-off-white);
+    display: block;
+  }
+
+  .hero__overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .hero__content {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-start;
+    padding: var(--space-xl) 0;
+  }
+
+  .hero__content--center {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .hero__content--top-left {
+    align-items: flex-start;
+  }
+
+  .hero__content--top-center {
+    align-items: flex-start;
+    justify-content: center;
+    text-align: center;
+  }
+
+  @media (min-width: 1024px) {
+    .hero__content { padding: var(--space-3xl) 0; }
+  }
+
+  .hero__content-inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    max-width: 700px;
+  }
+
+  .hero__content--center .hero__content-inner,
+  .hero__content--top-center .hero__content-inner {
+    align-items: center;
+    max-width: 800px;
+    margin-inline: auto;
+  }
+
+  .hero__heading {
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-tight);
+    color: var(--color-white);
+  }
+
+  .hero__subheading {
+    font-size: clamp(14px, 2vw, 18px);
+    color: var(--color-white);
+    max-width: 540px;
+    line-height: var(--line-height-normal);
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Hero",
+  "tag": "section",
+  "class": "shopify-section--hero",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background image"
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Background video (overrides image)"
+    },
+    {
+      "type": "range",
+      "id": "height",
+      "label": "Height (vh)",
+      "min": 40,
+      "max": 100,
+      "step": 5,
+      "default": 80,
+      "unit": "vh"
+    },
+    {
+      "type": "select",
+      "id": "content_position",
+      "label": "Content position",
+      "options": [
+        { "value": "bottom-left", "label": "Bottom left" },
+        { "value": "center", "label": "Centre" },
+        { "value": "top-left", "label": "Top left" },
+        { "value": "top-center", "label": "Top centre" }
+      ],
+      "default": "bottom-left"
+    },
+    {
+      "type": "select",
+      "id": "overlay_style",
+      "label": "Overlay style",
+      "options": [
+        { "value": "solid", "label": "Solid" },
+        { "value": "gradient", "label": "Gradient (bottom to transparent)" }
+      ],
+      "default": "gradient"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay opacity",
+      "min": 0,
+      "max": 90,
+      "step": 5,
+      "default": 40,
+      "unit": "%"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "", "label": "None" },
+        { "value": "1", "label": "Scheme 1 — Light" },
+        { "value": "2", "label": "Scheme 2 — Dark" },
+        { "value": "3", "label": "Scheme 3 — Neutral" }
+      ],
+      "default": ""
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 120,
+      "step": 8,
+      "default": 0,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 120,
+      "step": 8,
+      "default": 0,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "heading",
+      "name": "Heading",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Heading", "default": "New Season Collection" },
+        { "type": "range", "id": "size_desktop", "label": "Size desktop (px)", "min": 24, "max": 96, "step": 4, "default": 60 },
+        { "type": "range", "id": "size_mobile", "label": "Size mobile (px)", "min": 20, "max": 56, "step": 4, "default": 32 },
+        { "type": "color", "id": "color", "label": "Text color", "default": "#FFFFFF" }
+      ]
+    },
+    {
+      "type": "subheading",
+      "name": "Subheading",
+      "settings": [
+        { "type": "text", "id": "text", "label": "Text", "default": "Refined essentials for the modern wardrobe" },
+        { "type": "color", "id": "color", "label": "Text color", "default": "#FFFFFF" }
+      ]
+    },
+    {
+      "type": "button",
+      "name": "Button",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Label", "default": "Shop Now" },
+        { "type": "url", "id": "link", "label": "Link" },
+        { "type": "select", "id": "style", "label": "Style", "options": [{ "value": "primary", "label": "Primary" }, { "value": "secondary", "label": "Secondary" }], "default": "primary" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero",
+      "blocks": [
+        { "type": "heading", "settings": { "heading": "New Season Collection" } },
+        { "type": "subheading", "settings": { "text": "Refined essentials for the modern wardrobe" } },
+        { "type": "button", "settings": { "label": "Shop Now" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,23 +1,34 @@
-{%- comment -%}
+{%- doc -%}
   Theme Block: Divider
-  Horizontal line with style, thickness, and color controls.
-{%- endcomment -%}
+  Horizontal rule with style, thickness, width, alignment, spacing and color controls.
+  @param {select} style - Border style: solid/dashed/dotted
+  @param {range} thickness - Border thickness in px
+  @param {select} width - Width percentage
+  @param {select} alignment - Horizontal alignment
+  @param {range} spacing - Vertical margin in px
+  @param {color} color - Line color
+{%- enddoc -%}
 
-<hr class="block-divider" style="
-  border: none;
-  border-top: {{ block.settings.thickness }}px {{ block.settings.style }} {{ block.settings.color | default: 'var(--color-border)' }};
-  margin: {{ block.settings.spacing }}px 0;
-  {%- if block.settings.width != '100%' -%}
-    width: {{ block.settings.width }};
-    {%- if block.settings.alignment == 'center' -%}margin-inline: auto;{%- endif -%}
-    {%- if block.settings.alignment == 'right' -%}margin-left: auto;{%- endif -%}
-  {%- endif -%}
-" aria-hidden="true">
+<hr
+  class="block-divider"
+  {{ block.shopify_attributes }}
+  style="
+    border: none;
+    border-top: {{ block.settings.thickness }}px {{ block.settings.style }} {{ block.settings.color | default: 'var(--color-border)' }};
+    margin: {{ block.settings.spacing }}px 0;
+    {%- if block.settings.width != '100%' -%}
+      width: {{ block.settings.width }};
+      {%- if block.settings.alignment == 'center' -%}margin-inline: auto;{%- endif -%}
+      {%- if block.settings.alignment == 'right' -%}margin-left: auto;{%- endif -%}
+    {%- endif -%}
+  "
+  aria-hidden="true"
+>
 
 {% schema %}
 {
   "name": "Divider",
-  "tag": "div",
+  "tag": null,
   "class": "theme-block--divider",
   "settings": [
     {

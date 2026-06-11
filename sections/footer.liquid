@@ -35,11 +35,11 @@
               type="email"
               name="contact[email]"
               class="site-footer__newsletter-input"
-              placeholder="Enter your email"
+              placeholder="{{ 'form.email_address' | t }}"
               required
-              aria-label="Email address"
+              aria-label="{{ 'form.email_address' | t }}"
             >
-            <button type="submit" class="site-footer__newsletter-btn">Subscribe</button>
+            <button type="submit" class="site-footer__newsletter-btn">{{ 'general.newsletter.subscribe' | t | default: 'Subscribe' }}</button>
           </div>
         {%- endform -%}
       </div>

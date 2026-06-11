@@ -1,13 +1,25 @@
-{%- comment -%}
+{%- doc -%}
   Theme Block: Image
-  Responsive image with aspect ratio, link, and border radius controls.
-{%- endcomment -%}
+  Responsive image with aspect ratio, optional link, alignment,
+  max-width and corner radius controls.
 
-<div class="block-image" style="
-  {%- if block.settings.max_width != blank -%}max-width: {{ block.settings.max_width }}px;{%- endif -%}
-  {%- if block.settings.alignment == 'center' -%}margin-inline: auto;{%- endif -%}
-  {%- if block.settings.alignment == 'right' -%}margin-left: auto;{%- endif -%}
-">
+  @param {image_picker} image - The image to display
+  @param {select} aspect_ratio - Aspect ratio constraint
+  @param {url} link - Optional link wrapping the image
+  @param {range} max_width - Max width in pixels
+  @param {select} alignment - Horizontal alignment (left/center/right)
+  @param {range} border_radius - Corner radius in pixels
+{%- enddoc -%}
+
+<div
+  class="block-image"
+  {{ block.shopify_attributes }}
+  style="
+    {%- if block.settings.max_width != blank -%}max-width: {{ block.settings.max_width }}px;{%- endif -%}
+    {%- if block.settings.alignment == 'center' -%}margin-inline: auto;{%- endif -%}
+    {%- if block.settings.alignment == 'right' -%}margin-left: auto;{%- endif -%}
+  "
+>
   {%- if block.settings.link != blank -%}<a href="{{ block.settings.link }}">{%- endif -%}
 
     {%- if block.settings.image != blank -%}
@@ -26,7 +38,7 @@
             aspect-ratio: {{ block.settings.aspect_ratio }};
             object-fit: cover;
           {%- endif -%}
-          {%- if block.settings.border_radius != '0' -%}border-radius: {{ block.settings.border_radius }}px;{%- endif -%}
+          {%- if block.settings.border_radius != 0 -%}border-radius: {{ block.settings.border_radius }}px;{%- endif -%}
         "
       >
     {%- else -%}
@@ -49,7 +61,7 @@
 {% schema %}
 {
   "name": "Image",
-  "tag": "div",
+  "tag": null,
   "class": "theme-block--image",
   "settings": [
     {

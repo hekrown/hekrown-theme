@@ -1,0 +1,171 @@
+{%- comment -%}
+  Universal Blocks Section
+  The most flexible section in the theme. Accepts any @theme block or @app block.
+  Used for: custom landing page rows, promotional content, editorial layouts.
+  Layout: stack, 2-col, 3-col, or 4-col grid — configurable per section.
+{%- endcomment -%}
+
+{%- liquid
+  assign cols = section.settings.columns
+  assign gap = section.settings.gap
+  assign full_width = section.settings.full_width
+  assign pt = section.settings.padding_top
+  assign pb = section.settings.padding_bottom
+-%}
+
+<div
+  class="section-blocks{% if section.settings.color_scheme != blank %} color-scheme-{{ section.settings.color_scheme }}{% endif %}"
+  style="padding-top: {{ pt }}px; padding-bottom: {{ pb }}px;"
+>
+  <div class="{% if full_width %}section-blocks__full{% else %}container{% endif %}">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="section-blocks__heading" style="text-align: {{ section.settings.heading_align }};">
+        {{ section.settings.heading }}
+      </h2>
+    {%- endif -%}
+
+    <div
+      class="section-blocks__grid"
+      style="
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        gap: {{ gap }}px;
+      "
+    >
+      {%- content_for 'blocks' -%}
+    </div>
+  </div>
+</div>
+
+<style>
+  .section-blocks__heading {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--space-xl);
+    color: var(--color-scheme-heading, var(--color-black));
+  }
+
+  .section-blocks__full {
+    width: 100%;
+  }
+
+  @media (min-width: 640px) {
+    .section-blocks__grid[data-cols="2"],
+    .section-blocks__grid[data-cols="3"],
+    .section-blocks__grid[data-cols="4"] {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .section-blocks__grid[data-cols="2"] { grid-template-columns: repeat(2, 1fr); }
+    .section-blocks__grid[data-cols="3"] { grid-template-columns: repeat(3, 1fr); }
+    .section-blocks__grid[data-cols="4"] { grid-template-columns: repeat(4, 1fr); }
+  }
+</style>
+
+<script>
+  (function() {
+    var grid = document.querySelector('.section-blocks__grid');
+    if (grid) grid.setAttribute('data-cols', '{{ cols }}');
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Blocks",
+  "tag": "section",
+  "class": "shopify-section--blocks",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Section heading"
+    },
+    {
+      "type": "select",
+      "id": "heading_align",
+      "label": "Heading alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "columns",
+      "label": "Columns (desktop)",
+      "options": [
+        { "value": "1", "label": "1 column" },
+        { "value": "2", "label": "2 columns" },
+        { "value": "3", "label": "3 columns" },
+        { "value": "4", "label": "4 columns" }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Gap between blocks",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "default": 24,
+      "unit": "px"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full width (no container)",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "", "label": "None (inherit)" },
+        { "value": "1", "label": "Scheme 1 — Light" },
+        { "value": "2", "label": "Scheme 2 — Dark" },
+        { "value": "3", "label": "Scheme 3 — Neutral" }
+      ],
+      "default": ""
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 120,
+      "step": 8,
+      "default": 64,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 120,
+      "step": 8,
+      "default": 64,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    { "type": "@theme" },
+    { "type": "@app" }
+  ],
+  "presets": [
+    {
+      "name": "Blocks",
+      "settings": { "columns": "1" },
+      "blocks": [
+        { "type": "heading", "settings": { "heading": "Your heading here" } },
+        { "type": "text" }
+      ]
+    }
+  ]
+}
+{% endschema %}

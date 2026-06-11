@@ -1,0 +1,48 @@
+{%- doc -%}
+  Theme Block: Content (Nestable)
+  A nestable container that accepts @theme blocks as children.
+  Used for creating complex layouts inside the universal _blocks section.
+  Supports background, padding, border, and max-width controls.
+  @param {color} background - Background colour
+  @param {range} padding - Inner padding in px
+  @param {range} border_radius - Corner radius in px
+  @param {checkbox} show_border - Show border
+  @param {color} border_color - Border colour
+  @param {range} max_width - Max width in px (0 = full)
+  @param {checkbox} center - Center the block horizontally
+{%- enddoc -%}
+
+<div
+  class="block-content"
+  {{ block.shopify_attributes }}
+  style="
+    {%- if block.settings.background != blank and block.settings.background != 'rgba(0,0,0,0)' -%}
+      background-color: {{ block.settings.background }};
+    {%- endif -%}
+    {%- if block.settings.padding > 0 -%}padding: {{ block.settings.padding }}px;{%- endif -%}
+    {%- if block.settings.border_radius > 0 -%}border-radius: {{ block.settings.border_radius }}px;{%- endif -%}
+    {%- if block.settings.show_border -%}border: 1px solid {{ block.settings.border_color | default: 'var(--color-border)' }};{%- endif -%}
+    {%- if block.settings.max_width > 0 -%}max-width: {{ block.settings.max_width }}px;{%- endif -%}
+    {%- if block.settings.center -%}margin-inline: auto;{%- endif -%}
+  "
+>
+  {{ block.content }}
+</div>
+
+{% schema %}
+{
+  "name": "Content",
+  "tag": null,
+  "class": "theme-block--content",
+  "blocks": [{ "type": "@theme" }],
+  "settings": [
+    { "type": "color", "id": "background", "label": "Background color" },
+    { "type": "range", "id": "padding", "label": "Inner padding", "min": 0, "max": 80, "step": 4, "default": 0, "unit": "px" },
+    { "type": "range", "id": "border_radius", "label": "Corner radius", "min": 0, "max": 32, "step": 2, "default": 0, "unit": "px" },
+    { "type": "checkbox", "id": "show_border", "label": "Show border", "default": false },
+    { "type": "color", "id": "border_color", "label": "Border color", "default": "#DDDDDD" },
+    { "type": "range", "id": "max_width", "label": "Max width (0 = full)", "min": 0, "max": 1440, "step": 40, "default": 0, "unit": "px" },
+    { "type": "checkbox", "id": "center", "label": "Center horizontally", "default": false }
+  ]
+}
+{% endschema %}

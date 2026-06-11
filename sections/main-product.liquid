@@ -116,7 +116,7 @@
                 <legend class="product-page__option-label">
                   {{ option.name }}{% if option.name == 'Colour' or option.name == 'Color' %}: <span data-selected-color>{{ option.selected_value }}</span>{% endif %}
                   {%- if option.name == 'Size' -%}
-                    <button type="button" class="product-page__size-guide-link" data-size-guide-open>Size Guide</button>
+                    <button type="button" class="product-page__size-guide-link" data-size-guide-open>{{ 'products.product.size_guide' | t }}</button>
                   {%- endif -%}
                 </legend>
 
@@ -157,9 +157,9 @@
             {% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}
           >
             {%- if product.selected_or_first_available_variant.available -%}
-              Add to Basket
+              {{ 'products.product.add_to_cart' | t }}
             {%- else -%}
-              Out of Stock
+              {{ 'products.product.out_of_stock' | t }}
             {%- endif -%}
           </button>
         {%- endform -%}
@@ -180,7 +180,7 @@
         <div class="product-page__accordions">
           {%- if product.description != blank -%}
             <details class="product-page__accordion">
-              <summary class="product-page__accordion-trigger">Description</summary>
+              <summary class="product-page__accordion-trigger">{{ 'products.product.description' | t | default: 'Description' }}</summary>
               <div class="product-page__accordion-content">
                 {{ product.description }}
               </div>
@@ -189,7 +189,7 @@
 
           {%- if product.metafields.custom.details -%}
             <details class="product-page__accordion">
-              <summary class="product-page__accordion-trigger">Product Details</summary>
+              <summary class="product-page__accordion-trigger">{{ 'products.product.product_details' | t | default: 'Product Details' }}</summary>
               <div class="product-page__accordion-content">
                 {{ product.metafields.custom.details | metafield_tag }}
               </div>
@@ -197,7 +197,7 @@
           {%- endif -%}
 
           <details class="product-page__accordion">
-            <summary class="product-page__accordion-trigger">Delivery & Returns</summary>
+            <summary class="product-page__accordion-trigger">{{ 'products.product.delivery_returns' | t | default: 'Delivery & Returns' }}</summary>
             <div class="product-page__accordion-content">
               <p>Free UK standard delivery on orders over £200. Express delivery available. Easy returns within 30 days of purchase.</p>
             </div>
@@ -220,9 +220,9 @@
       {% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}
     >
       {%- if product.selected_or_first_available_variant.available -%}
-        Add to Basket
+        {{ 'products.product.add_to_cart' | t }}
       {%- else -%}
-        Out of Stock
+        {{ 'products.product.out_of_stock' | t }}
       {%- endif -%}
     </button>
   </div>
@@ -246,7 +246,7 @@
           required
           aria-label="Email address for back-in-stock notification"
         >
-        <button type="submit" class="btn btn--primary">Notify Me</button>
+        <button type="submit" class="btn btn--primary">{{ 'products.product.notify_me' | t | default: 'Notify Me' }}</button>
       </div>
       <p class="product-page__notify-disclaimer">We'll email you when this product is back in stock.</p>
     {%- endform -%}
@@ -367,7 +367,13 @@
 
     var priceEl = document.querySelector('[data-sticky-price]');
     if (priceEl && variant.price) {
-      priceEl.textContent = new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(variant.price / 100);
+      var format = window.MossTheme && window.MossTheme.moneyFormat;
+      if (format) {
+        var amount = (variant.price / 100).toFixed(2);
+        priceEl.textContent = format.replace(/\{\{\s*amount\s*\}\}/, amount);
+      } else {
+        priceEl.textContent = '£' + (variant.price / 100).toFixed(2);
+      }
     }
     if (stickyBtn) {
       stickyBtn.disabled = !variant.available;

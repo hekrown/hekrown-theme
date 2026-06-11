@@ -6,6 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#000000">
 
+  {%- comment -%} Preconnect hints for faster resource loading {%- endcomment -%}
+  <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
+
   <title>
     {{ page_title }}
     {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
@@ -165,6 +169,27 @@
   {%- comment -%} CSS Reset + Design Tokens {%- endcomment -%}
   {{ 'base.css' | asset_url | stylesheet_tag }}
 
+  {%- comment -%} Dynamic font loading from theme settings {%- endcomment -%}
+  {%- if settings.font_heading.system? == false -%}
+    <link rel="preload" as="font" href="{{ settings.font_heading | font_url }}" type="font/woff2" crossorigin>
+  {%- endif -%}
+  {%- if settings.font_body.system? == false and settings.font_body.family != settings.font_heading.family -%}
+    <link rel="preload" as="font" href="{{ settings.font_body | font_url }}" type="font/woff2" crossorigin>
+  {%- endif -%}
+
+  {{ settings.font_heading | font_face: font_display: 'swap' }}
+  {{ settings.font_body | font_face: font_display: 'swap' }}
+
+  {%- comment -%} Inject dynamic font CSS variables {%- endcomment -%}
+  <style>
+    :root {
+      --font-heading: {{ settings.font_heading.family | json }}, {{ settings.font_heading.fallback_families }};
+      --font-body: {{ settings.font_body.family | json }}, {{ settings.font_body.fallback_families }};
+      --font-heading-weight: {{ settings.font_heading.weight }};
+      --font-body-weight: {{ settings.font_body.weight }};
+    }
+  </style>
+
   {%- comment -%} Component styles {%- endcomment -%}
   {{ 'component-header.css' | asset_url | stylesheet_tag }}
   {{ 'component-footer.css' | asset_url | stylesheet_tag }}
@@ -175,6 +200,14 @@
 
   <script>
     document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
+  </script>
+
+  {%- comment -%} Global theme config — accessible to all JS files {%- endcomment -%}
+  <script>
+    window.MossTheme = window.MossTheme || {};
+    window.MossTheme.moneyFormat = {{ shop.money_format | json }};
+    window.MossTheme.currency = {{ cart.currency.iso_code | json }};
+    window.MossTheme.locale = {{ request.locale.iso_code | json }};
   </script>
 </head>
 

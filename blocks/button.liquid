@@ -1,10 +1,22 @@
-{%- comment -%}
+{%- doc -%}
   Theme Block: Button
-  Configurable CTA button — primary, secondary, or text link.
-{%- endcomment -%}
+  Configurable CTA button — primary, secondary, or text link styles.
+  Supports size, alignment, and full-width options.
+
+  @param {text} label - Button label text
+  @param {url} link - Button destination URL
+  @param {select} style - Visual style: primary (filled) or secondary (outline)
+  @param {select} size - Size preset: small, default, or large
+  @param {select} alignment - Alignment of the button wrapper
+  @param {checkbox} full_width - Whether button fills full container width
+{%- enddoc -%}
 
 {%- if block.settings.label != blank -%}
-  <div class="block-button" style="text-align: {{ block.settings.alignment }};">
+  <div
+    class="block-button"
+    {{ block.shopify_attributes }}
+    style="text-align: {{ block.settings.alignment }};"
+  >
     <a
       href="{{ block.settings.link }}"
       class="btn btn--{{ block.settings.style }}{% if block.settings.full_width %} btn--full-width{% endif %}"
@@ -21,7 +33,7 @@
 {% schema %}
 {
   "name": "Button",
-  "tag": "div",
+  "tag": null,
   "class": "theme-block--button",
   "settings": [
     {

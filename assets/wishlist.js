@@ -243,11 +243,14 @@
   }
 
   function formatMoney(cents) {
-    try {
-      return new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(Number(cents) / 100);
-    } catch (e) {
-      return '£' + (Number(cents) / 100).toFixed(2);
-    }
+    var format = window.MossTheme && window.MossTheme.moneyFormat;
+    if (!format) return '£' + (Number(cents) / 100).toFixed(2);
+    var amount = (Number(cents) / 100).toFixed(2);
+    return format
+      .replace(/\{\{\s*amount\s*\}\}/, amount)
+      .replace(/\{\{\s*amount_no_decimals\s*\}\}/, Math.round(Number(cents) / 100))
+      .replace(/\{\{\s*amount_with_comma_separator\s*\}\}/, amount.replace('.', ','))
+      .replace(/\{\{\s*amount_no_decimals_with_comma_separator\s*\}\}/, Math.round(Number(cents) / 100));
   }
 
   if (wishlistToggleBtns.length) {

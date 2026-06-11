@@ -1,11 +1,13 @@
-{%- comment -%}
+{%- doc -%}
   Commerce Block: Product Title
-  Displays the product title with optional vendor above.
-  Context: Must be used inside a section where `product` is available.
-{%- endcomment -%}
+  Renders the product title as an H1 with optional vendor above.
+  Must be used inside a section where the `product` object is available.
+  @param {checkbox} show_vendor - Show vendor name above title
+  @param {range} font_size - Max font size in px (clamps down on mobile)
+{%- enddoc -%}
 
 {%- if block.settings.show_vendor and product.vendor != blank -%}
-  <p class="block-product-title__vendor" style="
+  <p class="block-product-title__vendor" {{ block.shopify_attributes }} style="
     font-size: var(--font-size-xs);
     text-transform: uppercase;
     letter-spacing: var(--letter-spacing-wide);
@@ -16,7 +18,7 @@
   </p>
 {%- endif -%}
 
-<h1 class="block-product-title" style="
+<h1 class="block-product-title" {{ block.shopify_attributes }} style="
   font-size: clamp(20px, 3vw, {{ block.settings.font_size }}px);
   font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-snug);
@@ -28,7 +30,7 @@
 {% schema %}
 {
   "name": "Product title",
-  "tag": "div",
+  "tag": null,
   "class": "theme-block--product-title",
   "settings": [
     {

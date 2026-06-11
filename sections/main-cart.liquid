@@ -5,12 +5,12 @@
 
 <div class="cart-page section-padding" data-cart-page>
   <div class="container">
-    <h1 class="cart-page__heading">Your Basket</h1>
+    <h1 class="cart-page__heading">{{ 'cart.general.title' | t }}</h1>
 
     {%- if cart.item_count == 0 -%}
       <div class="cart-page__empty" data-cart-empty>
-        <p>Your basket is empty</p>
-        <a href="{{ routes.all_products_collection_url }}" class="btn btn--primary">Continue Shopping</a>
+        <p>{{ 'cart.general.empty' | t }}</p>
+        <a href="{{ routes.all_products_collection_url }}" class="btn btn--primary">{{ 'cart.general.continue_shopping' | t }}</a>
       </div>
     {%- else -%}
       <div class="cart-page__grid" data-cart-grid>
@@ -42,7 +42,7 @@
                     <span data-qty-value>{{ item.quantity }}</span>
                     <button type="button" data-qty-plus aria-label="Increase quantity">+</button>
                   </div>
-                  <button type="button" class="cart-page__item-remove" data-remove-item>Remove</button>
+                  <button type="button" class="cart-page__item-remove" data-remove-item>{{ 'cart.general.remove' | t }}</button>
                 </div>
               </div>
             </div>
@@ -52,31 +52,31 @@
         {%- comment -%} Order Summary {%- endcomment -%}
         <div class="cart-page__summary">
           <div class="cart-page__summary-box">
-            <h2 class="cart-page__summary-heading">Order Summary</h2>
+            <h2 class="cart-page__summary-heading">{{ 'cart.general.order_summary' | t | default: 'Order Summary' }}</h2>
 
             <div class="cart-page__summary-row">
-              <span>Subtotal</span>
+              <span>{{ 'cart.general.subtotal' | t }}</span>
               <span data-cart-subtotal>{{ cart.total_price | money }}</span>
             </div>
 
             <div class="cart-page__summary-row">
-              <span>Delivery</span>
-              <span>Calculated at checkout</span>
+              <span>{{ 'cart.general.shipping' | t }}</span>
+              <span>{{ 'cart.general.calculated_at_checkout' | t | default: 'Calculated at checkout' }}</span>
             </div>
 
-            {%- comment -%} Discount code {%- endcomment -%}
-            <div class="cart-page__discount">
-              <input type="text" placeholder="Discount code" class="input" data-discount-input>
-              <button type="button" class="btn btn--secondary">Apply</button>
+            {%- comment -%} Discount code — applied at checkout {%- endcomment -%}
+            <div class="cart-page__discount-note">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              {{ 'cart.discount.apply_at_checkout' | t | default: 'Discount codes can be applied at checkout' }}
             </div>
 
             <div class="cart-page__summary-total">
-              <span>Total</span>
+              <span>{{ 'cart.general.total' | t }}</span>
               <span data-cart-total>{{ cart.total_price | money }}</span>
             </div>
 
             <a href="/checkout" class="btn btn--primary btn--full-width cart-page__checkout-btn">
-              Proceed to Checkout
+              {{ 'cart.general.checkout' | t }}
             </a>
 
             <div class="cart-page__payment-icons">
@@ -268,6 +268,15 @@
     border-top: 1px solid var(--color-border);
   }
 
+  .cart-page__discount-note {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    font-size: var(--font-size-xs);
+    color: var(--color-mid-grey);
+    padding: var(--space-sm) 0;
+  }
+
   .cart-page__checkout-btn {
     height: var(--button-height);
     font-size: var(--font-size-base);
@@ -294,18 +303,15 @@
   if (!cartPage) return;
 
   // ── Money formatting ─────────────────────────────────────────────────────
-  // Shopify returns cents — format as £X.XX using the store's currency symbol
   function formatMoney(cents) {
+    var format = window.MossTheme && window.MossTheme.moneyFormat;
+    if (!format) return '£' + (cents / 100).toFixed(2);
     var amount = (cents / 100).toFixed(2);
-    // Use Intl if available, otherwise simple fallback
-    try {
-      return new Intl.NumberFormat('en-GB', {
-        style: 'currency',
-        currency: 'GBP'
-      }).format(cents / 100);
-    } catch (e) {
-      return '£' + amount;
-    }
+    return format
+      .replace(/\{\{\s*amount\s*\}\}/, amount)
+      .replace(/\{\{\s*amount_no_decimals\s*\}\}/, Math.round(cents / 100))
+      .replace(/\{\{\s*amount_with_comma_separator\s*\}\}/, amount.replace('.', ','))
+      .replace(/\{\{\s*amount_no_decimals_with_comma_separator\s*\}\}/, Math.round(cents / 100));
   }
 
   // ── Set loading state ────────────────────────────────────────────────────

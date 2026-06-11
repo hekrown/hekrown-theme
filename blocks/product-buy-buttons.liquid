@@ -1,18 +1,23 @@
-{%- comment -%}
+{%- doc -%}
   Commerce Block: Buy Buttons
-  Add to cart button + optional quantity selector + dynamic checkout button.
-{%- endcomment -%}
+  Add-to-cart button with optional quantity selector and dynamic checkout button.
+  Wired to section-main-product.js via data-atc-btn and data-variant-id.
+  @param {checkbox} show_quantity - Show +/- quantity stepper
+  @param {checkbox} show_dynamic_checkout - Show Shop Pay / Apple Pay button
+  @param {text} add_to_cart_text - ATC button label
+  @param {text} sold_out_text - Label when variant is unavailable
+{%- enddoc -%}
 
 {%- form 'product', product, id: 'product-form', data-product-form: '' -%}
   <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}" data-variant-id>
 
   {%- if block.settings.show_quantity -%}
-    <div class="block-buy__quantity" style="margin-bottom: var(--space-md);">
-      <label for="quantity-{{ section.id }}" class="visually-hidden">Quantity</label>
+    <div class="block-buy__quantity" {{ block.shopify_attributes }} style="margin-bottom: var(--space-md);">
+      <label for="quantity-{{ section.id }}" class="visually-hidden">{{ 'products.product.quantity' | t }}</label>
       <div style="display: flex; align-items: center; border: 1px solid var(--color-border); width: fit-content;">
-        <button type="button" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; font-size: 18px;" data-qty-minus aria-label="Decrease quantity">−</button>
+        <button type="button" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; font-size: 18px;" data-qty-minus aria-label="{{ 'products.product.decrease' | t }}">−</button>
         <input type="number" id="quantity-{{ section.id }}" name="quantity" value="1" min="1" style="width: 48px; height: 44px; text-align: center; border: none; border-left: 1px solid var(--color-border); border-right: 1px solid var(--color-border); font-size: var(--font-size-base); -moz-appearance: textfield;" data-qty-input>
-        <button type="button" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; font-size: 18px;" data-qty-plus aria-label="Increase quantity">+</button>
+        <button type="button" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; font-size: 18px;" data-qty-plus aria-label="{{ 'products.product.increase' | t }}">+</button>
       </div>
     </div>
   {%- else -%}
@@ -27,9 +32,9 @@
     {% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}
   >
     {%- if product.selected_or_first_available_variant.available -%}
-      {{ block.settings.add_to_cart_text | default: 'Add to Basket' }}
+      {{ block.settings.add_to_cart_text | default: 'products.product.add_to_cart' | t }}
     {%- else -%}
-      {{ block.settings.sold_out_text | default: 'Out of Stock' }}
+      {{ block.settings.sold_out_text | default: 'products.product.out_of_stock' | t }}
     {%- endif -%}
   </button>
 
@@ -43,34 +48,13 @@
 {% schema %}
 {
   "name": "Buy buttons",
-  "tag": "div",
+  "tag": null,
   "class": "theme-block--buy-buttons",
   "settings": [
-    {
-      "type": "checkbox",
-      "id": "show_quantity",
-      "label": "Show quantity selector",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "show_dynamic_checkout",
-      "label": "Show dynamic checkout button",
-      "info": "Displays Shop Pay, Apple Pay, etc. if available",
-      "default": true
-    },
-    {
-      "type": "text",
-      "id": "add_to_cart_text",
-      "label": "Add to cart text",
-      "default": "Add to Basket"
-    },
-    {
-      "type": "text",
-      "id": "sold_out_text",
-      "label": "Sold out text",
-      "default": "Out of Stock"
-    }
+    { "type": "checkbox", "id": "show_quantity", "label": "Show quantity selector", "default": true },
+    { "type": "checkbox", "id": "show_dynamic_checkout", "label": "Show dynamic checkout button", "info": "Displays Shop Pay, Apple Pay, etc. if available", "default": true },
+    { "type": "text", "id": "add_to_cart_text", "label": "Add to cart text", "default": "Add to Basket" },
+    { "type": "text", "id": "sold_out_text", "label": "Sold out text", "default": "Out of Stock" }
   ]
 }
 {% endschema %}
