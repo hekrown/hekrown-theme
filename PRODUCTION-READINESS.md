@@ -215,9 +215,9 @@ Horizon uses `t:` prefixes for ALL schema labels and setting names (not just cus
 ### 3.3 Loading & Empty States ⚠️ PARTIALLY DONE (Sprint 4)
 - [x] **Skeleton loaders** for cart drawer items while fetching
 - [x] **Empty cart drawer state** — "Your basket is empty" + Continue Shopping CTA
-- [ ] Skeleton loaders for product cards during AJAX filtering
-- [ ] Empty wishlist state with illustration + product suggestions
-- [ ] No search results state with popular products
+- [x] Skeleton loaders for product cards during AJAX filtering
+- [x] Empty wishlist state with illustration + product suggestions
+- [x] No search results state with popular products
 
 ### 3.4 Legacy Section Refactor
 
@@ -236,9 +236,10 @@ These 6 pre-existing sections don't match the current architecture:
 
 Move inline `style=""` attributes to proper CSS classes:
 
-- [ ] `product-buy-buttons.liquid` — heavy inline styles on quantity stepper
-- [ ] Various blocks using `style="margin-bottom: var(--space-md)"` — use CSS classes
-- [ ] Product card quick-add uses inline margin
+- [x] `product-buy-buttons.liquid` — heavy inline styles on quantity stepper — moved to `base.css`
+- [x] Various blocks using `style="margin-bottom: var(--space-md)"` — `.block-mb` utility class added
+- [x] Testimonials heading inline styles — moved to CSS classes
+- [x] Search page inline styles — moved to CSS classes
 
 ### 3.6 Documentation ✅ DONE (Sprint 5)
 | Document | Status |

@@ -1,18 +1,27 @@
 <div class="search-page section-padding">
   <div class="container">
-    <h1 class="search-page__title">Search</h1>
+    <h1 class="search-page__title">{{ 'general.search.title' | t }}</h1>
 
     <form action="{{ routes.search_url }}" method="get" class="search-page__form">
-      <div style="display: flex; gap: var(--space-sm); max-width: 600px;">
-        <input type="search" name="q" value="{{ search.terms | escape }}" class="input" placeholder="Search products..." aria-label="Search">
-        <button type="submit" class="btn btn--primary">Search</button>
+      <div class="search-page__form-row">
+        <label for="search-page-input" class="visually-hidden">{{ 'general.search.title' | t }}</label>
+        <input
+          type="search"
+          id="search-page-input"
+          name="q"
+          value="{{ search.terms | escape }}"
+          class="input"
+          placeholder="{{ 'general.search.placeholder' | t }}"
+          aria-label="{{ 'general.search.title' | t }}"
+        >
+        <button type="submit" class="btn btn--primary">{{ 'general.search.submit' | t }}</button>
       </div>
     </form>
 
     {%- if search.performed -%}
       {%- if search.results_count > 0 -%}
-        <p class="search-page__count" style="margin: var(--space-lg) 0; color: var(--color-mid-grey); font-size: var(--font-size-sm);">
-          {{ search.results_count }} results for "{{ search.terms }}"
+        <p class="search-page__count">
+          {{ 'general.search.results_count_plural' | t: count: search.results_count, terms: search.terms }}
         </p>
         <div class="collection-page__grid">
           {%- for item in search.results -%}
@@ -22,13 +31,106 @@
           {%- endfor -%}
         </div>
       {%- else -%}
-        <p style="margin-top: var(--space-xl); color: var(--color-mid-grey);">
-          No results found for "{{ search.terms }}". Try a different search term.
-        </p>
+        <div class="search-no-results">
+          <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true">
+            <circle cx="11" cy="11" r="7"/>
+            <line x1="16.5" y1="16.5" x2="21" y2="21"/>
+            <line x1="8" y1="11" x2="14" y2="11" stroke-width="1.5"/>
+          </svg>
+          <h2 class="search-no-results__heading">
+            {{ 'general.search.no_results' | t: terms: search.terms }}
+          </h2>
+          <p class="search-no-results__hint">{{ 'general.search.no_results_hint' | t | default: 'Check your spelling or try a more general term.' }}</p>
+          <div class="search-no-results__suggestions">
+            <p class="search-no-results__suggestions-label">{{ 'general.search.try_searching' | t | default: 'Try searching for:' }}</p>
+            <div class="search-no-results__tags">
+              {%- assign suggestion_terms = 'Suits,Shirts,Linen,Trousers,Accessories' | split: ',' -%}
+              {%- for term in suggestion_terms -%}
+                <a href="{{ routes.search_url }}?q={{ term | url_encode }}&type=product" class="search-no-results__tag">{{ term }}</a>
+              {%- endfor -%}
+            </div>
+          </div>
+          <a href="{{ routes.all_products_collection_url }}" class="btn btn--secondary">
+            {{ 'collections.general.view_all_products' | t }}
+          </a>
+        </div>
       {%- endif -%}
     {%- endif -%}
   </div>
 </div>
+
+<style>
+  .search-page__form-row {
+    display: flex;
+    gap: var(--space-sm);
+    max-width: 600px;
+  }
+
+  .search-page__count {
+    margin: var(--space-lg) 0;
+    color: var(--color-mid-grey);
+    font-size: var(--font-size-sm);
+  }
+
+  .search-no-results {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-lg);
+    padding: var(--space-2xl) 0;
+    text-align: center;
+    max-width: 480px;
+    margin-inline: auto;
+  }
+
+  .search-no-results svg {
+    opacity: 0.3;
+  }
+
+  .search-no-results__heading {
+    font-size: var(--font-size-xl);
+  }
+
+  .search-no-results__hint {
+    font-size: var(--font-size-sm);
+    color: var(--color-mid-grey);
+    margin-top: calc(var(--space-lg) * -0.5);
+  }
+
+  .search-no-results__suggestions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+
+  .search-no-results__suggestions-label {
+    font-size: var(--font-size-sm);
+    color: var(--color-mid-grey);
+  }
+
+  .search-no-results__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    justify-content: center;
+  }
+
+  .search-no-results__tag {
+    padding: 6px 14px;
+    border: 1px solid var(--color-border);
+    font-size: var(--font-size-sm);
+    color: var(--color-dark-grey);
+    text-decoration: none;
+    transition: border-color var(--transition-fast), color var(--transition-fast);
+  }
+
+  .search-no-results__tag:hover {
+    border-color: var(--color-black);
+    color: var(--color-black);
+    text-decoration: none;
+  }
+</style>
 
 {% schema %}
 {

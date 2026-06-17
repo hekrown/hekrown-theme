@@ -166,6 +166,14 @@
     .section-padding { padding-block: var(--section-spacing); }
   </style>
 
+  {%- comment -%} Hero image preload — above-fold LCP optimization {%- endcomment -%}
+  {%- if template.name == 'index' -%}
+    {%- assign hero_section = sections['hero'] -%}
+    {%- if hero_section.settings.image != blank -%}
+      <link rel="preload" as="image" href="{{ hero_section.settings.image | image_url: width: 1920 }}" fetchpriority="high">
+    {%- endif -%}
+  {%- endif -%}
+
   {%- comment -%} CSS Reset + Design Tokens {%- endcomment -%}
   {{ 'base.css' | asset_url | stylesheet_tag }}
 

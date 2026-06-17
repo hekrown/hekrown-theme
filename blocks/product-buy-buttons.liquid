@@ -12,12 +12,12 @@
   <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}" data-variant-id>
 
   {%- if block.settings.show_quantity -%}
-    <div class="block-buy__quantity" {{ block.shopify_attributes }} style="margin-bottom: var(--space-md);">
+    <div class="block-buy__quantity" {{ block.shopify_attributes }}>
       <label for="quantity-{{ section.id }}" class="visually-hidden">{{ 'products.product.quantity' | t }}</label>
-      <div style="display: flex; align-items: center; border: 1px solid var(--color-border); width: fit-content;">
-        <button type="button" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; font-size: 18px;" data-qty-minus aria-label="{{ 'products.product.decrease' | t }}">−</button>
-        <input type="number" id="quantity-{{ section.id }}" name="quantity" value="1" min="1" style="width: 48px; height: 44px; text-align: center; border: none; border-left: 1px solid var(--color-border); border-right: 1px solid var(--color-border); font-size: var(--font-size-base); -moz-appearance: textfield;" data-qty-input>
-        <button type="button" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; font-size: 18px;" data-qty-plus aria-label="{{ 'products.product.increase' | t }}">+</button>
+      <div class="block-buy__qty-stepper">
+        <button type="button" class="block-buy__qty-btn" data-qty-minus aria-label="{{ 'products.product.decrease' | t }}">−</button>
+        <input type="number" id="quantity-{{ section.id }}" name="quantity" value="1" min="1" class="block-buy__qty-input" data-qty-input>
+        <button type="button" class="block-buy__qty-btn" data-qty-plus aria-label="{{ 'products.product.increase' | t }}">+</button>
       </div>
     </div>
   {%- else -%}
@@ -26,8 +26,7 @@
 
   <button
     type="submit"
-    class="btn btn--primary btn--full-width"
-    style="height: var(--button-height); font-size: var(--font-size-base);"
+    class="btn btn--primary btn--full-width block-buy__atc"
     data-atc-btn
     {% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}
   >
@@ -39,7 +38,7 @@
   </button>
 
   {%- if block.settings.show_dynamic_checkout -%}
-    <div style="margin-top: var(--space-sm);">
+    <div class="block-buy__dynamic-checkout">
       {{ form | payment_button }}
     </div>
   {%- endif -%}

@@ -393,3 +393,96 @@ img {
   background-color: var(--color-white);
 }
 
+
+/* --------------------------------------------------------------------------
+   Buy Buttons Block — Quantity Stepper
+   Replaces inline styles from blocks/product-buy-buttons.liquid
+   -------------------------------------------------------------------------- */
+.block-buy__quantity {
+  margin-bottom: var(--space-md);
+}
+
+.block-buy__qty-stepper {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--color-border);
+  width: fit-content;
+}
+
+.block-buy__qty-btn {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.block-buy__qty-btn:hover {
+  background-color: var(--color-off-white);
+}
+
+.block-buy__qty-input {
+  width: 48px;
+  height: 44px;
+  text-align: center;
+  border: none;
+  border-left: 1px solid var(--color-border);
+  border-right: 1px solid var(--color-border);
+  font-size: var(--font-size-base);
+  -moz-appearance: textfield;
+}
+
+.block-buy__qty-input::-webkit-outer-spin-button,
+.block-buy__qty-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.block-buy__atc {
+  height: var(--button-height);
+  font-size: var(--font-size-base);
+}
+
+.block-buy__dynamic-checkout {
+  margin-top: var(--space-sm);
+}
+
+/* --------------------------------------------------------------------------
+   Block spacing utility — replaces inline style="margin-bottom: var(--space-md)"
+   -------------------------------------------------------------------------- */
+.block-mb { margin-bottom: var(--space-md); }
+.block-mb-sm { margin-bottom: var(--space-sm); }
+.block-mb-lg { margin-bottom: var(--space-lg); }
+
+/* --------------------------------------------------------------------------
+   Product card skeleton loaders for AJAX filtering
+   -------------------------------------------------------------------------- */
+.product-card--skeleton .product-card__image-wrapper {
+  background: linear-gradient(90deg, var(--color-off-white) 25%, #ebebeb 50%, var(--color-off-white) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.2s infinite;
+}
+
+.product-card--skeleton .product-card__title,
+.product-card--skeleton .product-card__price {
+  height: 14px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--color-off-white) 25%, #ebebeb 50%, var(--color-off-white) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.2s infinite;
+  color: transparent;
+}
+
+.product-card--skeleton .product-card__price {
+  width: 60px;
+}
+
+@keyframes skeleton-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}

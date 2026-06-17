@@ -22,9 +22,20 @@
         {%- endfor -%}
       </div>
 
-      {%- comment -%} Prev/Next controls {%- endcomment -%}
-      <button class="announcement-bar__ticker-btn announcement-bar__ticker-btn--prev" data-ticker-prev aria-label="Previous announcement">&#8249;</button>
-      <button class="announcement-bar__ticker-btn announcement-bar__ticker-btn--next" data-ticker-next aria-label="Next announcement">&#8250;</button>
+      {%- comment -%} Prev/Next + Pause controls {%- endcomment -%}
+      <button class="announcement-bar__ticker-btn announcement-bar__ticker-btn--prev" data-ticker-prev aria-label="{{ 'accessibility.previous' | t }}">&#8249;</button>
+      <button
+        class="announcement-bar__ticker-btn announcement-bar__ticker-btn--pause"
+        data-ticker-pause
+        aria-label="{{ 'announcement_bar.pause' | t | default: 'Pause announcements' }}"
+        aria-pressed="false"
+      >
+        <svg viewBox="0 0 16 16" width="10" height="10" aria-hidden="true" fill="currentColor">
+          <rect x="3" y="2" width="3" height="12"/>
+          <rect x="10" y="2" width="3" height="12"/>
+        </svg>
+      </button>
+      <button class="announcement-bar__ticker-btn announcement-bar__ticker-btn--next" data-ticker-next aria-label="{{ 'accessibility.next' | t }}">&#8250;</button>
     </div>
   {%- endif -%}
 </div>
@@ -88,19 +99,37 @@
   .announcement-bar__ticker-btn:hover { opacity: 1; }
   .announcement-bar__ticker-btn--prev { left: var(--space-md); }
   .announcement-bar__ticker-btn--next { right: var(--space-md); }
+  .announcement-bar__ticker-btn--pause {
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+  }
+  .announcement-bar:hover .announcement-bar__ticker-btn--pause,
+  .announcement-bar__ticker-btn--pause:focus-visible {
+    opacity: 0.7;
+  }
+  .announcement-bar__ticker-btn--pause[aria-pressed="true"] {
+    opacity: 1;
+  }
 </style>
 
 <script>
 (function () {
-  var bar = document.querySelector('[data-ticker]');
+  var bar       = document.querySelector('[data-ticker]');
   if (!bar) return;
 
-  var items    = Array.from(bar.querySelectorAll('[data-ticker-item]'));
-  var prevBtn  = bar.querySelector('[data-ticker-prev]');
-  var nextBtn  = bar.querySelector('[data-ticker-next]');
-  var current  = 0;
-  var interval = {{ section.settings.interval | times: 1000 }};
+  var items     = Array.from(bar.querySelectorAll('[data-ticker-item]'));
+  var prevBtn   = bar.querySelector('[data-ticker-prev]');
+  var nextBtn   = bar.querySelector('[data-ticker-next]');
+  var pauseBtn  = bar.querySelector('[data-ticker-pause]');
+  var current   = 0;
+  var interval  = {{ section.settings.interval | times: 1000 }};
   var timer;
+  var paused    = false;
+
+  // Respect prefers-reduced-motion
+  var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   function show(index) {
     items[current].classList.remove('is-active');
@@ -109,15 +138,25 @@
   }
 
   function startTimer() {
+    if (prefersReduced || paused) return;
     timer = setInterval(function () { show(current + 1); }, interval);
   }
 
-  function resetTimer() { clearInterval(timer); startTimer(); }
+  function stopTimer() { clearInterval(timer); }
 
-  if (prevBtn) prevBtn.addEventListener('click', function () { show(current - 1); resetTimer(); });
-  if (nextBtn) nextBtn.addEventListener('click', function () { show(current + 1); resetTimer(); });
+  function resetTimer() { stopTimer(); startTimer(); }
 
-  startTimer();
+  function togglePause() {
+    paused = !paused;
+    pauseBtn.setAttribute('aria-pressed', String(paused));
+    if (paused) { stopTimer(); } else { startTimer(); }
+  }
+
+  if (prevBtn)  prevBtn.addEventListener('click',  function () { show(current - 1); resetTimer(); });
+  if (nextBtn)  nextBtn.addEventListener('click',  function () { show(current + 1); resetTimer(); });
+  if (pauseBtn) pauseBtn.addEventListener('click', togglePause);
+
+  if (!prefersReduced) startTimer();
 })();
 </script>
 {%- endif -%}

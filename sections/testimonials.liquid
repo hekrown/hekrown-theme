@@ -6,13 +6,7 @@
 <div class="section-testimonials section-padding color-scheme-{{ section.settings.color_scheme }}">
   <div class="container">
     {%- if section.settings.heading != blank -%}
-      <h2 class="section-testimonials__heading" style="
-        text-align: {{ section.settings.heading_alignment }};
-        font-size: var(--font-size-2xl);
-        font-weight: var(--font-weight-bold);
-        margin-bottom: var(--space-xl);
-        color: var(--color-scheme-heading, inherit);
-      ">
+      <h2 class="section-testimonials__heading section-testimonials__heading--{{ section.settings.heading_alignment }}">
         {{ section.settings.heading }}
       </h2>
     {%- endif -%}
@@ -68,6 +62,16 @@
 </div>
 
 <style>
+  .section-testimonials__heading {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--space-xl);
+    color: var(--color-scheme-heading, inherit);
+  }
+
+  .section-testimonials__heading--left   { text-align: left; }
+  .section-testimonials__heading--center { text-align: center; }
+
   .section-testimonials__grid {
     display: grid;
     grid-template-columns: 1fr;

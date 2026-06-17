@@ -5,6 +5,10 @@
     "previous": "Previous",
     "next": "Next"
   },
+  "announcement_bar": {
+    "pause": "Pause announcements",
+    "resume": "Resume announcements"
+  },
   "wishlist": {
     "title": "Your Wishlist",
     "empty": "Your wishlist is empty",
@@ -33,6 +37,8 @@
       "submit": "Search",
       "searching": "Searching...",
       "no_results": "No results found for \"{{ terms }}\"",
+      "no_results_hint": "Check your spelling or try a more general term.",
+      "try_searching": "Try searching for:",
       "results_count": "{{ count }} result found for \"{{ terms }}\"",
       "results_count_plural": "{{ count }} results found for \"{{ terms }}\""
     }

@@ -18,7 +18,7 @@
 
     {%- if section.settings.show_view_all and collection != blank -%}
       <div class="featured-collection__cta">
-        <a href="{{ collection.url }}" class="btn btn--secondary">View All</a>
+        <a href="{{ collection.url }}" class="btn btn--secondary">{{ 'collections.general.view_all_products' | t }}</a>
       </div>
     {%- endif -%}
   </div>

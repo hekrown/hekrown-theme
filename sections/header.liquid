@@ -333,7 +333,15 @@
   </div>
 
   <div class="cart-drawer__body" data-drawer-body>
-    <p class="cart-drawer__empty" data-wishlist-empty>{{ 'wishlist.empty' | t }}</p>
+    <div class="wishlist-empty-state" data-wishlist-empty>
+      <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+      </svg>
+      <p class="wishlist-empty-state__text">{{ 'wishlist.empty' | t }}</p>
+      <a href="{{ routes.all_products_collection_url }}" class="btn btn--secondary wishlist-empty-state__cta">
+        {{ 'cart.general.continue_shopping' | t }}
+      </a>
+    </div>
     <div class="wishlist-drawer__items" data-wishlist-items></div>
   </div>
 
@@ -406,7 +414,30 @@
   .wishlist-drawer__remove:hover {
     color: var(--color-black);
   }
-</style>
+
+  /* Wishlist empty state */
+  .wishlist-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-md);
+    padding: var(--space-2xl) var(--space-lg);
+    text-align: center;
+  }
+
+  .wishlist-empty-state svg {
+    opacity: 0.3;
+  }
+
+  .wishlist-empty-state__text {
+    font-size: var(--font-size-sm);
+    color: var(--color-mid-grey);
+  }
+
+  .wishlist-empty-state__cta {
+    font-size: var(--font-size-sm);
+  }</style>
 
 <script src="{{ 'wishlist.js' | asset_url }}" defer></script>
 
