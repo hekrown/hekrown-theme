@@ -1,0 +1,174 @@
+{%- comment -%}
+  Media With Content Section
+  Split layout: media (image or video) on one side, content blocks on the other.
+  Desktop: 50/50 split (reversible). Mobile: stacked.
+{%- endcomment -%}
+
+{%- liquid
+  assign media_position = section.settings.media_position | default: 'left'
+  assign color_scheme = section.settings.color_scheme | default: 'color-scheme-1'
+-%}
+
+<div class="media-with-content {{ color_scheme }}{% if media_position == 'right' %} media-with-content--reverse{% endif %}">
+  <div class="media-with-content__inner">
+
+    {%- comment -%} Media column {%- endcomment -%}
+    <div class="media-with-content__media">
+      {%- if section.settings.video != blank -%}
+        <div class="media-with-content__video-wrapper">
+          {{- section.settings.video | video_tag:
+            autoplay: true,
+            loop: true,
+            muted: true,
+            controls: false,
+            class: 'media-with-content__video'
+          -}}
+        </div>
+      {%- elsif section.settings.image != blank -%}
+        <img
+          src="{{ section.settings.image | image_url: width: 1200 }}"
+          alt="{{ section.settings.image.alt | escape }}"
+          class="media-with-content__image"
+          width="1200"
+          height="{{ 1200 | divided_by: section.settings.image.aspect_ratio | round }}"
+          loading="lazy"
+        >
+      {%- else -%}
+        <div class="media-with-content__placeholder">
+          {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} Content column {%- endcomment -%}
+    <div class="media-with-content__content">
+      {%- content_for 'blocks' -%}
+    </div>
+
+  </div>
+</div>
+
+<style>
+  .media-with-content {
+    padding-block: var(--section-spacing, 64px);
+  }
+
+  .media-with-content__inner {
+    max-width: var(--page-width, 1440px);
+    margin-inline: auto;
+    padding-inline: clamp(16px, 4vw, 64px);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(32px, 5vw, 80px);
+    align-items: center;
+  }
+
+  .media-with-content--reverse .media-with-content__inner {
+    direction: rtl;
+  }
+
+  .media-with-content--reverse .media-with-content__inner > * {
+    direction: ltr;
+  }
+
+  .media-with-content__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .media-with-content__video-wrapper {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 4 / 5;
+  }
+
+  .media-with-content__video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .media-with-content__placeholder {
+    aspect-ratio: 4 / 5;
+    background-color: var(--color-off-white, #f5f5f5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .media-with-content__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md, 16px);
+    justify-content: center;
+  }
+
+  @media (max-width: 767px) {
+    .media-with-content__inner {
+      grid-template-columns: 1fr;
+    }
+
+    .media-with-content--reverse .media-with-content__inner {
+      direction: ltr;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Media with Content",
+  "tag": "section",
+  "class": "media-with-content-section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "media_position",
+      "label": "Media position",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Video",
+      "info": "Video takes priority over image if both are set"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "color-scheme-1", "label": "Scheme 1 (Light)" },
+        { "value": "color-scheme-2", "label": "Scheme 2 (Dark)" },
+        { "value": "color-scheme-3", "label": "Scheme 3 (Neutral)" }
+      ],
+      "default": "color-scheme-1"
+    }
+  ],
+  "blocks": [
+    { "type": "@theme" },
+    { "type": "@app" }
+  ],
+  "presets": [
+    {
+      "name": "Media with Content",
+      "blocks": [
+        { "type": "heading" },
+        { "type": "text" },
+        { "type": "button" }
+      ]
+    }
+  ]
+}
+{% endschema %}

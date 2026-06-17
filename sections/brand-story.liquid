@@ -30,17 +30,17 @@
       {%- form 'customer', id: 'brand-story-newsletter' -%}
         <input type="hidden" name="contact[tags]" value="newsletter">
         <div class="brand-story__form">
-          <label for="brand-story-email" class="visually-hidden">Email address</label>
+          <label for="brand-story-email" class="visually-hidden">{{ 'form.email_address' | t }}</label>
           <input
             type="email"
             id="brand-story-email"
             name="contact[email]"
             class="brand-story__input"
-            placeholder="Email address"
+            placeholder="{{ 'form.email_address' | t }}"
             required
             autocomplete="email"
           >
-          <button type="submit" class="brand-story__submit">Submit</button>
+          <button type="submit" class="brand-story__submit">{{ 'general.newsletter.subscribe' | t }}</button>
         </div>
       {%- endform -%}
 
@@ -193,6 +193,17 @@
   "tag": "section",
   "class": "brand-story-section",
   "settings": [
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "color-scheme-1", "label": "Scheme 1 (Light)" },
+        { "value": "color-scheme-2", "label": "Scheme 2 (Dark)" },
+        { "value": "color-scheme-3", "label": "Scheme 3 (Neutral)" }
+      ],
+      "default": "color-scheme-2"
+    },
     {
       "type": "text",
       "id": "eyebrow",

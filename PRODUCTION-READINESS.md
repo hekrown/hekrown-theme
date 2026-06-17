@@ -38,8 +38,8 @@ This document tracks every issue, gap, and improvement needed before Moss can sh
 - [x] Fix in `main-cart.liquid`: Your Basket, Order Summary, Subtotal, Delivery, Total, Checkout, Continue Shopping, Remove
 - [x] Fix in `product-card.liquid`: Quick Add, Add to Basket, Sale, New
 - [x] **Add missing locale keys** to `en.default.json` — all new keys added
-- [ ] Fix in `header.liquid`: "Your Basket", "Your Wishlist"
-- [ ] Fix in `footer.liquid`: "Enter your email", "Subscribe"
+- [x] Fix in `header.liquid`: "Your Basket", "Your Wishlist"
+- [x] Fix in `footer.liquid`: "Enter your email", "Subscribe"
 
 ### 1.4 settings_data.json Presets ✅ DONE (Sprint 1)
 - [x] **Preset 1: "Minimal"** — clean white, restrained typography, zoom hover
@@ -57,8 +57,8 @@ This document tracks every issue, gap, and improvement needed before Moss can sh
 ### 1.7 Accessibility — Critical Items ⚠️ PARTIALLY DONE (Sprint 1)
 - [x] **Mid-grey contrast** — darkened `--color-mid-grey` from #888888 to #767676 (WCAG AA 4.5:1)
 - [x] **Global focus rings** — added `:focus-visible` rules to `base.css` for all interactive elements (2px solid black, 2px offset)
-- [ ] Size guide modal focus trap — needs Tab-trap logic (only Escape works now)
-- [ ] Product card `<article>` — needs `aria-label="{{ product.title }}"`
+- [x] Size guide modal focus trap — Tab-trap logic added (Escape + full Tab cycle)
+- [x] Product card `<article>` — has `aria-label="{{ product.title }}"`
 - [ ] Color swatches — already has `title` attribute, verify it renders as tooltip
 - [ ] Filter drawer focus management — verify focus returns to trigger on close
 
@@ -117,8 +117,8 @@ Horizon uses static blocks for fixed structural elements (logo, menu).
 | `_blocks.liquid` (universal section) | ✅ Built — accepts any @theme + @app block, 1–4 col grid, color scheme, padding |
 | `hero.liquid` | ✅ Built — image/video bg, overlay, content position, heading/text/button blocks |
 | `carousel.liquid` | ✅ Built — autoplay, arrows, dots, swipe, per-slide image/heading/text/button |
-| `media-with-content.liquid` | ⏳ Not started |
-| `collection-list.liquid` | ⏳ Not started |
+| `media-with-content.liquid` | ✅ Built — image/video media column, 50/50 split, reversible, color scheme |
+| `collection-list.liquid` | ✅ Built — 2–4 col grid, collection cards, image/title/subtitle/CTA, color scheme |
 
 **Current section count: 44 (including 2 JSON groups) | Target: 45+**
 
@@ -128,8 +128,8 @@ Horizon uses static blocks for fixed structural elements (logo, menu).
 |---|---|
 | `_card.liquid` | ✅ Built — image + heading + text + button, hover zoom, link wrapping |
 | `_content.liquid` (nestable) | ✅ Built — accepts @theme blocks, bg/padding/border/radius/max-width |
-| `_marquee.liquid` | ⏳ Not started |
-| `_accordion-row.liquid` | ⏳ Not started |
+| `_marquee.liquid` | ✅ Built — scrolling ticker, configurable speed/separator/colors, pause on hover, reduced-motion safe |
+| `_accordion-row.liquid` | ✅ Built — accessible expand/collapse, focus-managed, open by default option |
 
 **Current block count: 21 | Target: 25–30**
 
@@ -225,12 +225,12 @@ These 6 pre-existing sections don't match the current architecture:
 
 | Section | Issues | Action |
 |---|---|---|
-| `brand-story.liquid` | No color scheme, no @theme blocks | [ ] Refactor or remove |
-| `full-banner.liquid` | No color scheme, no @theme blocks | [ ] Refactor or remove |
-| `services-links.liquid` | No color scheme, no @theme blocks | [ ] Refactor or remove |
-| `split-panel.liquid` | No color scheme, no @theme blocks | [ ] Refactor or remove |
-| `sticky-hero.liquid` | No color scheme, no @theme blocks | [ ] Refactor or remove |
-| `store-finder.liquid` | No color scheme, no @theme blocks | [ ] Refactor or remove |
+| `brand-story.liquid` | ~~No color scheme~~, no @theme blocks | [x] color_scheme setting added |
+| `full-banner.liquid` | ~~No color scheme~~, no @theme blocks | [x] color_scheme setting added |
+| `services-links.liquid` | ~~No color scheme~~, no @theme blocks | [x] color_scheme setting added |
+| `split-panel.liquid` | ~~No color scheme~~, no @theme blocks | [x] color_scheme setting added |
+| `sticky-hero.liquid` | ~~No color scheme~~, no @theme blocks | [x] color_scheme setting added |
+| `store-finder.liquid` | ~~No color scheme~~, no @theme blocks | [x] color_scheme setting added |
 
 ### 3.5 Inline Styles Cleanup
 

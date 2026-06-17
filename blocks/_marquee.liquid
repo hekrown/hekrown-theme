@@ -1,0 +1,154 @@
+{%- doc -%}
+  Marquee / Ticker Block
+  Renders a continuously scrolling ticker of text items.
+  @param block {Block} - The block object
+  @param speed {Number} - Scroll speed in seconds (default 20)
+  @param items {String} - Pipe-separated list of ticker items
+  @param pause_on_hover {Boolean} - Pause animation on hover
+{%- enddoc -%}
+
+{%- liquid
+  assign speed = block.settings.speed | default: 20
+  assign items = block.settings.items | default: 'Free Shipping Over £200 | New Arrivals Weekly | Expertly Crafted Since 1851'
+  assign item_list = items | split: '|'
+  assign pause_on_hover = block.settings.pause_on_hover
+-%}
+
+<div
+  class="marquee-block"
+  style="--marquee-speed: {{ speed }}s;"
+  {% if pause_on_hover %}data-marquee-pause{% endif %}
+  {{ block.shopify_attributes }}
+>
+  <div class="marquee-block__track" aria-hidden="true">
+    {%- comment -%} Duplicate for seamless loop {%- endcomment -%}
+    {%- for i in (1..2) -%}
+      <span class="marquee-block__list">
+        {%- for item in item_list -%}
+          <span class="marquee-block__item">{{ item | strip }}</span>
+          <span class="marquee-block__separator" aria-hidden="true">{{ block.settings.separator | default: '✦' }}</span>
+        {%- endfor -%}
+      </span>
+    {%- endfor -%}
+  </div>
+  {%- comment -%} Visually hidden accessible text {%- endcomment -%}
+  <p class="visually-hidden">
+    {%- for item in item_list -%}{{ item | strip }}{% unless forloop.last %}, {% endunless %}{%- endfor -%}
+  </p>
+</div>
+
+<style>
+  .marquee-block {
+    overflow: hidden;
+    white-space: nowrap;
+    padding-block: {{ block.settings.padding_vertical | default: 12 }}px;
+    background-color: {{ block.settings.background | default: 'transparent' }};
+    color: {{ block.settings.text_color | default: 'inherit' }};
+    font-size: {{ block.settings.font_size | default: 13 }}px;
+    font-weight: var(--font-weight-medium, 500);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    position: relative;
+  }
+
+  .marquee-block__track {
+    display: inline-flex;
+    animation: marquee-scroll var(--marquee-speed) linear infinite;
+  }
+
+  .marquee-block[data-marquee-pause]:hover .marquee-block__track {
+    animation-play-state: paused;
+  }
+
+  .marquee-block__list {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding-right: 12px;
+  }
+
+  .marquee-block__item {
+    white-space: nowrap;
+  }
+
+  .marquee-block__separator {
+    opacity: 0.5;
+    flex-shrink: 0;
+  }
+
+  @keyframes marquee-scroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-block__track {
+      animation: none;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Marquee",
+  "tag": null,
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "items",
+      "label": "Ticker items",
+      "info": "Separate items with a pipe character |",
+      "default": "Free Shipping Over £200 | New Arrivals Weekly | Expertly Crafted Since 1851"
+    },
+    {
+      "type": "text",
+      "id": "separator",
+      "label": "Separator symbol",
+      "default": "✦"
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "Scroll speed (seconds)",
+      "min": 5,
+      "max": 60,
+      "step": 5,
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Font size (px)",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "default": 13
+    },
+    {
+      "type": "range",
+      "id": "padding_vertical",
+      "label": "Vertical padding (px)",
+      "min": 6,
+      "max": 32,
+      "step": 2,
+      "default": 12
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background color"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color"
+    },
+    {
+      "type": "checkbox",
+      "id": "pause_on_hover",
+      "label": "Pause on hover",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

@@ -9,7 +9,8 @@
     "title": "Your Wishlist",
     "empty": "Your wishlist is empty",
     "add": "Add to wishlist",
-    "remove": "Remove from wishlist"
+    "remove": "Remove from wishlist",
+    "view_full": "View Full Wishlist"
   },
   "general": {
     "newsletter": {
@@ -30,6 +31,7 @@
       "title": "Search",
       "placeholder": "Search products...",
       "submit": "Search",
+      "searching": "Searching...",
       "no_results": "No results found for \"{{ terms }}\"",
       "results_count": "{{ count }} result found for \"{{ terms }}\"",
       "results_count_plural": "{{ count }} results found for \"{{ terms }}\""

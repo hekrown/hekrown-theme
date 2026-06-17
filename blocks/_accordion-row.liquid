@@ -1,0 +1,151 @@
+{%- doc -%}
+  Accordion Row Block
+  A single expandable/collapsible row with a heading trigger and rich-text content.
+  Can be used standalone or stacked in a section to form a full FAQ/accordion group.
+  @param block {Block} - The block object
+  @param heading {String} - Accordion trigger label
+  @param content {RichText} - Expanded content body
+  @param open_by_default {Boolean} - Whether row starts open
+{%- enddoc -%}
+
+{%- liquid
+  assign is_open = block.settings.open_by_default
+  assign block_id = 'accordion-content-' | append: block.id
+-%}
+
+<div
+  class="accordion-row{% if is_open %} accordion-row--open{% endif %}"
+  {{ block.shopify_attributes }}
+>
+  <button
+    class="accordion-row__trigger"
+    aria-expanded="{{ is_open }}"
+    aria-controls="{{ block_id }}"
+    type="button"
+    data-accordion-trigger
+  >
+    <span class="accordion-row__heading">{{ block.settings.heading | default: 'Accordion heading' }}</span>
+    <span class="accordion-row__icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5">
+        <polyline points="6 9 12 15 18 9"/>
+      </svg>
+    </span>
+  </button>
+  <div
+    id="{{ block_id }}"
+    class="accordion-row__content"
+    aria-hidden="{{ is_open | default: true | json | replace: 'true', 'false' | replace: 'false', 'true' }}"
+    data-accordion-content
+  >
+    <div class="accordion-row__body rte">
+      {{ block.settings.content }}
+    </div>
+  </div>
+</div>
+
+<style>
+  .accordion-row {
+    border-bottom: 1px solid var(--color-border, #e5e5e5);
+  }
+
+  .accordion-row:first-of-type {
+    border-top: 1px solid var(--color-border, #e5e5e5);
+  }
+
+  .accordion-row__trigger {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 18px 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    color: inherit;
+    font-family: var(--font-body, inherit);
+  }
+
+  .accordion-row__heading {
+    font-size: var(--font-size-md, 15px);
+    font-weight: var(--font-weight-medium, 500);
+    line-height: 1.4;
+  }
+
+  .accordion-row__icon {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    transition: transform 0.3s ease;
+  }
+
+  .accordion-row--open .accordion-row__icon {
+    transform: rotate(180deg);
+  }
+
+  .accordion-row__content {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.35s ease, padding 0.35s ease;
+  }
+
+  .accordion-row--open .accordion-row__content {
+    max-height: 600px;
+  }
+
+  .accordion-row__body {
+    padding-bottom: 18px;
+    font-size: var(--font-size-sm, 14px);
+    line-height: var(--line-height-normal, 1.6);
+    color: var(--color-body-text, #444);
+  }
+
+  .accordion-row__body p { margin-bottom: 8px; }
+  .accordion-row__body p:last-child { margin-bottom: 0; }
+</style>
+
+<script>
+(function () {
+  var triggers = document.querySelectorAll('[data-accordion-trigger]');
+  triggers.forEach(function (trigger) {
+    if (trigger._accordionInit) return;
+    trigger._accordionInit = true;
+    trigger.addEventListener('click', function () {
+      var row = trigger.closest('.accordion-row');
+      var content = row.querySelector('[data-accordion-content]');
+      var isOpen = row.classList.contains('accordion-row--open');
+      row.classList.toggle('accordion-row--open', !isOpen);
+      trigger.setAttribute('aria-expanded', String(!isOpen));
+      content.setAttribute('aria-hidden', String(isOpen));
+    });
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Accordion Row",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "What is your return policy?"
+    },
+    {
+      "type": "richtext",
+      "id": "content",
+      "label": "Content",
+      "default": "<p>We offer free returns within 30 days of purchase. Items must be in original condition with tags attached.</p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "open_by_default",
+      "label": "Open by default",
+      "default": false
+    }
+  ]
+}
+{% endschema %}

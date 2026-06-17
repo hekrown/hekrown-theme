@@ -146,13 +146,13 @@
   <div class="search-overlay__inner">
     <form action="{{ routes.search_url }}" method="get" class="search-overlay__form predictive-search" role="search" data-predictive-search>
       <input type="hidden" name="type" value="product">
-      <label for="search-input" class="visually-hidden">Search</label>
+      <label for="search-input" class="visually-hidden">{{ 'general.search.title' | t }}</label>
       <input
         type="search"
         id="search-input"
         name="q"
         class="search-overlay__input"
-        placeholder="Search for products..."
+        placeholder="{{ 'general.search.placeholder' | t }}"
         autocomplete="off"
         data-search-input
         data-predictive-input
@@ -171,7 +171,7 @@
       </button>
 
       {%- comment -%} Predictive search results dropdown {%- endcomment -%}
-      <div class="predictive__loading" data-predictive-loading>Searching...</div>
+      <div class="predictive__loading" data-predictive-loading>{{ 'general.search.searching' | t | default: 'Searching...' }}</div>
       <div class="predictive-results" aria-hidden="true" data-predictive-results style="display: none;"></div>
     </form>
   </div>
@@ -247,14 +247,14 @@
         <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.5" fill="none"/>
         <path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1" stroke="currentColor" stroke-width="1.5" fill="none"/>
       </svg>
-      Account
+      {{ 'customer.account.title' | t }}
     </a>
     <a href="{{ routes.search_url }}" class="mobile-nav__utility-link">
       <svg viewBox="0 0 24 24" aria-hidden="true" width="18" height="18">
         <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.5" fill="none"/>
         <line x1="16.5" y1="16.5" x2="21" y2="21" stroke="currentColor" stroke-width="1.5"/>
       </svg>
-      Search
+      {{ 'general.search.title' | t }}
     </a>
   </div>
 </nav>
@@ -301,11 +301,11 @@
     {% render 'free-shipping-bar', cart: cart %}
     {% render 'cart-upsell' %}
     <div class="cart-drawer__subtotal">
-      <span>Subtotal</span>
+      <span>{{ 'cart.general.subtotal' | t }}</span>
       <span data-drawer-subtotal></span>
     </div>
-    <a href="{{ routes.cart_url }}" class="btn btn--secondary btn--full-width cart-drawer__view-cart">View Basket</a>
-    <a href="/checkout" class="btn btn--primary btn--full-width cart-drawer__checkout">Proceed to Checkout</a>
+    <a href="{{ routes.cart_url }}" class="btn btn--secondary btn--full-width cart-drawer__view-cart">{{ 'cart.general.view_cart' | t }}</a>
+    <a href="/checkout" class="btn btn--primary btn--full-width cart-drawer__checkout">{{ 'cart.general.checkout' | t }}</a>
   </div>
 </div>
 {%- endif -%}
@@ -333,13 +333,13 @@
   </div>
 
   <div class="cart-drawer__body" data-drawer-body>
-    <p class="cart-drawer__empty" data-wishlist-empty>Your wishlist is empty</p>
+    <p class="cart-drawer__empty" data-wishlist-empty>{{ 'wishlist.empty' | t }}</p>
     <div class="wishlist-drawer__items" data-wishlist-items></div>
   </div>
 
   <div class="cart-drawer__footer" data-wishlist-footer style="display:none;">
-    <a href="/pages/wishlist" class="btn btn--secondary btn--full-width">View Full Wishlist</a>
-    <a href="{{ routes.all_products_collection_url }}" class="btn btn--primary btn--full-width">Continue Shopping</a>
+    <a href="/pages/wishlist" class="btn btn--secondary btn--full-width">{{ 'wishlist.view_full' | t | default: 'View Full Wishlist' }}</a>
+    <a href="{{ routes.all_products_collection_url }}" class="btn btn--primary btn--full-width">{{ 'cart.general.continue_shopping' | t }}</a>
   </div>
 </div>
 

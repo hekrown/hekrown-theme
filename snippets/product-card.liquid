@@ -22,7 +22,7 @@
   endfor
 -%}
 
-<article class="product-card" data-product-card>
+<article class="product-card" data-product-card aria-label="{{ product.title | escape }}">
   <div class="product-card__image-wrapper">
     <a href="{{ product.url }}" class="product-card__image-link" aria-label="{{ product.title | escape }}" tabindex="0">
       {%- if product.featured_image -%}
@@ -119,7 +119,7 @@
           data-quick-add-size="{{ product.first_available_variant.id }}"
           aria-label="Add {{ product.title | escape }} to basket"
         >
-          Add to Basket
+          {{ 'products.product.add_to_cart' | t }}
         </button>
       </div>
     {%- endunless -%}
