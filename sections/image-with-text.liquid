@@ -2,7 +2,7 @@
   Promotional / Editorial Banner (50/50 split)
 {%- endcomment -%}
 
-<div class="image-with-text section-padding">
+<div class="image-with-text section-padding color-scheme-{{ section.settings.color_scheme }}" style="padding-top:{{ section.settings.padding_top | default: 0 }}px;padding-bottom:{{ section.settings.padding_bottom | default: 0 }}px;">
   <div class="image-with-text__grid image-with-text__grid--{{ section.settings.image_position }}">
     <div class="image-with-text__media">
       {%- if section.settings.image != blank -%}
@@ -128,6 +128,17 @@
   "class": "image-with-text-section",
   "settings": [
     {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "1", "label": "Scheme 1 (Light)" },
+        { "value": "2", "label": "Scheme 2 (Dark)" },
+        { "value": "3", "label": "Scheme 3 (Neutral)" }
+      ],
+      "default": "3"
+    },
+    {
       "type": "image_picker",
       "id": "image",
       "label": "Image"
@@ -168,6 +179,18 @@
       "type": "url",
       "id": "button_link",
       "label": "Button link"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0, "max": 120, "step": 8, "default": 0, "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0, "max": 120, "step": 8, "default": 0, "unit": "px"
     }
   ],
   "presets": [

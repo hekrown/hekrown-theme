@@ -5,6 +5,13 @@
     "previous": "Previous",
     "next": "Next"
   },
+  "404": {
+    "general": {
+      "title": "Page not found",
+      "subtext": "Sorry, the page you're looking for doesn't exist.",
+      "link": "Return to Homepage"
+    }
+  },
   "announcement_bar": {
     "pause": "Pause announcements",
     "resume": "Resume announcements"

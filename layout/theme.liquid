@@ -67,30 +67,6 @@
       --font-body-scale: {{ settings.font_body_scale | default: 100 }}%;
       --font-heading-scale: {{ settings.font_heading_scale | default: 100 }}%;
       --heading-transform: {{ settings.heading_transform | default: 'none' }};
-
-      /* Color Scheme 1 (default) */
-      --color-scheme-1-bg: {{ settings.scheme_1_background | default: '#FFFFFF' }};
-      --color-scheme-1-text: {{ settings.scheme_1_text | default: '#333333' }};
-      --color-scheme-1-heading: {{ settings.scheme_1_heading | default: '#000000' }};
-      --color-scheme-1-btn-bg: {{ settings.scheme_1_button_bg | default: '#000000' }};
-      --color-scheme-1-btn-text: {{ settings.scheme_1_button_text | default: '#FFFFFF' }};
-      --color-scheme-1-accent: {{ settings.scheme_1_accent | default: '#C0392B' }};
-
-      /* Color Scheme 2 (dark) */
-      --color-scheme-2-bg: {{ settings.scheme_2_background | default: '#000000' }};
-      --color-scheme-2-text: {{ settings.scheme_2_text | default: '#CCCCCC' }};
-      --color-scheme-2-heading: {{ settings.scheme_2_heading | default: '#FFFFFF' }};
-      --color-scheme-2-btn-bg: {{ settings.scheme_2_button_bg | default: '#FFFFFF' }};
-      --color-scheme-2-btn-text: {{ settings.scheme_2_button_text | default: '#000000' }};
-      --color-scheme-2-accent: {{ settings.scheme_2_accent | default: '#E74C3C' }};
-
-      /* Color Scheme 3 (neutral) */
-      --color-scheme-3-bg: {{ settings.scheme_3_background | default: '#F5F5F5' }};
-      --color-scheme-3-text: {{ settings.scheme_3_text | default: '#333333' }};
-      --color-scheme-3-heading: {{ settings.scheme_3_heading | default: '#000000' }};
-      --color-scheme-3-btn-bg: {{ settings.scheme_3_button_bg | default: '#333333' }};
-      --color-scheme-3-btn-text: {{ settings.scheme_3_button_text | default: '#FFFFFF' }};
-      --color-scheme-3-accent: {{ settings.scheme_3_accent | default: '#C0392B' }};
     }
 
     /* Font scaling */
@@ -100,71 +76,63 @@
     /* Dynamic button radius */
     .btn, .input, select { border-radius: var(--button-radius); }
 
-    /* Color scheme utility classes */
-    .color-scheme-1 {
-      background-color: var(--color-scheme-1-bg);
-      color: var(--color-scheme-1-text);
-      --color-scheme-bg: var(--color-scheme-1-bg);
-      --color-scheme-text: var(--color-scheme-1-text);
-      --color-scheme-heading: var(--color-scheme-1-heading);
-      --color-scheme-btn-bg: var(--color-scheme-1-btn-bg);
-      --color-scheme-btn-text: var(--color-scheme-1-btn-text);
-      --color-scheme-accent: var(--color-scheme-1-accent);
-    }
-
-    .color-scheme-2 {
-      background-color: var(--color-scheme-2-bg);
-      color: var(--color-scheme-2-text);
-      --color-scheme-bg: var(--color-scheme-2-bg);
-      --color-scheme-text: var(--color-scheme-2-text);
-      --color-scheme-heading: var(--color-scheme-2-heading);
-      --color-scheme-btn-bg: var(--color-scheme-2-btn-bg);
-      --color-scheme-btn-text: var(--color-scheme-2-btn-text);
-      --color-scheme-accent: var(--color-scheme-2-accent);
-    }
-
-    .color-scheme-3 {
-      background-color: var(--color-scheme-3-bg);
-      color: var(--color-scheme-3-text);
-      --color-scheme-bg: var(--color-scheme-3-bg);
-      --color-scheme-text: var(--color-scheme-3-text);
-      --color-scheme-heading: var(--color-scheme-3-heading);
-      --color-scheme-btn-bg: var(--color-scheme-3-btn-bg);
-      --color-scheme-btn-text: var(--color-scheme-3-btn-text);
-      --color-scheme-accent: var(--color-scheme-3-accent);
-    }
-
-    /* Apply scheme to buttons within scheme context */
-    [class*="color-scheme-"] .btn--primary {
-      background-color: var(--color-scheme-btn-bg);
-      color: var(--color-scheme-btn-text);
-    }
-
-    [class*="color-scheme-"] .btn--secondary {
-      color: var(--color-scheme-btn-bg);
-      border-color: var(--color-scheme-btn-bg);
-    }
-
-    [class*="color-scheme-"] .btn--secondary:hover {
-      background-color: var(--color-scheme-btn-bg);
-      color: var(--color-scheme-btn-text);
-    }
-
-    [class*="color-scheme-"] h1,
-    [class*="color-scheme-"] h2,
-    [class*="color-scheme-"] h3,
-    [class*="color-scheme-"] h4,
-    [class*="color-scheme-"] h5,
-    [class*="color-scheme-"] h6 {
-      color: var(--color-scheme-heading);
-    }
-
     /* Container uses dynamic page width */
     .container { max-width: var(--page-width); }
 
     /* Section padding uses dynamic spacing */
     .section-padding { padding-block: var(--section-spacing); }
   </style>
+
+  {%- comment -%} Native color_scheme_group — output CSS vars per scheme {%- endcomment -%}
+  {%- if settings.color_schemes -%}
+    {{ settings.color_schemes | color_scheme_css }}
+  {%- else -%}
+  {%- comment -%} Fallback legacy scheme vars for backwards compat {%- endcomment -%}
+  <style>
+    .color-scheme-1 {
+      --color-scheme-bg: #FFFFFF;
+      --color-scheme-text: #333333;
+      --color-scheme-heading: #000000;
+      --color-scheme-border: #DDDDDD;
+      --color-scheme-btn-bg: #000000;
+      --color-scheme-btn-text: #FFFFFF;
+      --color-scheme-accent: #C0392B;
+      background-color: var(--color-scheme-bg);
+      color: var(--color-scheme-text);
+    }
+    .color-scheme-2 {
+      --color-scheme-bg: #000000;
+      --color-scheme-text: #CCCCCC;
+      --color-scheme-heading: #FFFFFF;
+      --color-scheme-border: #333333;
+      --color-scheme-btn-bg: #FFFFFF;
+      --color-scheme-btn-text: #000000;
+      --color-scheme-accent: #E74C3C;
+      background-color: var(--color-scheme-bg);
+      color: var(--color-scheme-text);
+    }
+    .color-scheme-3 {
+      --color-scheme-bg: #F5F5F5;
+      --color-scheme-text: #333333;
+      --color-scheme-heading: #000000;
+      --color-scheme-border: #DDDDDD;
+      --color-scheme-btn-bg: #333333;
+      --color-scheme-btn-text: #FFFFFF;
+      --color-scheme-accent: #C0392B;
+      background-color: var(--color-scheme-bg);
+      color: var(--color-scheme-text);
+    }
+    [class*="color-scheme-"] h1,
+    [class*="color-scheme-"] h2,
+    [class*="color-scheme-"] h3,
+    [class*="color-scheme-"] h4,
+    [class*="color-scheme-"] h5,
+    [class*="color-scheme-"] h6 { color: var(--color-scheme-heading); }
+    [class*="color-scheme-"] .btn--primary  { background-color: var(--color-scheme-btn-bg); color: var(--color-scheme-btn-text); border-color: var(--color-scheme-btn-bg); }
+    [class*="color-scheme-"] .btn--secondary { color: var(--color-scheme-btn-bg); border-color: var(--color-scheme-btn-bg); }
+    [class*="color-scheme-"] .btn--secondary:hover { background-color: var(--color-scheme-btn-bg); color: var(--color-scheme-btn-text); }
+  </style>
+  {%- endif -%}
 
   {%- comment -%} Hero image preload — above-fold LCP optimization {%- endcomment -%}
   {%- if template.name == 'index' -%}

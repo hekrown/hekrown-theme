@@ -1,0 +1,44 @@
+{%- comment -%}
+  Section Wrapper Snippet
+  Universal wrapper that gives every section consistent:
+  - Color scheme application
+  - Padding top/bottom
+  - Section width (page-width vs full-width)
+  - Data attributes for editor compatibility
+
+  Usage:
+    {%- render 'section-wrapper',
+      section: section,
+      color_scheme: section.settings.color_scheme,
+      padding_top: section.settings.padding_top,
+      padding_bottom: section.settings.padding_bottom,
+      full_width: section.settings.full_width
+    -%}
+      ... section content ...
+    </div></div>
+
+  Note: This renders the opening tags. Close with </div></div> in the section.
+{%- endcomment -%}
+
+{%- liquid
+  assign scheme_class = ''
+  if color_scheme != blank
+    assign scheme_class = 'color-scheme-' | append: color_scheme
+  endif
+
+  assign pt = padding_top | default: 64
+  assign pb = padding_bottom | default: 64
+
+  assign width_class = 'section-wrapper--page-width'
+  if full_width
+    assign width_class = 'section-wrapper--full-width'
+  endif
+-%}
+
+<div
+  class="section-wrapper {{ scheme_class }} {{ width_class }}"
+  style="padding-top: {{ pt }}px; padding-bottom: {{ pb }}px;"
+  data-section-id="{{ section.id }}"
+  data-section-type="{{ section.type }}"
+>
+  <div class="section-wrapper__inner">

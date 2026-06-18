@@ -1,14 +1,24 @@
-<div class="page-404 section-padding">
+<div class="page-404 section-padding color-scheme-1">
   <div class="container text-center">
-    <h1>Page not found</h1>
-    <p style="color: var(--color-mid-grey); margin-top: var(--space-md);">
-      Sorry, the page you're looking for doesn't exist.
+    <h1>{{ '404.general.title' | t | default: 'Page not found' }}</h1>
+    <p class="page-404__text">
+      {{ '404.general.subtext' | t | default: "Sorry, the page you're looking for doesn't exist." }}
     </p>
-    <a href="{{ routes.root_url }}" class="btn btn--primary" style="margin-top: var(--space-xl);">
-      Return to Homepage
+    <a href="{{ routes.root_url }}" class="btn btn--primary page-404__cta">
+      {{ '404.general.link' | t | default: 'Return to Homepage' }}
     </a>
   </div>
 </div>
+
+<style>
+  .page-404__text {
+    color: var(--color-mid-grey);
+    margin-top: var(--space-md);
+  }
+  .page-404__cta {
+    margin-top: var(--space-xl);
+  }
+</style>
 
 {% schema %}
 {

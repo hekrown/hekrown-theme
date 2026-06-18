@@ -3,7 +3,7 @@
   Two-column: 65% line items, 35% order summary (sticky).
 {%- endcomment -%}
 
-<div class="cart-page section-padding" data-cart-page>
+<div class="cart-page section-padding color-scheme-{{ section.settings.color_scheme }}" style="padding-top:{{ section.settings.padding_top | default: 64 }}px;padding-bottom:{{ section.settings.padding_bottom | default: 64 }}px;" data-cart-page>
   <div class="container">
     <h1 class="cart-page__heading">{{ 'cart.general.title' | t }}</h1>
 
@@ -459,7 +459,31 @@
   "name": "Cart",
   "tag": "section",
   "class": "main-cart-section",
-  "settings": [],
+  "settings": [
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "1", "label": "Scheme 1 (Light)" },
+        { "value": "2", "label": "Scheme 2 (Dark)" },
+        { "value": "3", "label": "Scheme 3 (Neutral)" }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0, "max": 120, "step": 8, "default": 64, "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0, "max": 120, "step": 8, "default": 64, "unit": "px"
+    }
+  ],
   "blocks": [
     { "type": "@theme" },
     { "type": "@app" }

@@ -5,7 +5,7 @@
 
 {{ 'section-main-collection.css' | asset_url | stylesheet_tag }}
 
-<div class="collection-sidebar section-padding">
+<div class="collection-sidebar section-padding color-scheme-{{ section.settings.color_scheme }}" style="padding-top:{{ section.settings.padding_top | default: 64 }}px;padding-bottom:{{ section.settings.padding_bottom | default: 64 }}px;">
   <div class="container">
     <div class="collection-sidebar__grid">
       {%- comment -%} Left Sidebar {%- endcomment -%}
@@ -304,22 +304,39 @@
   "class": "main-collection-sidebar-section",
   "settings": [
     {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "1", "label": "Scheme 1 (Light)" },
+        { "value": "2", "label": "Scheme 2 (Dark)" },
+        { "value": "3", "label": "Scheme 3 (Neutral)" }
+      ],
+      "default": "1"
+    },
+    {
       "type": "range",
       "id": "products_per_row",
       "label": "Products per row (desktop)",
-      "min": 2,
-      "max": 4,
-      "step": 1,
-      "default": 3
+      "min": 2, "max": 4, "step": 1, "default": 3
     },
     {
       "type": "range",
       "id": "products_per_page",
       "label": "Products per page",
-      "min": 12,
-      "max": 48,
-      "step": 4,
-      "default": 24
+      "min": 12, "max": 48, "step": 4, "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0, "max": 120, "step": 8, "default": 64, "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0, "max": 120, "step": 8, "default": 64, "unit": "px"
     }
   ],
   "blocks": [

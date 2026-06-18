@@ -2,7 +2,7 @@
   Collection Banner / Header
 {%- endcomment -%}
 
-<div class="collection-banner" style="background-color: {{ section.settings.background_color }};">
+<div class="collection-banner color-scheme-{{ section.settings.color_scheme }}" style="{% if section.settings.background_color != blank and section.settings.background_color != 'rgba(0,0,0,0)' %}background-color: {{ section.settings.background_color }};{% endif %}padding-top:{{ section.settings.padding_top | default: 40 }}px;padding-bottom:{{ section.settings.padding_bottom | default: 64 }}px;">
   <div class="container">
     <nav class="breadcrumb" aria-label="Breadcrumb">
       <a href="{{ routes.root_url }}">Home</a>
@@ -42,10 +42,33 @@
   "class": "collection-banner-section",
   "settings": [
     {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "1", "label": "Scheme 1 (Light)" },
+        { "value": "2", "label": "Scheme 2 (Dark)" },
+        { "value": "3", "label": "Scheme 3 (Neutral)" }
+      ],
+      "default": "3"
+    },
+    {
       "type": "color",
       "id": "background_color",
-      "label": "Background colour",
-      "default": "#F5F5F5"
+      "label": "Background colour override",
+      "info": "Leave blank to use color scheme"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0, "max": 120, "step": 8, "default": 40, "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0, "max": 120, "step": 8, "default": 64, "unit": "px"
     }
   ],
   "blocks": [

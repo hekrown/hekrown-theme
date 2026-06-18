@@ -388,12 +388,8 @@
     {
       "type": "range",
       "id": "height",
-      "label": "Slide height (vh)",
-      "min": 50,
-      "max": 100,
-      "step": 5,
-      "default": 80,
-      "unit": "vh"
+      "label": "Slide height",
+      "min": 50, "max": 100, "step": 5, "default": 80, "unit": "vh"
     },
     {
       "type": "checkbox",
@@ -405,11 +401,8 @@
       "type": "range",
       "id": "interval",
       "label": "Seconds per slide",
-      "min": 3,
-      "max": 10,
-      "step": 1,
-      "default": 5,
-      "unit": "s"
+      "min": 3, "max": 10, "step": 1, "default": 5, "unit": "s",
+      "visible_if": "{{ section.settings.autoplay == true }}"
     }
   ],
   "blocks": [

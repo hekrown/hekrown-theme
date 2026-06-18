@@ -4,201 +4,85 @@
     "theme_name": "Moss",
     "theme_version": "2.0.0",
     "theme_author": "Hekrown",
-    "theme_documentation_url": "https://github.com/hekrown/moss-theme",
-    "theme_support_url": "https://github.com/hekrown/moss-theme/issues"
+    "theme_documentation_url": "https://github.com/hekrown/hekrown-theme",
+    "theme_support_url": "https://github.com/hekrown/hekrown-theme/issues"
   },
   {
     "name": "Brand",
     "settings": [
-      {
-        "type": "image_picker",
-        "id": "logo",
-        "label": "Logo"
-      },
+      { "type": "image_picker", "id": "logo", "label": "Logo" },
       {
         "type": "range",
         "id": "logo_width",
-        "label": "Logo width (px)",
+        "label": "Logo width",
         "min": 50,
         "max": 250,
         "step": 5,
         "default": 120,
         "unit": "px"
       },
-      {
-        "type": "image_picker",
-        "id": "favicon",
-        "label": "Favicon"
-      }
+      { "type": "image_picker", "id": "favicon", "label": "Favicon" }
     ]
   },
   {
     "name": "Color schemes",
     "settings": [
       {
-        "type": "header",
-        "content": "Scheme 1 — Light (default)"
-      },
-      {
-        "type": "color",
-        "id": "scheme_1_background",
-        "label": "Background",
-        "default": "#FFFFFF"
-      },
-      {
-        "type": "color",
-        "id": "scheme_1_text",
-        "label": "Text",
-        "default": "#333333"
-      },
-      {
-        "type": "color",
-        "id": "scheme_1_heading",
-        "label": "Headings",
-        "default": "#000000"
-      },
-      {
-        "type": "color",
-        "id": "scheme_1_button_bg",
-        "label": "Button background",
-        "default": "#000000"
-      },
-      {
-        "type": "color",
-        "id": "scheme_1_button_text",
-        "label": "Button text",
-        "default": "#FFFFFF"
-      },
-      {
-        "type": "color",
-        "id": "scheme_1_accent",
-        "label": "Accent (sale/badges)",
-        "default": "#C0392B"
-      },
-      {
-        "type": "header",
-        "content": "Scheme 2 — Dark"
-      },
-      {
-        "type": "color",
-        "id": "scheme_2_background",
-        "label": "Background",
-        "default": "#000000"
-      },
-      {
-        "type": "color",
-        "id": "scheme_2_text",
-        "label": "Text",
-        "default": "#CCCCCC"
-      },
-      {
-        "type": "color",
-        "id": "scheme_2_heading",
-        "label": "Headings",
-        "default": "#FFFFFF"
-      },
-      {
-        "type": "color",
-        "id": "scheme_2_button_bg",
-        "label": "Button background",
-        "default": "#FFFFFF"
-      },
-      {
-        "type": "color",
-        "id": "scheme_2_button_text",
-        "label": "Button text",
-        "default": "#000000"
-      },
-      {
-        "type": "color",
-        "id": "scheme_2_accent",
-        "label": "Accent (sale/badges)",
-        "default": "#E74C3C"
-      },
-      {
-        "type": "header",
-        "content": "Scheme 3 — Neutral"
-      },
-      {
-        "type": "color",
-        "id": "scheme_3_background",
-        "label": "Background",
-        "default": "#F5F5F5"
-      },
-      {
-        "type": "color",
-        "id": "scheme_3_text",
-        "label": "Text",
-        "default": "#333333"
-      },
-      {
-        "type": "color",
-        "id": "scheme_3_heading",
-        "label": "Headings",
-        "default": "#000000"
-      },
-      {
-        "type": "color",
-        "id": "scheme_3_button_bg",
-        "label": "Button background",
-        "default": "#333333"
-      },
-      {
-        "type": "color",
-        "id": "scheme_3_button_text",
-        "label": "Button text",
-        "default": "#FFFFFF"
-      },
-      {
-        "type": "color",
-        "id": "scheme_3_accent",
-        "label": "Accent (sale/badges)",
-        "default": "#C0392B"
+        "type": "color_scheme_group",
+        "id": "color_schemes",
+        "definition": [
+          { "type": "color",        "id": "background",              "label": "Background",                    "default": "#FFFFFF" },
+          { "type": "color",        "id": "text",                    "label": "Body text",                     "default": "#333333" },
+          { "type": "color",        "id": "heading",                 "label": "Heading text",                  "default": "#000000" },
+          { "type": "color",        "id": "border",                  "label": "Border",                        "default": "#DDDDDD" },
+          { "type": "color",        "id": "primary_button_bg",       "label": "Primary button background",     "default": "#000000" },
+          { "type": "color",        "id": "primary_button_text",     "label": "Primary button text",           "default": "#FFFFFF" },
+          { "type": "color",        "id": "primary_button_border",   "label": "Primary button border",         "default": "#000000" },
+          { "type": "color",        "id": "secondary_button_bg",     "label": "Secondary button background",   "default": "#FFFFFF" },
+          { "type": "color",        "id": "secondary_button_text",   "label": "Secondary button text",         "default": "#000000" },
+          { "type": "color",        "id": "secondary_button_border", "label": "Secondary button border",       "default": "#000000" },
+          { "type": "color",        "id": "accent",                  "label": "Accent (sale / badges)",        "default": "#C0392B" },
+          { "type": "color",        "id": "overlay_bg",              "label": "Overlay background",            "default": "#000000" },
+          { "type": "color_background", "id": "gradient_bg",         "label": "Gradient background (optional)" }
+        ],
+        "role": {
+          "text":                    "text",
+          "background":              "background",
+          "background_gradient":     "gradient_bg",
+          "border":                  "border",
+          "primary_button":          "primary_button_bg",
+          "on_primary_button":       "primary_button_text",
+          "secondary_button":        "secondary_button_bg",
+          "on_secondary_button":     "secondary_button_text",
+          "secondary_button_border": "secondary_button_border"
+        }
       }
     ]
   },
   {
     "name": "Typography",
     "settings": [
-      {
-        "type": "font_picker",
-        "id": "font_heading",
-        "label": "Heading font",
-        "default": "assistant_n7"
-      },
-      {
-        "type": "font_picker",
-        "id": "font_body",
-        "label": "Body font",
-        "default": "assistant_n4"
-      },
+      { "type": "font_picker", "id": "font_heading", "label": "Heading font",  "default": "assistant_n7" },
+      { "type": "font_picker", "id": "font_body",    "label": "Body font",     "default": "assistant_n4" },
       {
         "type": "range",
         "id": "font_body_scale",
-        "label": "Base font size scale (%)",
-        "min": 85,
-        "max": 130,
-        "step": 5,
-        "default": 100,
-        "unit": "%"
+        "label": "Base font size scale",
+        "min": 85, "max": 130, "step": 5, "default": 100, "unit": "%"
       },
       {
         "type": "range",
         "id": "font_heading_scale",
-        "label": "Heading size scale (%)",
-        "min": 80,
-        "max": 150,
-        "step": 5,
-        "default": 100,
-        "unit": "%"
+        "label": "Heading size scale",
+        "min": 80, "max": 150, "step": 5, "default": 100, "unit": "%"
       },
       {
         "type": "select",
         "id": "heading_transform",
         "label": "Heading text transform",
         "options": [
-          { "value": "none", "label": "None" },
-          { "value": "uppercase", "label": "Uppercase" },
+          { "value": "none",       "label": "None" },
+          { "value": "uppercase",  "label": "Uppercase" },
           { "value": "capitalize", "label": "Capitalize" }
         ],
         "default": "none"
@@ -211,32 +95,20 @@
       {
         "type": "range",
         "id": "page_width",
-        "label": "Max page width (px)",
-        "min": 1000,
-        "max": 1600,
-        "step": 40,
-        "default": 1440,
-        "unit": "px"
+        "label": "Max page width",
+        "min": 1000, "max": 1600, "step": 40, "default": 1440, "unit": "px"
       },
       {
         "type": "range",
         "id": "section_spacing",
-        "label": "Spacing between sections (px)",
-        "min": 0,
-        "max": 120,
-        "step": 8,
-        "default": 64,
-        "unit": "px"
+        "label": "Spacing between sections",
+        "min": 0, "max": 120, "step": 8, "default": 64, "unit": "px"
       },
       {
         "type": "range",
         "id": "grid_gap",
-        "label": "Grid gap (px)",
-        "min": 8,
-        "max": 40,
-        "step": 4,
-        "default": 20,
-        "unit": "px"
+        "label": "Grid gap",
+        "min": 8, "max": 40, "step": 4, "default": 20, "unit": "px"
       }
     ]
   },
@@ -246,31 +118,23 @@
       {
         "type": "range",
         "id": "button_border_radius",
-        "label": "Corner radius (px)",
-        "min": 0,
-        "max": 40,
-        "step": 2,
-        "default": 0,
-        "unit": "px"
+        "label": "Corner radius",
+        "min": 0, "max": 40, "step": 2, "default": 0, "unit": "px"
       },
       {
         "type": "range",
         "id": "button_border_width",
         "label": "Border width (outline buttons)",
-        "min": 1,
-        "max": 3,
-        "step": 1,
-        "default": 1,
-        "unit": "px"
+        "min": 1, "max": 3, "step": 1, "default": 1, "unit": "px"
       },
       {
         "type": "select",
         "id": "button_hover_effect",
         "label": "Hover effect",
         "options": [
-          { "value": "darken", "label": "Darken" },
-          { "value": "lighten", "label": "Lighten" },
-          { "value": "outline-swap", "label": "Fill ↔ Outline swap" }
+          { "value": "darken",       "label": "Darken" },
+          { "value": "lighten",      "label": "Lighten" },
+          { "value": "outline-swap", "label": "Fill \u2194 Outline swap" }
         ],
         "default": "darken"
       }
@@ -285,9 +149,9 @@
         "label": "Image ratio",
         "options": [
           { "value": "natural", "label": "Natural" },
-          { "value": "3/4", "label": "Portrait (3:4)" },
-          { "value": "1/1", "label": "Square (1:1)" },
-          { "value": "4/5", "label": "Tall (4:5)" }
+          { "value": "3/4",     "label": "Portrait (3:4)" },
+          { "value": "1/1",     "label": "Square (1:1)" },
+          { "value": "4/5",     "label": "Tall (4:5)" }
         ],
         "default": "3/4"
       },
@@ -302,30 +166,15 @@
         ],
         "default": "swap"
       },
-      {
-        "type": "checkbox",
-        "id": "card_show_badges",
-        "label": "Show sale / new badges",
-        "default": true
-      },
-      {
-        "type": "checkbox",
-        "id": "card_show_swatches",
-        "label": "Show colour swatches",
-        "default": true
-      },
-      {
-        "type": "checkbox",
-        "id": "card_show_quick_add",
-        "label": "Show quick add button",
-        "default": true
-      },
+      { "type": "checkbox", "id": "card_show_badges",    "label": "Show sale / new badges",  "default": true },
+      { "type": "checkbox", "id": "card_show_swatches",  "label": "Show colour swatches",     "default": true },
+      { "type": "checkbox", "id": "card_show_quick_add", "label": "Show quick add button",    "default": true },
       {
         "type": "select",
         "id": "card_text_alignment",
         "label": "Text alignment",
         "options": [
-          { "value": "left", "label": "Left" },
+          { "value": "left",   "label": "Left" },
           { "value": "center", "label": "Center" }
         ],
         "default": "left"
@@ -335,12 +184,7 @@
   {
     "name": "Animations",
     "settings": [
-      {
-        "type": "checkbox",
-        "id": "enable_scroll_animations",
-        "label": "Enable scroll reveal animations",
-        "default": true
-      },
+      { "type": "checkbox", "id": "enable_scroll_animations", "label": "Enable scroll reveal animations", "default": true },
       {
         "type": "select",
         "id": "animation_speed",
@@ -362,65 +206,31 @@
         "id": "cart_type",
         "label": "Cart type",
         "options": [
-          { "value": "page", "label": "Page" },
+          { "value": "page",   "label": "Page" },
           { "value": "drawer", "label": "Drawer" }
         ],
         "default": "drawer"
       },
-      {
-        "type": "checkbox",
-        "id": "cart_show_shipping_bar",
-        "label": "Show free shipping progress bar",
-        "default": true
-      },
+      { "type": "checkbox", "id": "cart_show_shipping_bar", "label": "Show free shipping progress bar", "default": true },
       {
         "type": "text",
         "id": "cart_shipping_threshold",
-        "label": "Free shipping threshold (e.g. 200)",
+        "label": "Free shipping threshold",
         "default": "200",
         "info": "Amount in your store's default currency without symbol"
       },
-      {
-        "type": "checkbox",
-        "id": "cart_enable_notes",
-        "label": "Enable order notes",
-        "default": false
-      }
+      { "type": "checkbox", "id": "cart_enable_notes", "label": "Enable order notes", "default": false }
     ]
   },
   {
     "name": "Social media",
     "settings": [
-      {
-        "type": "text",
-        "id": "social_instagram",
-        "label": "Instagram URL"
-      },
-      {
-        "type": "text",
-        "id": "social_facebook",
-        "label": "Facebook URL"
-      },
-      {
-        "type": "text",
-        "id": "social_pinterest",
-        "label": "Pinterest URL"
-      },
-      {
-        "type": "text",
-        "id": "social_tiktok",
-        "label": "TikTok URL"
-      },
-      {
-        "type": "text",
-        "id": "social_youtube",
-        "label": "YouTube URL"
-      },
-      {
-        "type": "text",
-        "id": "social_twitter",
-        "label": "X (Twitter) URL"
-      }
+      { "type": "text", "id": "social_instagram", "label": "Instagram URL" },
+      { "type": "text", "id": "social_facebook",  "label": "Facebook URL" },
+      { "type": "text", "id": "social_pinterest", "label": "Pinterest URL" },
+      { "type": "text", "id": "social_tiktok",    "label": "TikTok URL" },
+      { "type": "text", "id": "social_youtube",   "label": "YouTube URL" },
+      { "type": "text", "id": "social_twitter",   "label": "X (Twitter) URL" }
     ]
   }
 ]

@@ -264,22 +264,39 @@
   "class": "main-collection-section",
   "settings": [
     {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "1", "label": "Scheme 1 (Light)" },
+        { "value": "2", "label": "Scheme 2 (Dark)" },
+        { "value": "3", "label": "Scheme 3 (Neutral)" }
+      ],
+      "default": "1"
+    },
+    {
       "type": "range",
       "id": "products_per_row",
       "label": "Products per row (desktop)",
-      "min": 2,
-      "max": 5,
-      "step": 1,
-      "default": 4
+      "min": 2, "max": 5, "step": 1, "default": 4
     },
     {
       "type": "range",
       "id": "products_per_page",
       "label": "Products per page",
-      "min": 12,
-      "max": 48,
-      "step": 4,
-      "default": 24
+      "min": 12, "max": 48, "step": 4, "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0, "max": 120, "step": 8, "default": 64, "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0, "max": 120, "step": 8, "default": 64, "unit": "px"
     }
   ],
   "blocks": [

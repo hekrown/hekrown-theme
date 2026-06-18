@@ -3,7 +3,7 @@
   Horizontal row of 3-4 trust icons with text.
 {%- endcomment -%}
 
-<div class="usp-bar section-padding" style="background-color: {{ section.settings.background_color }}; color: {{ section.settings.text_color }};">
+<div class="usp-bar color-scheme-{{ section.settings.color_scheme }}" style="{% if section.settings.background_color != blank and section.settings.background_color != 'rgba(0,0,0,0)' %}background-color:{{ section.settings.background_color }};{% endif %}{% if section.settings.text_color != blank and section.settings.text_color != 'rgba(0,0,0,0)' %}color:{{ section.settings.text_color }};{% endif %}padding-top:{{ section.settings.padding_top | default: 40 }}px;padding-bottom:{{ section.settings.padding_bottom | default: 40 }}px;">
   <div class="container">
     <div class="usp-bar__grid">
       {%- for block in section.blocks -%}
@@ -80,16 +80,37 @@
   "class": "usp-bar-section",
   "settings": [
     {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "1", "label": "Scheme 1 (Light)" },
+        { "value": "2", "label": "Scheme 2 (Dark)" },
+        { "value": "3", "label": "Scheme 3 (Neutral)" }
+      ],
+      "default": "2"
+    },
+    {
       "type": "color",
       "id": "background_color",
-      "label": "Background colour",
-      "default": "#000000"
+      "label": "Background override"
     },
     {
       "type": "color",
       "id": "text_color",
-      "label": "Text colour",
-      "default": "#FFFFFF"
+      "label": "Text override"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0, "max": 80, "step": 8, "default": 40, "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0, "max": 80, "step": 8, "default": 40, "unit": "px"
     }
   ],
   "blocks": [

@@ -66,7 +66,8 @@
         { "value": "default", "label": "Default" },
         { "value": "large", "label": "Large" }
       ],
-      "default": "default"
+      "default": "default",
+      "visible_if": "{{ block.settings.style != 'text' }}"
     },
     {
       "type": "select",
@@ -83,7 +84,8 @@
       "type": "checkbox",
       "id": "full_width",
       "label": "Full width",
-      "default": false
+      "default": false,
+      "visible_if": "{{ block.settings.style != 'text' }}"
     }
   ]
 }
