@@ -27,36 +27,27 @@
   {
     "name": "Color schemes",
     "settings": [
-      {
-        "type": "color_scheme_group",
-        "id": "color_schemes",
-        "definition": [
-          { "type": "color",        "id": "background",              "label": "Background",                    "default": "#FFFFFF" },
-          { "type": "color",        "id": "text",                    "label": "Body text",                     "default": "#333333" },
-          { "type": "color",        "id": "heading",                 "label": "Heading text",                  "default": "#000000" },
-          { "type": "color",        "id": "border",                  "label": "Border",                        "default": "#DDDDDD" },
-          { "type": "color",        "id": "primary_button_bg",       "label": "Primary button background",     "default": "#000000" },
-          { "type": "color",        "id": "primary_button_text",     "label": "Primary button text",           "default": "#FFFFFF" },
-          { "type": "color",        "id": "primary_button_border",   "label": "Primary button border",         "default": "#000000" },
-          { "type": "color",        "id": "secondary_button_bg",     "label": "Secondary button background",   "default": "#FFFFFF" },
-          { "type": "color",        "id": "secondary_button_text",   "label": "Secondary button text",         "default": "#000000" },
-          { "type": "color",        "id": "secondary_button_border", "label": "Secondary button border",       "default": "#000000" },
-          { "type": "color",        "id": "accent",                  "label": "Accent (sale / badges)",        "default": "#C0392B" },
-          { "type": "color",        "id": "overlay_bg",              "label": "Overlay background",            "default": "#000000" },
-          { "type": "color_background", "id": "gradient_bg",         "label": "Gradient background (optional)" }
-        ],
-        "role": {
-          "text":                    "text",
-          "background":              "background",
-          "background_gradient":     "gradient_bg",
-          "border":                  "border",
-          "primary_button":          "primary_button_bg",
-          "on_primary_button":       "primary_button_text",
-          "secondary_button":        "secondary_button_bg",
-          "on_secondary_button":     "secondary_button_text",
-          "secondary_button_border": "secondary_button_border"
-        }
-      }
+      { "type": "header", "content": "Scheme 1 — Light (default)" },
+      { "type": "color", "id": "scheme_1_background", "label": "Background", "default": "#FFFFFF" },
+      { "type": "color", "id": "scheme_1_text", "label": "Text", "default": "#333333" },
+      { "type": "color", "id": "scheme_1_heading", "label": "Headings", "default": "#000000" },
+      { "type": "color", "id": "scheme_1_button_bg", "label": "Button background", "default": "#000000" },
+      { "type": "color", "id": "scheme_1_button_text", "label": "Button text", "default": "#FFFFFF" },
+      { "type": "color", "id": "scheme_1_accent", "label": "Accent (sale/badges)", "default": "#C0392B" },
+      { "type": "header", "content": "Scheme 2 — Dark" },
+      { "type": "color", "id": "scheme_2_background", "label": "Background", "default": "#000000" },
+      { "type": "color", "id": "scheme_2_text", "label": "Text", "default": "#CCCCCC" },
+      { "type": "color", "id": "scheme_2_heading", "label": "Headings", "default": "#FFFFFF" },
+      { "type": "color", "id": "scheme_2_button_bg", "label": "Button background", "default": "#FFFFFF" },
+      { "type": "color", "id": "scheme_2_button_text", "label": "Button text", "default": "#000000" },
+      { "type": "color", "id": "scheme_2_accent", "label": "Accent (sale/badges)", "default": "#E74C3C" },
+      { "type": "header", "content": "Scheme 3 — Neutral" },
+      { "type": "color", "id": "scheme_3_background", "label": "Background", "default": "#F5F5F5" },
+      { "type": "color", "id": "scheme_3_text", "label": "Text", "default": "#333333" },
+      { "type": "color", "id": "scheme_3_heading", "label": "Headings", "default": "#000000" },
+      { "type": "color", "id": "scheme_3_button_bg", "label": "Button background", "default": "#333333" },
+      { "type": "color", "id": "scheme_3_button_text", "label": "Button text", "default": "#FFFFFF" },
+      { "type": "color", "id": "scheme_3_accent", "label": "Accent (sale/badges)", "default": "#C0392B" }
     ]
   },
   {
