@@ -4,26 +4,22 @@
   Merchants can add headings, text, buttons, images, spacers, dividers — in any order.
 {%- endcomment -%}
 
-<div class="section-rich-text section-padding color-scheme-{{ section.settings.color_scheme }}" style="
-  {%- if section.settings.full_width == false -%}
-    padding-inline: var(--container-padding-mobile);
-  {%- endif -%}
-">
-  <div class="section-rich-text__inner" style="
-    max-width: {{ section.settings.content_width }}px;
+<div class="section-rich-text section-padding color-scheme-{{ section.settings.color_scheme }}{% if section.settings.full_width == false %} section-rich-text--contained{% endif %}">
+  <div class="section-rich-text__inner" style="--rt-width:{{ section.settings.content_width }}px;--rt-gap:{{ section.settings.block_gap }}px;text-align:{{ section.settings.text_alignment }};">
+    {%- content_for 'blocks' -%}
+  </div>
+</div>
+
+<style>
+  .section-rich-text--contained { padding-inline: var(--container-padding-mobile); }
+  .section-rich-text__inner {
+    max-width: var(--rt-width, 720px);
     margin-inline: auto;
     display: flex;
     flex-direction: column;
-    gap: {{ section.settings.block_gap }}px;
-    text-align: {{ section.settings.text_alignment }};
-  ">
-    {%- for block in section.blocks -%}
-      <div {{ block.shopify_attributes }}>
-        {{ block.content }}
-      </div>
-    {%- endfor -%}
-  </div>
-</div>
+    gap: var(--rt-gap, 16px);
+  }
+</style>
 
 {% schema %}
 {

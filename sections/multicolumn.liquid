@@ -7,54 +7,55 @@
 <div class="section-multicolumn section-padding color-scheme-{{ section.settings.color_scheme }}">
   <div class="container">
     {%- if section.settings.heading != blank -%}
-      <h2 class="section-multicolumn__heading" style="
-        text-align: {{ section.settings.heading_alignment }};
-        font-size: var(--font-size-xl);
-        font-weight: var(--font-weight-bold);
-        margin-bottom: var(--space-xl);
-      ">
+      <h2 class="section-multicolumn__heading section-multicolumn__heading--{{ section.settings.heading_alignment }}">
         {{ section.settings.heading }}
       </h2>
     {%- endif -%}
 
     {%- if section.settings.subheading != blank -%}
-      <p class="section-multicolumn__subheading" style="
-        text-align: {{ section.settings.heading_alignment }};
-        font-size: var(--font-size-base);
-        color: var(--color-mid-grey);
-        margin-bottom: var(--space-xl);
-        max-width: 640px;
-        {%- if section.settings.heading_alignment == 'center' -%}margin-inline: auto;{%- endif -%}
-      ">
+      <p class="section-multicolumn__subheading section-multicolumn__subheading--{{ section.settings.heading_alignment }}">
         {{ section.settings.subheading }}
       </p>
     {%- endif -%}
 
-    <div class="section-multicolumn__grid" style="
-      display: grid;
-      grid-template-columns: repeat(1, 1fr);
-      gap: {{ section.settings.gap }}px;
-      text-align: {{ section.settings.column_alignment }};
-    ">
-      {%- for block in section.blocks -%}
-        <div class="section-multicolumn__column" {{ block.shopify_attributes }}>
-          {{ block.content }}
-        </div>
-      {%- endfor -%}
+    <div class="section-multicolumn__grid">
+      {%- content_for 'blocks' -%}
     </div>
   </div>
 </div>
 
 <style>
+  .section-multicolumn__heading {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--space-xl);
+  }
+  .section-multicolumn__heading--left,
+  .section-multicolumn__subheading--left  { text-align: left; }
+  .section-multicolumn__heading--center,
+  .section-multicolumn__subheading--center { text-align: center; margin-inline: auto; }
+
+  .section-multicolumn__subheading {
+    font-size: var(--font-size-base);
+    color: var(--color-mid-grey);
+    margin-bottom: var(--space-xl);
+    max-width: 640px;
+  }
+
+  .section-multicolumn__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: {{ section.settings.gap }}px;
+    text-align: {{ section.settings.column_alignment }};
+  }
+
   @media (min-width: 640px) {
-    .section-multicolumn__grid {
-      grid-template-columns: repeat(2, 1fr) !important;
-    }
+    .section-multicolumn__grid { grid-template-columns: repeat(2, 1fr); }
   }
 
   @media (min-width: 1024px) {
     .section-multicolumn__grid {
-      grid-template-columns: repeat({{ section.settings.columns }}, 1fr) !important;
+      grid-template-columns: repeat({{ section.settings.columns }}, 1fr);
     }
   }
 

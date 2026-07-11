@@ -5,22 +5,13 @@
 {%- endcomment -%}
 
 <div class="section-countdown section-padding color-scheme-{{ section.settings.color_scheme }}">
-  <div class="container" style="text-align: center; max-width: 800px; margin-inline: auto;">
+  <div class="container section-countdown__inner">
     {%- if section.settings.heading != blank -%}
-      <h2 class="section-countdown__heading" style="
-        font-size: var(--font-size-2xl);
-        font-weight: var(--font-weight-bold);
-        margin-bottom: var(--space-sm);
-        color: var(--color-scheme-heading, inherit);
-      ">
-        {{ section.settings.heading }}
-      </h2>
+      <h2 class="section-countdown__heading">{{ section.settings.heading }}</h2>
     {%- endif -%}
 
     {%- if section.settings.subheading != blank -%}
-      <p style="font-size: var(--font-size-base); margin-bottom: var(--space-xl); color: var(--color-scheme-text, var(--color-mid-grey));">
-        {{ section.settings.subheading }}
-      </p>
+      <p class="section-countdown__subheading">{{ section.settings.subheading }}</p>
     {%- endif -%}
 
     <div
@@ -52,7 +43,7 @@
     </div>
 
     {%- if section.settings.button_text != blank -%}
-      <div style="margin-top: var(--space-xl);">
+      <div class="section-countdown__cta">
         <a href="{{ section.settings.button_link }}" class="btn btn--primary">
           {{ section.settings.button_text }}
         </a>
@@ -66,6 +57,29 @@
 </div>
 
 <style>
+  .section-countdown__inner {
+    text-align: center;
+    max-width: 800px;
+    margin-inline: auto;
+  }
+
+  .section-countdown__heading {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--space-sm);
+    color: var(--color-scheme-heading, inherit);
+  }
+
+  .section-countdown__subheading {
+    font-size: var(--font-size-base);
+    margin-bottom: var(--space-xl);
+    color: var(--color-scheme-text, var(--color-mid-grey));
+  }
+
+  .section-countdown__cta {
+    margin-top: var(--space-xl);
+  }
+
   .section-countdown__timer {
     display: flex;
     align-items: center;

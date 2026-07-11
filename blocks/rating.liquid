@@ -1,0 +1,114 @@
+{%- doc -%}
+  Theme Block: Star Rating Display
+  Shows a star rating with optional review count and label.
+  Works standalone or alongside Judge.me / Shopify Reviews metafields.
+  @param {range} rating - Star rating value (1-5)
+  @param {text} review_count - Optional review count text
+  @param {select} size - Icon size (small / medium / large)
+  @param {select} alignment - Left / Center / Right
+{%- enddoc -%}
+
+{%- liquid
+  assign rating = block.settings.rating
+  assign max = 5
+-%}
+
+<div
+  class="block-rating block-rating--{{ block.settings.size }} block-rating--{{ block.settings.alignment }}"
+  {{ block.shopify_attributes }}
+  aria-label="{{ rating }} out of {{ max }} stars"
+>
+  <div class="block-rating__stars" role="img" aria-hidden="true">
+    {%- for i in (1..max) -%}
+      {%- if i <= rating -%}
+        <svg class="block-rating__star block-rating__star--filled" viewBox="0 0 24 24" aria-hidden="true">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor"/>
+        </svg>
+      {%- else -%}
+        <svg class="block-rating__star block-rating__star--empty" viewBox="0 0 24 24" aria-hidden="true">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="none" stroke="currentColor" stroke-width="1.5"/>
+        </svg>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+
+  {%- if block.settings.review_count != blank -%}
+    <span class="block-rating__count">{{ block.settings.review_count }}</span>
+  {%- endif -%}
+</div>
+
+<style>
+  .block-rating {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .block-rating--left   { justify-content: flex-start; }
+  .block-rating--center { justify-content: center; }
+  .block-rating--right  { justify-content: flex-end; }
+
+  .block-rating__stars {
+    display: flex;
+    gap: 2px;
+    color: {{ block.settings.star_color | default: '#F4A62A' }};
+  }
+
+  .block-rating--small  .block-rating__star { width: 14px; height: 14px; }
+  .block-rating--medium .block-rating__star { width: 18px; height: 18px; }
+  .block-rating--large  .block-rating__star { width: 24px; height: 24px; }
+
+  .block-rating__count {
+    font-size: var(--font-size-sm, 12px);
+    color: var(--color-mid-grey, #767676);
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Star rating",
+  "tag": null,
+  "settings": [
+    {
+      "type": "range",
+      "id": "rating",
+      "label": "Rating",
+      "min": 1, "max": 5, "step": 1, "default": 5
+    },
+    {
+      "type": "text",
+      "id": "review_count",
+      "label": "Review count text",
+      "placeholder": "e.g. (128 reviews)"
+    },
+    {
+      "type": "select",
+      "id": "size",
+      "label": "Size",
+      "options": [
+        { "value": "small",  "label": "Small" },
+        { "value": "medium", "label": "Medium" },
+        { "value": "large",  "label": "Large" }
+      ],
+      "default": "medium"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Alignment",
+      "options": [
+        { "value": "left",   "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right",  "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "color",
+      "id": "star_color",
+      "label": "Star color",
+      "default": "#F4A62A"
+    }
+  ]
+}
+{% endschema %}

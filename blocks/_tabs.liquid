@@ -1,0 +1,139 @@
+{%- doc -%}
+  Theme Block: Tabs
+  A tabbed content block with up to 5 configurable tab panels.
+  Useful for product details, FAQs, size guides inside any @theme block section.
+  @param {text} tab_1_label - Label for tab 1
+  @param {richtext} tab_1_content - Content for tab 1
+  @param {text} tab_2_label - Label for tab 2
+  @param {richtext} tab_2_content - Content for tab 2
+{%- enddoc -%}
+
+{%- liquid
+  assign block_id = 'tabs-' | append: block.id
+  assign tabs = '1,2,3,4,5' | split: ','
+-%}
+
+<div class="block-tabs" id="{{ block_id }}" {{ block.shopify_attributes }}>
+  <div class="block-tabs__nav" role="tablist" aria-label="Content tabs">
+    {%- for i in tabs -%}
+      {%- assign label_key = 'tab_' | append: i | append: '_label' -%}
+      {%- assign label = block.settings[label_key] -%}
+      {%- if label != blank -%}
+        <button
+          class="block-tabs__tab{% if forloop.first %} block-tabs__tab--active{% endif %}"
+          role="tab"
+          aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+          aria-controls="{{ block_id }}-panel-{{ i }}"
+          id="{{ block_id }}-tab-{{ i }}"
+          data-tab-btn="{{ block_id }}-panel-{{ i }}"
+          type="button"
+        >
+          {{ label }}
+        </button>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+
+  {%- for i in tabs -%}
+    {%- assign label_key = 'tab_' | append: i | append: '_label' -%}
+    {%- assign content_key = 'tab_' | append: i | append: '_content' -%}
+    {%- assign label = block.settings[label_key] -%}
+    {%- assign content = block.settings[content_key] -%}
+    {%- if label != blank -%}
+      <div
+        class="block-tabs__panel{% if forloop.first %} block-tabs__panel--active{% endif %} rte"
+        id="{{ block_id }}-panel-{{ i }}"
+        role="tabpanel"
+        aria-labelledby="{{ block_id }}-tab-{{ i }}"
+        {% unless forloop.first %}hidden{% endunless %}
+      >
+        {{ content }}
+      </div>
+    {%- endif -%}
+  {%- endfor -%}
+</div>
+
+<style>
+  .block-tabs__nav {
+    display: flex;
+    border-bottom: 1px solid var(--color-border, #ddd);
+    gap: 0;
+    flex-wrap: wrap;
+  }
+
+  .block-tabs__tab {
+    padding: 12px 20px;
+    font-size: var(--font-size-sm, 13px);
+    font-weight: var(--font-weight-medium, 500);
+    letter-spacing: 0.03em;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    cursor: pointer;
+    color: var(--color-mid-grey, #767676);
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .block-tabs__tab:hover {
+    color: var(--color-black, #000);
+  }
+
+  .block-tabs__tab--active {
+    color: var(--color-black, #000);
+    border-bottom-color: var(--color-black, #000);
+  }
+
+  .block-tabs__panel {
+    padding: var(--space-lg, 24px) 0;
+    font-size: var(--font-size-base, 14px);
+    line-height: var(--line-height-normal, 1.6);
+  }
+
+  .block-tabs__panel p { margin-bottom: var(--space-sm, 8px); }
+  .block-tabs__panel p:last-child { margin-bottom: 0; }
+</style>
+
+<script>
+(function () {
+  var container = document.getElementById('{{ block_id }}');
+  if (!container) return;
+  var btns = container.querySelectorAll('[data-tab-btn]');
+  btns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var target = btn.dataset.tabBtn;
+      btns.forEach(function (b) {
+        b.classList.remove('block-tabs__tab--active');
+        b.setAttribute('aria-selected', 'false');
+      });
+      container.querySelectorAll('.block-tabs__panel').forEach(function (p) {
+        p.classList.remove('block-tabs__panel--active');
+        p.hidden = true;
+      });
+      btn.classList.add('block-tabs__tab--active');
+      btn.setAttribute('aria-selected', 'true');
+      var panel = document.getElementById(target);
+      if (panel) { panel.classList.add('block-tabs__panel--active'); panel.hidden = false; }
+    });
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Tabs",
+  "tag": null,
+  "settings": [
+    { "type": "text", "id": "tab_1_label", "label": "Tab 1 label", "default": "Description" },
+    { "type": "richtext", "id": "tab_1_content", "label": "Tab 1 content", "default": "<p>Add your content here.</p>" },
+    { "type": "text", "id": "tab_2_label", "label": "Tab 2 label", "default": "Details" },
+    { "type": "richtext", "id": "tab_2_content", "label": "Tab 2 content", "default": "<p>Add your content here.</p>" },
+    { "type": "text", "id": "tab_3_label", "label": "Tab 3 label" },
+    { "type": "richtext", "id": "tab_3_content", "label": "Tab 3 content" },
+    { "type": "text", "id": "tab_4_label", "label": "Tab 4 label" },
+    { "type": "richtext", "id": "tab_4_content", "label": "Tab 4 content" },
+    { "type": "text", "id": "tab_5_label", "label": "Tab 5 label" },
+    { "type": "richtext", "id": "tab_5_content", "label": "Tab 5 content" }
+  ]
+}
+{% endschema %}

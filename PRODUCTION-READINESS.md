@@ -384,8 +384,8 @@ The theme is ready to ship when ALL of the following are true:
 - [x] All sections have color scheme + padding_top/bottom controls
 - [x] All theme blocks have `tag: null`, `shopify_attributes`, `{%- doc -%}`
 - [x] `settings_data.json` has 3 named presets with full demo content
-- [ ] `content_for 'blocks'` pattern used in all block-accepting sections
-- [x] 46 sections, 23 theme blocks
+- [x] `content_for 'blocks'` pattern used in all block-accepting sections
+- [x] 46 sections, 25 theme blocks
 - [ ] Lighthouse 90+ on all metrics (requires live URL — manual)
 - [x] WCAG AA compliance (contrast ✅, focus ✅, keyboard ✅ focus trap done)
 - [ ] Theme Check: 0 errors (requires Shopify CLI — manual)

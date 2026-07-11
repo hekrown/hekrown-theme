@@ -5,26 +5,15 @@
 {%- endcomment -%}
 
 <div class="section-faq section-padding color-scheme-{{ section.settings.color_scheme }}">
-  <div class="container" style="max-width: {{ section.settings.content_width }}px; margin-inline: auto;">
+  <div class="section-faq__container" style="--faq-width:{{ section.settings.content_width }}px;">
     {%- if section.settings.heading != blank -%}
-      <h2 class="section-faq__heading" style="
-        text-align: {{ section.settings.heading_alignment }};
-        font-size: var(--font-size-2xl);
-        font-weight: var(--font-weight-bold);
-        margin-bottom: var(--space-sm);
-        color: var(--color-scheme-heading, inherit);
-      ">
+      <h2 class="section-faq__heading section-faq__heading--{{ section.settings.heading_alignment }}">
         {{ section.settings.heading }}
       </h2>
     {%- endif -%}
 
     {%- if section.settings.subheading != blank -%}
-      <p style="
-        text-align: {{ section.settings.heading_alignment }};
-        color: var(--color-scheme-text, var(--color-mid-grey));
-        margin-bottom: var(--space-xl);
-        font-size: var(--font-size-base);
-      ">
+      <p class="section-faq__subheading section-faq__subheading--{{ section.settings.heading_alignment }}">
         {{ section.settings.subheading }}
       </p>
     {%- endif -%}
@@ -46,7 +35,6 @@
           </details>
         {%- endif -%}
       {%- endfor -%}
-    </div>
   </div>
 </div>
 
@@ -75,6 +63,29 @@
 {%- endif -%}
 
 <style>
+  .section-faq__container {
+    max-width: var(--faq-width, 800px);
+    margin-inline: auto;
+  }
+
+  .section-faq__heading {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--space-sm);
+    color: var(--color-scheme-heading, inherit);
+  }
+
+  .section-faq__subheading {
+    color: var(--color-scheme-text, var(--color-mid-grey));
+    margin-bottom: var(--space-xl);
+    font-size: var(--font-size-base);
+  }
+
+  .section-faq__heading--left,
+  .section-faq__subheading--left   { text-align: left; }
+  .section-faq__heading--center,
+  .section-faq__subheading--center { text-align: center; }
+
   .section-faq__list {
     border-top: 1px solid var(--color-border);
   }
